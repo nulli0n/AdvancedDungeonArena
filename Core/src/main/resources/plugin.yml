@@ -1,4 +1,4 @@
-main: su.nightexpress.ama.DungeonPlugin
+main: su.nightexpress.dungeons.DungeonPlugin
 version: '${project.version}'
 name: AdvancedDungeonArena
 description: Advanced and poweful dungeon & mob arena creator.

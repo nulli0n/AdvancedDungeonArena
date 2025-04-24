@@ -427,7 +427,7 @@ public class Lang extends CoreLang {
 
     public static final LangText DUNGEON_STATUS_ENDING_DEFEAT = LangText.of("Dungeon.Status.Ending.Defeat",
         OUTPUT.wrap(OutputType.ACTION_BAR),
-        RED.wrap(BOLD.wrap("Dungeon Defeated!")) + " " + GRAY.wrap("(" + WHITE.wrap(GENERIC_TIME) + ")")
+        RED.wrap(BOLD.wrap("Dungeon Raid Failed!")) + " " + GRAY.wrap("(" + WHITE.wrap(GENERIC_TIME) + ")")
     );
 
     public static final LangText DUNGEON_STATUS_DEAD_LIVES = LangText.of("Dungeon.Status.Dead.WithLives",

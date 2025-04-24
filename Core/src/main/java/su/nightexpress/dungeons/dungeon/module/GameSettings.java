@@ -97,8 +97,6 @@ public class GameSettings implements Writeable {
         this.setMobsDropLoot(true);
 
         this.setKitsEnabled(false);
-        this.kitsLimits.put("kit1", 3);
-        this.kitsLimits.put("kit2", 1);
     }
 
     public void load(@NotNull FileConfig config, @NotNull String path) {
@@ -226,17 +224,19 @@ public class GameSettings implements Writeable {
 
     public int getKitLimit(@NotNull String id) {
         // If nothing defined, then noting to limit.
-        if (this.kitsLimits.isEmpty()) return -1;
+//        if (this.kitsLimits.isEmpty()) return -1;
+//
+//        id = id.toLowerCase();
 
-        id = id.toLowerCase(Locale.ROOT);
+        return this.kitsLimits.getOrDefault(id.toLowerCase(), -1);
 
         // If kit present, get limit for it.
-        if (this.kitsLimits.containsKey(id)) {
-            return this.kitsLimits.getOrDefault(id, 0);
-        }
-
-        // Otherwise try to get global one.
-        return this.kitsLimits.getOrDefault(Placeholders.WILDCARD, 0);
+//        if (this.kitsLimits.containsKey(id)) {
+//            return this.kitsLimits.getOrDefault(id, -1);
+//        }
+//
+//        // Otherwise try to get global one.
+//        return this.kitsLimits.getOrDefault(Placeholders.WILDCARD, 0);
     }
 
     // General settings.

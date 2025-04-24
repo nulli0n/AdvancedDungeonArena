@@ -220,7 +220,7 @@
                             </outputFile>
                             <artifactSet>
                                 <includes>
-                                    <include>su.nightexpress.dungeons:*</include>
+                                    <include>su.nightexpress.dungeonarena:*</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

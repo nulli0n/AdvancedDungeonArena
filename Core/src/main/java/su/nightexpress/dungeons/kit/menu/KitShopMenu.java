@@ -148,6 +148,7 @@ public class KitShopMenu extends LinkedMenu<DungeonPlugin, DungeonInstance> impl
                                 .setIcon(kit.getIcon().localized(Lang.UI_CONFIRMATION_KIT_PURCHASE).replacement(replacer -> replacer.replace(kit.replacePlaceholders())))
                                 .onAccept((viewer2, event1) -> plugin.getKitManager().purchase(player, kit))
                                 .onReturn((viewer2, event1) -> this.runNextTick(() -> plugin.getKitManager().openShop(player, dungeon)))
+                                .returnOnAccept(true)
                                 .build());
                         }
                         else {
