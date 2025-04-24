@@ -442,28 +442,28 @@ public class Lang extends CoreLang {
 
 
 
-    public static final LangText DUNGEON_DEATH_WITH_LIFES = LangText.of("Dungeon.Death.WithLifes",
+    public static final LangText DUNGEON_DEATH_WITH_LIFES = LangText.of("Dungeon.Death.WithLives",
         OUTPUT.wrap(10, 50) + SOUND.wrap(Sound.ENTITY_ZOMBIE_DEATH),
         LIGHT_ORANGE.wrap(BOLD.wrap("KNOCKED OUT")),
-        LIGHT_GRAY.wrap("You have " + LIGHT_ORANGE.wrap(PLAYER_LIVES + "❤") + " extra lifes.")
+        LIGHT_GRAY.wrap("You have " + LIGHT_ORANGE.wrap(PLAYER_LIVES + "❤") + " extra lives.")
     );
 
-    public static final LangText DUNGEON_DEATH_NO_LIFES = LangText.of("Dungeon.Death.NoLifes",
+    public static final LangText DUNGEON_DEATH_NO_LIFES = LangText.of("Dungeon.Death.NoLives",
         OUTPUT.wrap(10, 50) + SOUND.wrap(Sound.ENTITY_ZOMBIE_DEATH),
         LIGHT_RED.wrap(BOLD.wrap("YOU DIED")),
-        LIGHT_GRAY.wrap("And you have " + LIGHT_RED.wrap("no extra lifes") + " left.")
+        LIGHT_GRAY.wrap("And you have " + LIGHT_RED.wrap("no extra lives") + " left.")
     );
 
-    public static final LangText DUNGEON_REVIVE_WITH_LIFES = LangText.of("Dungeon.Revive.WithLifes",
+    public static final LangText DUNGEON_REVIVE_WITH_LIFES = LangText.of("Dungeon.Revive.WithLives",
         OUTPUT.wrap(10, 50) + SOUND.wrap(Sound.ITEM_TOTEM_USE),
         LIGHT_GREEN.wrap(BOLD.wrap("REVIVED")),
-        LIGHT_GRAY.wrap("You have " + LIGHT_GREEN.wrap(PLAYER_LIVES + "❤") + " extra lifes left.")
+        LIGHT_GRAY.wrap("You have " + LIGHT_GREEN.wrap(PLAYER_LIVES + "❤") + " extra lives left.")
     );
 
-    public static final LangText DUNGEON_REVIVE_NO_LIFES = LangText.of("Dungeon.Revive.NoLifes",
+    public static final LangText DUNGEON_REVIVE_NO_LIFES = LangText.of("Dungeon.Revive.NoLives",
         OUTPUT.wrap(10, 50) + SOUND.wrap(Sound.ITEM_TOTEM_USE),
         LIGHT_GREEN.wrap(BOLD.wrap("REVIVED")),
-        LIGHT_GRAY.wrap("You have " + LIGHT_RED.wrap("no extra lifes") + " left.")
+        LIGHT_GRAY.wrap("You have " + LIGHT_RED.wrap("no extra lives") + " left.")
     );
 
 
