@@ -6,7 +6,7 @@
 <a href="https://ko-fi.com/nightexpress"><img src="https://nightexpressdev.com/img/generic/btn_donate.png"></a>
 <a href="https://nightexpressdev.com/excellentjobs/"><img src="https://nightexpressdev.com/img/generic/btn_wiki.png"></a>
 
-![](https://repo.nightexpressdev.com/api/badge/latest/releases/su/nightexpress/dungeonarena/ADA?color=40c14a&name=ADA&prefix=v)
+![](https://repo.nightexpressdev.com/api/badge/latest/releases/su/nightexpress/dungeonarena/AdvancedDungeonArena?color=40c14a&name=AdvancedDungeonArena&prefix=v)
 
 **AdvancedDungeonArena** is a **flexible**, **script-based** custom dungeon creator plugin.
 
