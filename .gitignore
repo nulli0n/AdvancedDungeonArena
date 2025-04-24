@@ -1,0 +1,13 @@
+/.idea/
+/pom.xml.versionsBackup
+/target/
+/Core/target/
+/Core/pom.xml.versionsBackup
+/API/target/
+/API/pom.xml.versionsBackup
+/NMS/target/
+/NMS/pom.xml.versionsBackup
+/MC_1_21_3/target/
+/MC_1_21_3/pom.xml.versionsBackup
+/MC_1_21_5/target/
+/MC_1_21_5/pom.xml.versionsBackup

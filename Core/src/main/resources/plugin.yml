@@ -1,0 +1,19 @@
+main: su.nightexpress.ama.DungeonPlugin
+version: '${project.version}'
+name: AdvancedDungeonArena
+description: Advanced and poweful dungeon & mob arena creator.
+author: NightExpress
+depend: [ nightcore ]
+softdepend:
+  - EconomyBridge
+  - MythicMobs
+  - BossMania
+  - mcMMO
+  - PlaceholderAPI
+  - SunLight
+  - Essentials
+  - MCPets
+  - AdvancedPets
+  - CombatPets
+
+api-version: 1.21

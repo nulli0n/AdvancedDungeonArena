@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>su.nightexpress.dungeonarena</groupId>
+    <artifactId>AdvancedDungeonArena</artifactId>
+    <packaging>pom</packaging>
+    <version>8.0.0-beta</version>
+    <modules>
+        <module>API</module>
+        <module>Core</module>
+        <module>NMS</module>
+        <module>MC_1_21_3</module>
+        <module>MC_1_21_5</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>nightexpress</id>
+            <url>https://repo.nightexpressdev.com/releases</url>
+        </repository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+
+        <repository>
+            <id>nightexpress-releases</id>
+            <url>https://repo.nightexpressdev.com/releases</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.21.4-R0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>su.nightexpress.nightcore</groupId>
+            <artifactId>nightcore</artifactId>
+            <version>2.7.5.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>su.nightexpress.economybridge</groupId>
+            <artifactId>economy-bridge</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+    </dependencies>
+
+</project>
