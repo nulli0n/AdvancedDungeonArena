@@ -77,8 +77,8 @@ public class LootChest extends AbstractFileData<DungeonPlugin> {
     // TODO Highlight loot chest when generated per player?
 
     public void generateLoot(@NotNull DungeonInstance dungeon) {
-        Block block = this.blockPos.toBlock(dungeon.getWorld());
-        if (!(block.getState() instanceof Container container)) return;
+        Container container = this.getContainer(dungeon);
+        if (container == null) return;
 
         Inventory inventory = container.getInventory();
         int inventorySize = inventory.getSize();
@@ -110,6 +110,24 @@ public class LootChest extends AbstractFileData<DungeonPlugin> {
             lootCount--;
             freeSlots.remove(slot);
         }
+    }
+
+    public void clearLoot(@NotNull DungeonInstance dungeon) {
+        Container container = this.getContainer(dungeon);
+        if (container == null) return;
+
+        Inventory inventory = container.getInventory();
+        inventory.clear();
+    }
+
+    @Nullable
+    private Container getContainer(@NotNull DungeonInstance dungeon) {
+        Block block = this.blockPos.toBlock(dungeon.getWorld());
+        if (block.getState() instanceof Container container) {
+            return container;
+        }
+
+        return null;
     }
 
     @NotNull

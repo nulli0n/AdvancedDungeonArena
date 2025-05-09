@@ -121,6 +121,7 @@ public class DungeonInstance implements Dungeon {
         this.killMobs();
         this.removeTasks();
         this.resetSpotStates();
+        this.clearLootChests();
 
         this.counters.clear();
         this.variables.clear();
@@ -648,6 +649,11 @@ public class DungeonInstance implements Dungeon {
         }
         else {
             gamer.getRewards().forEach(reward -> reward.getReward().give(this, gamer));
+
+            // Set cooldown only if dungeon have been started.
+            if (!player.hasPermission(Perms.BYPASS_DUNGEON_COOLDOWN)) {
+                this.plugin.getDungeonManager().setJoinCooldown(player, this);
+            }
         }
     }
 
@@ -1005,14 +1011,22 @@ public class DungeonInstance implements Dungeon {
 
 
 
-    // TODO clearLootChests on start
+
 
     public void refillLootChests() {
-        this.config.getLootChests().forEach(lootChest -> lootChest.generateLoot(this));
+        this.config.getLootChests().forEach(this::refillLootChest);
     }
 
     public void refillLootChest(@NotNull LootChest lootChest) {
         lootChest.generateLoot(this);
+    }
+
+    public void clearLootChests() {
+        this.config.getLootChests().forEach(this::clearLootChest);
+    }
+
+    public void clearLootChest(@NotNull LootChest lootChest) {
+        lootChest.clearLoot(this);
     }
 
 

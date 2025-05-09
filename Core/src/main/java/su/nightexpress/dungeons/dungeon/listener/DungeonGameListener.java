@@ -1,5 +1,6 @@
 package su.nightexpress.dungeons.dungeon.listener;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -260,13 +261,14 @@ public class DungeonGameListener extends AbstractListener<DungeonPlugin> {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onDungeonPlayerItemUse(PlayerInteractEvent event) {
-        if (event.useItemInHand() == Event.Result.DENY) return;
-        if (event.useInteractedBlock() == Event.Result.DENY) return;
+        Player player = event.getPlayer();
 
         ItemStack itemStack = event.getItem();
         if (itemStack == null) return;
 
-        Player player = event.getPlayer();
+        if (event.useItemInHand() == Event.Result.DENY) return;
+        if (player.getGameMode() != GameMode.ADVENTURE && event.useInteractedBlock() == Event.Result.DENY) return;
+
         Block block = event.getClickedBlock();
         BlockFace face = event.getBlockFace();
         Action action = event.getAction();

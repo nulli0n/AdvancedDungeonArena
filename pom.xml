@@ -7,7 +7,7 @@
     <groupId>su.nightexpress.dungeonarena</groupId>
     <artifactId>AdvancedDungeonArena</artifactId>
     <packaging>pom</packaging>
-    <version>8.0.0-beta</version>
+    <version>8.0.1-beta</version>
     <modules>
         <module>API</module>
         <module>Core</module>

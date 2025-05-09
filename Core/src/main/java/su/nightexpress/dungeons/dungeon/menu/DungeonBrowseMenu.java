@@ -111,7 +111,7 @@ public class DungeonBrowseMenu extends NormalMenu<DungeonPlugin> implements Fill
         return config.getIcon()
             .setHideComponents(true)
             .setDisplayName(this.dungeonName)
-            .setLore(dungeon.canJoin(player, false) ? (onCooldown ? this.dungeonCooldownInfo : this.dungeonUnlockedInfo) : this.dungeonLockedInfo)
+            .setLore(dungeon.canJoin(player, false) ? this.dungeonUnlockedInfo : (onCooldown ? this.dungeonCooldownInfo : this.dungeonLockedInfo))
             .replacement(replacer -> replacer
                 .replace(dungeon.replacePlaceholders())
                 .replace(COOLDOWN, () -> {

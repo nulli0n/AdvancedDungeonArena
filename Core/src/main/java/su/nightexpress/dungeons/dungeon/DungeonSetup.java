@@ -481,7 +481,7 @@ public class DungeonSetup extends AbstractManager<DungeonPlugin> {
         config.removeSpot(spot.getId());
         spot.getFile().delete();
 
-        Lang.SETUP_LOOT_CHEST_REMOVED.getMessage().send(sender, replacer -> replacer.replace(spot.replacePlaceholders()));
+        Lang.SETUP_SPOT_REMOVED.getMessage().send(sender, replacer -> replacer.replace(spot.replacePlaceholders()));
         return true;
     }
 

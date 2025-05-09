@@ -57,6 +57,7 @@ public class DungeonGamer implements DungeonPlayer {
         this.rewards = new ArrayList<>();
         this.setDead(false);
         this.deathTime = -1L;
+        this.setLives(dungeon.getConfig().gameSettings().getPlayerLives());
     }
 
     @NotNull

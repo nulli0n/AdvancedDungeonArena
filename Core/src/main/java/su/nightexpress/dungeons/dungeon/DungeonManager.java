@@ -1,5 +1,6 @@
 package su.nightexpress.dungeons.dungeon;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -241,9 +242,6 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
         this.playerByIdMap.remove(player.getUniqueId());
         Lang.DUNGEON_LEAVE_INFO.getMessage().send(player, replacer -> replacer.replace(dungeon.replacePlaceholders()));
 
-        // Apply dungeon cooldown after leaving it, so cooldown not counting in dungeon.
-        this.setJoinCooldown(player, dungeon);
-
         DungeonLeftEvent event = new DungeonLeftEvent(dungeon, gamer);
         this.plugin.getPluginManager().callEvent(event);
 
@@ -251,8 +249,6 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
     }
 
     public void setJoinCooldown(@NotNull Player player, @NotNull DungeonInstance dungeon) {
-        if (player.hasPermission(Perms.BYPASS_DUNGEON_COOLDOWN)) return;
-
         int cooldown = dungeon.getConfig().features().getEntranceCooldown().getSmallest(player);
         if (cooldown == 0) return;
 
@@ -438,18 +434,18 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
     }
 
     public boolean canPlace(@NotNull Player player, @NotNull Block block, @NotNull ItemStack itemStack) {
-        DungeonGamer gamer = this.getDungeonPlayer(player);
-        if (gamer != null && block.getType() == Material.TNT && Config.ITEMS_TNT_ALLOW_PLACEMENT.get()) {
-            World world = player.getWorld();
-            Location location = LocationUtil.setCenter2D(block.getLocation());
-
-            itemStack.setAmount(itemStack.getAmount() - 1);
-
-            TNTPrimed tnt = world.spawn(location, TNTPrimed.class);
-            tnt.setSource(player);
-            tnt.setFuseTicks(Config.ITEMS_TNT_FUSE_TICKS.get());
-            return false;
-        }
+//        DungeonGamer gamer = this.getDungeonPlayer(player);
+//        if (gamer != null && itemStack.getType() == Material.TNT && Config.ITEMS_TNT_ALLOW_PLACEMENT.get()) {
+//            World world = player.getWorld();
+//            Location location = LocationUtil.setCenter2D(block.getLocation());
+//
+//            itemStack.setAmount(itemStack.getAmount() - 1);
+//
+//            TNTPrimed tnt = world.spawn(location, TNTPrimed.class);
+//            tnt.setSource(player);
+//            tnt.setFuseTicks(Config.ITEMS_TNT_FUSE_TICKS.get());
+//            return false;
+//        }
 
         return this.canBuild(player, block);
     }
@@ -469,7 +465,7 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
             return true;
         }
 
-        return this.isDungeonLocation(entity.getLocation());
+        return !this.isDungeonLocation(entity.getLocation());
     }
 
     public boolean canInteract(@NotNull Player player, @NotNull Entity entity) {
@@ -534,6 +530,24 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
             }
             else player.swingMainHand();
 
+            return false;
+        }
+
+        if (itemStack.getType() == Material.TNT && Config.ITEMS_TNT_ALLOW_PLACEMENT.get()) {
+            itemStack.setAmount(itemStack.getAmount() - 1);
+
+            boolean hasBlock = block != null && player.getGameMode() == GameMode.SURVIVAL;
+            Location location;
+            if (hasBlock) {
+                location = LocationUtil.setCenter2D(block.getLocation());
+            }
+            else {
+                location = player.getEyeLocation().add(player.getLocation().getDirection());
+            }
+
+            TNTPrimed tnt = player.getWorld().spawn(location, TNTPrimed.class);
+            tnt.setSource(player);
+            tnt.setFuseTicks(Config.ITEMS_TNT_FUSE_TICKS.get());
             return false;
         }
 

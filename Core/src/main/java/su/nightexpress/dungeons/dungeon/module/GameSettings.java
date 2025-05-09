@@ -282,7 +282,7 @@ public class GameSettings implements Writeable {
     }
 
     public void setMaxPlayers(int maxPlayers) {
-        this.maxPlayers = Math.max(1, maxPlayers);
+        this.maxPlayers = maxPlayers;
     }
 
     public int getPlayerLives() {
