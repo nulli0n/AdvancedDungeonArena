@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.dungeons.DungeonPlugin;
 import su.nightexpress.dungeons.api.dungeon.DungeonPos;
+import su.nightexpress.dungeons.api.type.GameResult;
 import su.nightexpress.dungeons.api.type.GameState;
 import su.nightexpress.dungeons.api.type.MobFaction;
 import su.nightexpress.dungeons.dungeon.config.DungeonConfig;
@@ -248,12 +249,26 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
         return true;
     }
 
-    public void setJoinCooldown(@NotNull Player player, @NotNull DungeonInstance dungeon) {
+    public void setJoinCooldown(@NotNull Player player, @NotNull DungeonInstance dungeon, GameResult gameResult) {
         int cooldown = dungeon.getConfig().features().getEntranceCooldown().getSmallest(player);
-        if (cooldown == 0) return;
+
+        int victoryCooldown = dungeon.getConfig().features().getEntranceVictoryCooldown().getSmallest(player);
+        if (victoryCooldown == 0) victoryCooldown = cooldown;
+
+        int defeatCooldown = dungeon.getConfig().features().getEntranceDefeatCooldown().getSmallest(player);
+        if (defeatCooldown == 0) defeatCooldown = cooldown;
+
+        if (victoryCooldown == 0 && defeatCooldown == 0) return;
 
         DungeonUser user = this.plugin.getUserManager().getOrFetch(player);
-        user.setArenaCooldown(dungeon, TimeUtil.createFutureTimestamp(cooldown));
+
+        switch (gameResult) {
+            case VICTORY -> user.setArenaCooldown(dungeon, TimeUtil.createFutureTimestamp(victoryCooldown));
+            case DEFEAT -> user.setArenaCooldown(dungeon, TimeUtil.createFutureTimestamp(defeatCooldown));
+            case null, default -> {
+            }
+        }
+
         this.plugin.getUserManager().save(user);
     }
 
