@@ -41,10 +41,10 @@ public class LevelRequirement implements Writeable {
         if (levelProvider == null) return true;
 
         int playerLevel = levelProvider.getLevel(player);
-        boolean underMin = !this.hasMinValue() || playerLevel > this.minLevel;
+        boolean underMin = !this.hasMinValue() || playerLevel >= this.minLevel;
         boolean underMax = !this.hasMaxValue() || playerLevel <= this.maxLevel;
 
-        return underMin || underMax;
+        return underMin && underMax;
     }
 
     public boolean isRequired() {

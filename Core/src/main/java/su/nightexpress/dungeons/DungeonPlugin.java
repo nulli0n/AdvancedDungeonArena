@@ -12,6 +12,7 @@ import su.nightexpress.dungeons.config.Perms;
 import su.nightexpress.dungeons.data.DataHandler;
 import su.nightexpress.dungeons.dungeon.DungeonManager;
 import su.nightexpress.dungeons.dungeon.DungeonSetup;
+import su.nightexpress.dungeons.dungeon.criteria.registry.CriteriaRegistry;
 import su.nightexpress.dungeons.dungeon.scale.ScaleBaseRegistry;
 import su.nightexpress.dungeons.dungeon.script.action.ActionRegistry;
 import su.nightexpress.dungeons.dungeon.script.condition.ConditionRegistry;
@@ -120,6 +121,7 @@ public class DungeonPlugin extends NightPlugin implements ImprovedCommands {
         PetRegistry.clear();
         DungeonEntityBridge.clear();
         MobVariantRegistry.clear();
+        CriteriaRegistry.clear();
         Keys.clear();
         DungeonsAPI.clear();
     }
@@ -143,6 +145,7 @@ public class DungeonPlugin extends NightPlugin implements ImprovedCommands {
     private void loadEngine() {
         DungeonsAPI.load(this);
         Keys.load(this);
+        CriteriaRegistry.load(this);
         MobRegistry.load(this);
         LevelRegistry.load(this);
         PetRegistry.load(this);

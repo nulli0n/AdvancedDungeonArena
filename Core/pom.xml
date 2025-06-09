@@ -5,7 +5,7 @@
     <parent>
         <artifactId>AdvancedDungeonArena</artifactId>
         <groupId>su.nightexpress.dungeonarena</groupId>
-        <version>8.0.1-beta</version>
+        <version>8.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -62,37 +62,42 @@
             <id>phoenix</id>
             <url>https://nexus.phoenixdevt.fr/repository/maven-public/</url>
         </repository>
+
+        <repository>
+            <id>auroramc-releases</id>
+            <url>https://repo.auroramc.gg/releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>API</artifactId>
-            <version>8.0.1-beta</version>
+            <version>8.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>NMS</artifactId>
-            <version>8.0.1-beta</version>
+            <version>8.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>MC_1_21_5</artifactId>
-            <version>8.0.1-beta</version>
+            <version>8.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>MC_1_21_3</artifactId>
-            <version>8.0.1-beta</version>
+            <version>8.1.0</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.sunlight</groupId>
             <artifactId>Core</artifactId>
-            <version>3.13.1</version>
+            <version>3.13.2</version>
             <scope>provided</scope>
         </dependency>
 
@@ -181,6 +186,25 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>gg.auroramc</groupId>
+            <artifactId>AuroraLevels</artifactId>
+            <version>2.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>gg.auroramc</groupId>
+            <artifactId>Aurora</artifactId>
+            <version>2.1.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.0.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

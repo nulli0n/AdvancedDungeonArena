@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.dungeons.DungeonPlugin;
 import su.nightexpress.dungeons.Placeholders;
+import su.nightexpress.dungeons.api.criteria.CriterionMob;
 import su.nightexpress.dungeons.api.dungeon.*;
 import su.nightexpress.dungeons.api.mob.MobIdentifier;
 import su.nightexpress.dungeons.api.mob.MobProvider;
@@ -21,6 +22,7 @@ import su.nightexpress.dungeons.config.Config;
 import su.nightexpress.dungeons.config.Lang;
 import su.nightexpress.dungeons.config.Perms;
 import su.nightexpress.dungeons.dungeon.config.DungeonConfig;
+import su.nightexpress.dungeons.dungeon.criteria.registry.mob.MobCriterias;
 import su.nightexpress.dungeons.dungeon.event.DungeonEventReceiver;
 import su.nightexpress.dungeons.dungeon.event.game.*;
 import su.nightexpress.dungeons.dungeon.event.normal.DungeonEndEvent;
@@ -39,6 +41,7 @@ import su.nightexpress.dungeons.dungeon.spot.SpotState;
 import su.nightexpress.dungeons.dungeon.stage.Stage;
 import su.nightexpress.dungeons.dungeon.stage.StageTask;
 import su.nightexpress.dungeons.dungeon.stage.task.TaskProgress;
+import su.nightexpress.dungeons.dungeon.stats.DungeonStats;
 import su.nightexpress.dungeons.kit.KitUtils;
 import su.nightexpress.dungeons.kit.impl.Kit;
 import su.nightexpress.dungeons.registry.mob.MobRegistry;
@@ -64,6 +67,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -71,7 +75,7 @@ public class DungeonInstance implements Dungeon {
 
     private final DungeonPlugin   plugin;
     private final DungeonConfig   config;
-    private final DungeonCounters counters;
+    private final DungeonStats stats;
     private final DungeonVariables variables;
 
     private final List<DungeonEventReceiver>   eventReceivers;
@@ -95,7 +99,7 @@ public class DungeonInstance implements Dungeon {
     public DungeonInstance(@NotNull DungeonPlugin plugin, @NotNull DungeonConfig config) {
         this.plugin = plugin;
         this.config = config;
-        this.counters = new DungeonCounters(this);
+        this.stats = new DungeonStats(this);
         this.variables = new DungeonVariables();
         this.eventReceivers = new ArrayList<>(); // List to keep receivers order.
         this.taskProgress = new LinkedHashMap<>(); // Linked to keep tasks order.
@@ -123,7 +127,7 @@ public class DungeonInstance implements Dungeon {
         this.resetSpotStates();
         this.clearLootChests();
 
-        this.counters.clear();
+        this.stats.clear();
         this.variables.clear();
 
         this.taskProgress.clear();
@@ -722,8 +726,10 @@ public class DungeonInstance implements Dungeon {
             return;
         }
 
+        boolean isTamed = entity instanceof Tameable tameable && tameable.isTamed();
+
         MobIdentifier identifier = MobIdentifier.from(provider, mobId);
-        MobFaction faction = MobUitls.isExternalAlly(identifier) ? MobFaction.ALLY : MobFaction.ENEMY;
+        MobFaction faction = MobUitls.isExternalAlly(identifier) || isTamed ? MobFaction.ALLY : MobFaction.ENEMY;
 
         DungeonMob dungeonMob = new DungeonMob(this, entity, faction, provider, mobId);
         this.addMob(dungeonMob);
@@ -832,7 +838,7 @@ public class DungeonInstance implements Dungeon {
         if (mob.isAlive()) {
             mob.getBukkitEntity().remove();
         }
-        this.counters.addMobKill(mob);
+        this.stats.addMobKill(mob);
         this.removeMob(mob);
         this.broadcastEvent(new DungeonMobEliminatedEvent(this, mob));
         DungeonEntityBridge.removeHolder(mob);
@@ -886,7 +892,7 @@ public class DungeonInstance implements Dungeon {
     @Override
     public void addMob(@NotNull DungeonEntity mob) {
         this.mobByIdMap.put(mob.getUniqueId(), (DungeonMob) mob);
-        this.counters.addMobSpawn(mob);
+        this.stats.addMobSpawn(mob);
 
         LivingEntity entity = mob.getBukkitEntity();
 
@@ -944,7 +950,20 @@ public class DungeonInstance implements Dungeon {
     @Override
     @NotNull
     public Set<DungeonMob> getMobs(@NotNull MobFaction faction) {
-        return this.getMobs().stream().filter(mob -> mob.getFaction() == faction).collect(Collectors.toSet());
+        return this.queryMobs(mob -> mob.isFaction(faction));
+    }
+
+    @NotNull
+    public Set<DungeonMob> queryMobs(@NotNull Predicate<CriterionMob> predicate) {
+        return this.getMobs().stream().filter(predicate).collect(Collectors.toSet());
+    }
+
+    public int countMobs(@NotNull MobFaction faction) {
+        return this.countMobs(mob -> MobCriterias.FACTION.predicate(faction).test(mob));
+    }
+
+    public int countMobs(@NotNull Predicate<CriterionMob> predicate) {
+        return this.queryMobs(predicate).size();
     }
 
 
@@ -1222,8 +1241,8 @@ public class DungeonInstance implements Dungeon {
     }
 
     @NotNull
-    public DungeonCounters getCounters() {
-        return this.counters;
+    public DungeonStats getStats() {
+        return this.stats;
     }
 
     @NotNull

@@ -4,6 +4,7 @@ import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.dungeons.api.dungeon.DungeonEntity;
 import su.nightexpress.dungeons.api.mob.MobIdentifier;
+import su.nightexpress.dungeons.api.mob.MobSnapshot;
 import su.nightexpress.dungeons.api.type.MobFaction;
 import su.nightexpress.dungeons.api.mob.MobProvider;
 import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
@@ -18,6 +19,7 @@ public class DungeonMob implements DungeonEntity {
     private final MobProvider     provider;
     private final String          mobId;
     private final MobIdentifier   identifier;
+    private final MobSnapshot snapshot;
 
     public DungeonMob(@NotNull DungeonInstance dungeon,
                       @NotNull LivingEntity bukkitEntity,
@@ -30,6 +32,7 @@ public class DungeonMob implements DungeonEntity {
         this.provider = provider;
         this.mobId = mobId;
         this.identifier = MobIdentifier.from(this.provider, this.mobId);
+        this.snapshot = new MobSnapshot(this.getProviderId(), this.getMobId(), this.faction, this.dungeon.getStage().getId());
     }
 
     @NotNull
@@ -45,13 +48,19 @@ public class DungeonMob implements DungeonEntity {
     }
 
     @Override
+    @NotNull
+    public MobSnapshot getSnapshot() {
+        return this.snapshot;
+    }
+
+    @Override
     public boolean isMob(@NotNull MobProvider provider, @NotNull String mobId) {
         return this.isProvider(provider) && this.isId(mobId);
     }
 
     @Override
     public boolean isMob(@NotNull MobIdentifier identifier) {
-        return this.provider.getName().equalsIgnoreCase(identifier.getProviderId()) && this.isId(identifier.getMobId());
+        return this.isProvider(identifier.getProviderId()) && this.isId(identifier.getMobId());
     }
 
     @Override
@@ -62,6 +71,11 @@ public class DungeonMob implements DungeonEntity {
     @Override
     public boolean isProvider(@NotNull MobProvider provider) {
         return this.provider == provider;
+    }
+
+    @Override
+    public boolean isProvider(@NotNull String providerId) {
+        return this.provider.getName().equalsIgnoreCase(providerId);
     }
 
     @Override
@@ -113,5 +127,11 @@ public class DungeonMob implements DungeonEntity {
     @NotNull
     public String getMobId() {
         return this.mobId;
+    }
+
+    @Override
+    @NotNull
+    public String getBornStageId() {
+        return this.snapshot.getBornStageId();
     }
 }

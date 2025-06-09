@@ -1,23 +1,21 @@
 package su.nightexpress.dungeons.dungeon.script.condition.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import su.nightexpress.dungeons.api.type.MobFaction;
 import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
 import su.nightexpress.dungeons.dungeon.script.condition.ConditionId;
 import su.nightexpress.dungeons.dungeon.script.condition.type.MobsAmountCondition;
-import su.nightexpress.dungeons.dungeon.script.number.NumberComparator;
 import su.nightexpress.nightcore.config.FileConfig;
 
+@Deprecated
 public class KilledMobsAmountCondition extends MobsAmountCondition {
 
-    public KilledMobsAmountCondition(@NotNull NumberComparator comparator, int compareValue, boolean checkFaction, @Nullable MobFaction faction) {
-        super(comparator, compareValue, checkFaction, faction);
+    public KilledMobsAmountCondition(@NotNull MobsData data) {
+        super(data);
     }
 
     @NotNull
     public static KilledMobsAmountCondition read(@NotNull FileConfig config, @NotNull String path) {
-        return read(config, path, KilledMobsAmountCondition::new);
+        return new KilledMobsAmountCondition(readMobsData(config, path));
     }
 
     @NotNull
@@ -28,9 +26,6 @@ public class KilledMobsAmountCondition extends MobsAmountCondition {
 
     @Override
     protected int getDungeonValue(@NotNull DungeonInstance dungeon) {
-        if (this.checkFaction && this.faction != null) {
-            return dungeon.getCounters().countMobKills(this.faction);
-        }
-        return dungeon.getCounters().countMobKills();
+        return dungeon.getStats().countMobKills(stage -> true, byFaction(this.getFactionLookup()));
     }
 }

@@ -19,8 +19,10 @@ public abstract class NumberCompareCondition implements Condition {
         this.compareValue = compareValue;
     }
 
+    public record NumberData(NumberComparator comparator, int compareValue){}
+
     @NotNull
-    protected static <T extends NumberCompareCondition> T read(@NotNull FileConfig config, @NotNull String path, @NotNull Creator<T> creator) {
+    public static NumberData readNumberData(@NotNull FileConfig config, @NotNull String path) {
         String operatorStr = config.getString(path + ".Operator", "null");
         NumberComparator comparator = NumberComparators.getComparator(operatorStr);
         if (comparator == null) {
@@ -30,7 +32,7 @@ public abstract class NumberCompareCondition implements Condition {
 
         int compareValue = config.getInt(path + ".Value");
 
-        return creator.create(comparator, compareValue);
+        return new NumberData(comparator, compareValue);
     }
 
     @Override
@@ -50,9 +52,4 @@ public abstract class NumberCompareCondition implements Condition {
     }
 
     protected abstract int getDungeonValue(@NotNull DungeonInstance dungeon);
-
-    protected interface Creator<T extends NumberCompareCondition> {
-
-        T create(@NotNull NumberComparator comparator, int compareValue);
-    }
 }

@@ -10,6 +10,7 @@ import su.nightexpress.dungeons.config.Config;
 import su.nightexpress.dungeons.dungeon.config.DungeonConfig;
 import su.nightexpress.dungeons.dungeon.feature.board.BoardLayout;
 import su.nightexpress.dungeons.kit.impl.Kit;
+import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.config.Writeable;
 import su.nightexpress.nightcore.util.CommandUtil;
@@ -25,7 +26,8 @@ public class GameSettings implements Writeable {
     private int     minPlayers;
     private int     maxPlayers;
     private int     playerLives;
-    private boolean keepInventory;
+    private boolean keepInventoryEnabled;
+    private boolean keepInventoryRequiresLives;
     private boolean leaveOnDeath;
     private boolean adventureMode;
 
@@ -73,7 +75,8 @@ public class GameSettings implements Writeable {
         this.setMinPlayers(1);
         this.setMaxPlayers(5);
         this.setPlayerLives(1);
-        this.setKeepInventory(true);
+        this.setKeepInventoryEnabled(true);
+        this.setKeepInventoryRequiresLives(false);
         this.setLeaveOnDeath(false);
         this.setAdventureMode(true);
 
@@ -100,6 +103,12 @@ public class GameSettings implements Writeable {
     }
 
     public void load(@NotNull FileConfig config, @NotNull String path) {
+        if (config.contains(path + ".General.Keep_Inventory")) {
+            boolean oldValue = config.getBoolean(path + ".General.Keep_Inventory");
+            config.set(path + ".General.KeepInventory.Enabled", oldValue);
+            config.remove(path + ".General.Keep_Inventory");
+        }
+
         this.setTimeleft(config.getInt(path + ".General.Timeleft", this.timeleft));
         this.setLobbyTime(config.getInt(path + ".General.Lobby_Prepare_Time", this.lobbyTime));
         this.setLeaveOnDeath(config.getBoolean(path + ".General.Leave_On_Death", this.leaveOnDeath));
@@ -107,7 +116,8 @@ public class GameSettings implements Writeable {
         this.setMinPlayers(config.getInt(path + ".General.MinPlayers", this.minPlayers));
         this.setMaxPlayers(config.getInt(path + ".General.MaxPlayers", this.maxPlayers));
         this.setPlayerLives(config.getInt(path + ".General.PlayerLives", this.playerLives));
-        this.setKeepInventory(config.getBoolean(path + ".General.Keep_Inventory", this.keepInventory));
+        this.setKeepInventoryEnabled(config.getBoolean(path + ".General.KeepInventory.Enabled", this.keepInventoryEnabled));
+        this.setKeepInventoryRequiresLives(ConfigValue.create(path + ".General.KeepInventory.LivesRequired", false).read(config));
         this.setAllowedCommands(config.getStringSet(path + ".General.AllowedCommands"));
         this.bannedItems = new HashSet<>(config.getStringSet(path + ".General.Banned_Items").stream()
             .map(Material::getMaterial).filter(Objects::nonNull).toList());
@@ -153,7 +163,8 @@ public class GameSettings implements Writeable {
         config.set(path + ".General.MinPlayers", this.minPlayers);
         config.set(path + ".General.MaxPlayers", this.maxPlayers);
         config.set(path + ".General.PlayerLives", this.playerLives);
-        config.set(path + ".General.Keep_Inventory", this.keepInventory);
+        config.set(path + ".General.KeepInventory.Enabled", this.keepInventoryEnabled);
+        config.set(path + ".General.KeepInventory.LivesRequired", this.keepInventoryRequiresLives);
         config.set(path + ".General.AllowedCommands", this.allowedCommands);
         config.set(path + ".General.Banned_Items", this.bannedItems.stream().map(Material::name).toList());
 
@@ -293,12 +304,20 @@ public class GameSettings implements Writeable {
         this.playerLives = Math.max(1, playerLives);
     }
 
-    public boolean isKeepInventory() {
-        return this.keepInventory;
+    public boolean isKeepInventoryEnabled() {
+        return this.keepInventoryEnabled;
     }
 
-    public void setKeepInventory(boolean keepInventory) {
-        this.keepInventory = keepInventory;
+    public void setKeepInventoryEnabled(boolean keepInventoryEnabled) {
+        this.keepInventoryEnabled = keepInventoryEnabled;
+    }
+
+    public boolean isKeepInventoryRequiresLives() {
+        return keepInventoryRequiresLives;
+    }
+
+    public void setKeepInventoryRequiresLives(boolean keepInventoryRequiresLives) {
+        this.keepInventoryRequiresLives = keepInventoryRequiresLives;
     }
 
     @NotNull

@@ -16,6 +16,9 @@ import java.util.function.UnaryOperator;
 
 public class Spot extends AbstractFileData<DungeonPlugin> {
 
+    private static final String EXT_OLD = ".schema";
+    private static final String EXT_NEW = ".schema2";
+
     private final Map<String, SpotState> stateByIdMap;
 
     private String    name;
@@ -71,14 +74,20 @@ public class Spot extends AbstractFileData<DungeonPlugin> {
     }
 
     public void loadStateSchema(@NotNull SpotState state) {
-        File file = this.getStateSchemaFile(state);
+        boolean compressed = true;
+
+        File file = this.getNewStateSchemaFile(state);
+        if (!file.exists()) {
+            file = this.getOldStateSchemaFile(state);
+            compressed = false;
+        }
         if (!file.exists()) return;
 
-        state.loadSchema(this.plugin, file);
+        state.loadSchema(this.plugin, file, compressed);
     }
 
     public void writeStateSchema(@NotNull SpotState state, @NotNull World world, @NotNull List<Block> blocks) {
-        File file = this.getStateSchemaFile(state);
+        File file = this.getNewStateSchemaFile(state);
         FileUtil.create(file);
 
         this.plugin.getInternals().saveSchema(world, blocks, file);
@@ -94,7 +103,7 @@ public class Spot extends AbstractFileData<DungeonPlugin> {
     public void removeState(@NotNull SpotState state) {
         this.stateByIdMap.remove(state.getId());
 
-        File file = this.getStateSchemaFile(state);
+        File file = this.getAnyStateSchemaFile(state);
         if (file.exists()) {
             file.delete();
         }
@@ -110,8 +119,24 @@ public class Spot extends AbstractFileData<DungeonPlugin> {
     }
 
     @NotNull
-    public File getStateSchemaFile(@NotNull SpotState state) {
-        String name = this.getId() + "_" + state.getId() + ".schema";
+    public File getAnyStateSchemaFile(@NotNull SpotState state) {
+        File modern = this.getNewStateSchemaFile(state);
+        return modern.exists() ? modern : this.getOldStateSchemaFile(state);
+    }
+
+    @NotNull
+    public File getOldStateSchemaFile(@NotNull SpotState state) {
+        return this.getStateSchemaFile(state, EXT_OLD);
+    }
+
+    @NotNull
+    public File getNewStateSchemaFile(@NotNull SpotState state) {
+        return this.getStateSchemaFile(state, EXT_NEW);
+    }
+
+    @NotNull
+    private File getStateSchemaFile(@NotNull SpotState state, @NotNull String extension) {
+        String name = this.getId() + "_" + state.getId() + extension;
         return new File(this.file.getAbsoluteFile().getParent(), name);
     }
 

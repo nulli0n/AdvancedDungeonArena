@@ -9,8 +9,10 @@ public class HookId {
     public static final String SUNLIGHT     = "SunLight";
     public static final String PROTOCOL_LIB = "ProtocolLib";
     public static final String PACKET_EVENTS = "packetevents";
+
     public static final String MCMMO        = "mcMMO";
     public static final String MMOCORE      = "MMOCore";
+    public static final String AURORA_LEVELS = "AuroraLevels";
 
     public static final String COMBAT_PETS   = "CombatPets";
     public static final String MC_PETS       = "MCPets";

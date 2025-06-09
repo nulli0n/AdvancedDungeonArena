@@ -3,10 +3,7 @@ package su.nightexpress.dungeons.nms.mc_1_21_3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -188,12 +185,12 @@ public class MC_1_21_3 implements DungeonNMS {
 
     @NotNull
     @Override
-    public List<SchemaBlock> loadSchema(@NotNull File file) {
+    public List<SchemaBlock> loadSchema(@NotNull File file, boolean compressed) {
         List<SchemaBlock> schemaBlocks = new ArrayList<>();
         CompoundTag schemTag;
 
         try {
-            schemTag = NbtIo.read(file.toPath());
+            schemTag = compressed ? NbtIo.readCompressed(file.toPath(), NbtAccounter.unlimitedHeap()) : NbtIo.read(file.toPath());
         }
         catch (IOException exception) {
             exception.printStackTrace();
@@ -251,7 +248,7 @@ public class MC_1_21_3 implements DungeonNMS {
         schemTag.put("blocks", blocksTag);
 
         try {
-            NbtIo.write(schemTag, file.toPath());
+            NbtIo.writeCompressed(schemTag, file.toPath());
         }
         catch (IOException exception) {
             exception.printStackTrace();

@@ -33,6 +33,7 @@ public class Perms {
     public static final UniPermission COMMAND_SET_LOBBY      = new UniPermission(PREFIX + "command.setlobby");
     public static final UniPermission COMMAND_SET_STAGE      = new UniPermission(PREFIX + "command.setstage");
     public static final UniPermission COMMAND_SET_LEVEL      = new UniPermission(PREFIX + "command.setlevel");
+    public static final UniPermission COMMAND_SET_SPOT      = new UniPermission(PREFIX + "command.setspot");
     public static final UniPermission COMMAND_STOP           = new UniPermission(PREFIX + "command.stop");
     public static final UniPermission COMMAND_START          = new UniPermission(PREFIX + "command.start");
 
@@ -72,6 +73,7 @@ public class Perms {
             COMMAND_SET_LOBBY,
             COMMAND_SET_STAGE,
             COMMAND_SET_LEVEL,
+            COMMAND_SET_SPOT,
             COMMAND_SPAWNER,
             COMMAND_KIT,
             COMMAND_REWARD,

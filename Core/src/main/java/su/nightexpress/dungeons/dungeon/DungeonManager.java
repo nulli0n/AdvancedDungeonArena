@@ -41,6 +41,7 @@ import su.nightexpress.nightcore.ui.menu.confirmation.Confirmation;
 import su.nightexpress.nightcore.util.FileUtil;
 import su.nightexpress.nightcore.util.LocationUtil;
 import su.nightexpress.nightcore.util.TimeUtil;
+import su.nightexpress.nightcore.util.geodata.Cuboid;
 import su.nightexpress.nightcore.util.geodata.pos.ChunkPos;
 
 import java.io.File;
@@ -263,6 +264,14 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
 
     public boolean isDungeonLocation(@NotNull Location location) {
         return this.getDungeonByLocation(location) != null;
+    }
+
+    public boolean containsDungeons(@NotNull World world, @NotNull Cuboid cuboid) {
+        return this.containsDungeons(world, cuboid, null);
+    }
+
+    public boolean containsDungeons(@NotNull World world, @NotNull Cuboid cuboid, @Nullable DungeonConfig source) {
+        return this.getDungeons().stream().anyMatch(dungeon -> dungeon != source && dungeon.isWorld(world) && cuboid.isIntersectingWith(dungeon.getCuboid()));
     }
 
     @NotNull

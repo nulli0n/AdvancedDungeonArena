@@ -182,12 +182,12 @@ public class MC_1_21_5 implements DungeonNMS {
 
     @NotNull
     @Override
-    public List<SchemaBlock> loadSchema(@NotNull File file) {
+    public List<SchemaBlock> loadSchema(@NotNull File file, boolean compressed) {
         List<SchemaBlock> schemaBlocks = new ArrayList<>();
         CompoundTag schemTag;
 
         try {
-            schemTag = NbtIo.read(file.toPath());
+            schemTag = compressed ? NbtIo.readCompressed(file.toPath(), NbtAccounter.unlimitedHeap()) : NbtIo.read(file.toPath());
         }
         catch (IOException exception) {
             exception.printStackTrace();
@@ -240,7 +240,7 @@ public class MC_1_21_5 implements DungeonNMS {
         schemTag.put("blocks", blocksTag);
 
         try {
-            NbtIo.write(schemTag, file.toPath());
+            NbtIo.writeCompressed(schemTag, file.toPath());
         }
         catch (IOException exception) {
             exception.printStackTrace();

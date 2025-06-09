@@ -138,9 +138,11 @@ public class DungeonGameListener extends AbstractListener<DungeonPlugin> {
 
         DungeonInstance dungeon = gamer.getDungeon();
 
-        if (dungeon.getConfig().gameSettings().isKeepInventory()) {
-            event.setKeepInventory(true);
-            event.getDrops().clear();
+        if (dungeon.getConfig().gameSettings().isKeepInventoryEnabled()) {
+            if (gamer.hasExtraLives() || !dungeon.getConfig().gameSettings().isKeepInventoryRequiresLives()) {
+                event.setKeepInventory(true);
+                event.getDrops().clear();
+            }
         }
 
         event.setDroppedExp(0);

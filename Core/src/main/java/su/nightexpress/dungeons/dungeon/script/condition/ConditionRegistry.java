@@ -19,6 +19,9 @@ public class ConditionRegistry {
         addLoader(ConditionId.TASK_ID, TaskIdCondition::load);
         addLoader(ConditionId.STAGE_ID, StageIdCondition::load);
 
+        addLoader(ConditionId.MOBS_AMOUNT, MobsAmountCondition::read);
+        addLoader(ConditionId.MOBS_KILLED, MobsKilledCondition::read);
+
         // TODO Players amount, real_time_before, after, between, + world_time_ the same
         addLoader(ConditionId.ALIVE_MOB_AMOUNT, AliveMobAmountCondition::read);
         addLoader(ConditionId.ALIVE_MOBS_AMOUNT, AliveMobsAmountCondition::read);

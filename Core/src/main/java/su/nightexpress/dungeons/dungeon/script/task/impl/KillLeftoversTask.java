@@ -43,7 +43,7 @@ public class KillLeftoversTask implements Task {
 
     @Override
     public void onTaskAdd(@NotNull DungeonInstance dungeon, @NotNull StageTask stageTask, @NotNull TaskProgress progress) {
-        progress.setRequiredAmount(dungeon.getCounters().countAliveMobs(MobFaction.ENEMY));
+        progress.setRequiredAmount(dungeon.countMobs(MobFaction.ENEMY));
     }
 
     @Override

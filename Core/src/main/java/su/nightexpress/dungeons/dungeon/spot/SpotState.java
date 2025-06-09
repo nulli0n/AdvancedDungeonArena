@@ -36,8 +36,8 @@ public class SpotState implements Writeable {
         config.set(path + ".Enabled", true);
     }
 
-    public void loadSchema(@NotNull DungeonPlugin plugin, @NotNull File file) {
-        this.setSchema(plugin.getInternals().loadSchema(file));
+    public void loadSchema(@NotNull DungeonPlugin plugin, @NotNull File file, boolean compressed) {
+        this.setSchema(plugin.getInternals().loadSchema(file, compressed));
     }
 
     @NotNull

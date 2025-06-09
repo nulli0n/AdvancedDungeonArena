@@ -1,13 +1,9 @@
-package su.nightexpress.dungeons.dungeon.game;
+package su.nightexpress.dungeons.dungeon.stats;
 
-public class MobCounter {
+public class MobStats {
 
     private int spawnedAmount;
     private int killedAmount;
-
-    public MobCounter() {
-
-    }
 
     public void addSpawn() {
         this.spawnedAmount += 1;

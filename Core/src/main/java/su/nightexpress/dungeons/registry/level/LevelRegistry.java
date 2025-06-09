@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.dungeons.DungeonPlugin;
 import su.nightexpress.dungeons.hook.HookId;
+import su.nightexpress.dungeons.registry.level.provider.AuroraLevelsProvider;
 import su.nightexpress.dungeons.registry.level.provider.MMOCoreLevelProvider;
 import su.nightexpress.nightcore.util.Plugins;
 
@@ -23,6 +24,7 @@ public class LevelRegistry {
         plugin = dungeonPlugin;
 
         loadIntegration(HookId.MMOCORE, MMOCoreLevelProvider::new);
+        loadIntegration(HookId.AURORA_LEVELS, AuroraLevelsProvider::new);
     }
 
     private static void loadIntegration(@NotNull String pluginName, @NotNull Supplier<LevelProvider> supplier) {

@@ -28,7 +28,7 @@ public interface DungeonNMS {
 
     void setSchemaBlock(@NotNull World world, @NotNull SchemaBlock schemaBlock);
 
-    @NotNull List<SchemaBlock> loadSchema(@NotNull File file);
+    @NotNull List<SchemaBlock> loadSchema(@NotNull File file, boolean compressed);
 
     void saveSchema(@NotNull World world, @NotNull List<Block> blocks, @NotNull File file);
 }

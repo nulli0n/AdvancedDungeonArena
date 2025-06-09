@@ -122,6 +122,8 @@ public class LootChest extends AbstractFileData<DungeonPlugin> {
 
     @Nullable
     private Container getContainer(@NotNull DungeonInstance dungeon) {
+        if (!dungeon.isActive()) return null;
+
         Block block = this.blockPos.toBlock(dungeon.getWorld());
         if (block.getState() instanceof Container container) {
             return container;

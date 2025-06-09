@@ -104,7 +104,7 @@ public class DungeonSetup extends AbstractManager<DungeonPlugin> {
             return false;
         }
 
-        if (this.plugin.getDungeonManager().getDungeons().stream().anyMatch(other -> cuboid.isIntersectingWith(other.getCuboid()))) {
+        if (this.plugin.getDungeonManager().containsDungeons(player.getWorld(), cuboid)) {
             Lang.SETUP_SELECTION_DUNGEON_OVERLAP.getMessage().send(player);
             return false;
         }
@@ -154,7 +154,7 @@ public class DungeonSetup extends AbstractManager<DungeonPlugin> {
             return false;
         }
 
-        if (this.plugin.getDungeonManager().getDungeons().stream().anyMatch(other -> other != config && cuboid.isIntersectingWith(other.getCuboid()))) {
+        if (this.plugin.getDungeonManager().containsDungeons(player.getWorld(), cuboid, config)) {
             Lang.SETUP_SELECTION_DUNGEON_OVERLAP.getMessage().send(player);
             return false;
         }
@@ -172,7 +172,7 @@ public class DungeonSetup extends AbstractManager<DungeonPlugin> {
 
     public boolean setLobby(@NotNull Player player, @NotNull DungeonConfig config) {
         ExactPos pos = ExactPos.from(player.getLocation());
-        if (!config.getCuboid().contains(pos) || !config.isWorld(player.getWorld())) {
+        if (!config.isInProtection(pos) || !config.isWorld(player.getWorld())) {
             Lang.SETUP_SELECTION_POSITION_OUT_OF_PROTECTION.getMessage().send(player, replacer -> replacer.replace(config.replacePlaceholders()));
             return false;
         }

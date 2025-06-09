@@ -11,6 +11,8 @@ import su.nightexpress.dungeons.config.Perms;
 import su.nightexpress.dungeons.dungeon.config.DungeonConfig;
 import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
 import su.nightexpress.dungeons.dungeon.level.Level;
+import su.nightexpress.dungeons.dungeon.spot.Spot;
+import su.nightexpress.dungeons.dungeon.spot.SpotState;
 import su.nightexpress.dungeons.dungeon.stage.Stage;
 import su.nightexpress.dungeons.selection.SelectionType;
 import su.nightexpress.nightcore.command.experimental.CommandContext;
@@ -84,6 +86,24 @@ public class BaseCommands {
             .executes((context, arguments) -> setLevel(plugin, context, arguments))
         );
 
+        root.addChildren(DirectNode.builder(plugin, "setspot")
+            .playerOnly()
+            .description(Lang.COMMAND_SET_SPOT_DESC)
+            .permission(Perms.COMMAND_SET_SPOT)
+            .withArgument(CommandArguments.forDungeon(plugin).required())
+            .withArgument(ArgumentTypes.string(CommandArguments.SPOT).required().localized(Lang.COMMAND_ARGUMENT_NAME_SPOT)
+                .withSamples(context -> {
+                    DungeonConfig config = CommandArguments.getDungeonConfig(plugin, context);
+                    return config == null ? Collections.emptyList() : new ArrayList<>(config.getSpotByIdMap().keySet());
+                }))
+            .withArgument(ArgumentTypes.string(CommandArguments.STATE).required().localized(Lang.COMMAND_ARGUMENT_NAME_STATE)
+                .withSamples(context -> {
+                    Spot spot = CommandArguments.getSpot(plugin, context);
+                    return spot == null ? Collections.emptyList() : new ArrayList<>(spot.getStateByIdMap().keySet());
+                }))
+            .executes(BaseCommands::setSpotState)
+        );
+
         root.addChildren(DirectNode.builder(plugin, "start")
             .description(Lang.COMMAND_START_DESC)
             .permission(Perms.COMMAND_START)
@@ -144,6 +164,41 @@ public class BaseCommands {
 
         instance.setLevel(level);
         Lang.DUNGEON_ADMIN_SET_LEVEL.getMessage().send(player, replacer -> replacer.replace(instance.replacePlaceholders()).replace(level.replacePlaceholders()));
+        return true;
+    }
+
+    private static boolean setSpotState(@NotNull CommandContext context, @NotNull ParsedArguments arguments) {
+        Player player = context.getPlayerOrThrow();
+        DungeonConfig config = arguments.getArgument(CommandArguments.DUNGEON, DungeonConfig.class);
+
+        String spotId = arguments.getStringArgument(CommandArguments.SPOT);
+        Spot spot = config.getSpotById(spotId);
+        if (spot == null) {
+            Lang.ERROR_COMMAND_INVALID_SPOT_ARGUMENT.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, spotId));
+            return false;
+        }
+
+        String stateId = arguments.getStringArgument(CommandArguments.STATE);
+        SpotState state = spot.getState(stateId);
+        if (state == null) {
+            Lang.ERROR_COMMAND_INVALID_STATE_ARGUMENT.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, stateId));
+            return false;
+        }
+
+        DungeonInstance dungeon = config.getInstance();
+
+        if (dungeon.getState() == GameState.INGAME) {
+            dungeon.setSpotState(spot, state);
+        }
+        else if (dungeon.isActive()) {
+            spot.build(dungeon.getWorld(), state);
+        }
+
+        Lang.DUNGEON_ADMIN_SET_LEVEL.getMessage().send(player, replacer -> replacer
+            .replace(config.replacePlaceholders())
+            .replace(spot.replacePlaceholders())
+            .replace(state.replacePlaceholders())
+        );
         return true;
     }
 

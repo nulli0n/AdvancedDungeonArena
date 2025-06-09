@@ -120,10 +120,10 @@ public class PlaceholderHook {
             }
 
             if (var.equalsIgnoreCase("alive_enemy_mobs")) {
-                return NumberUtil.format(dungeon.getCounters().countAliveMobs(MobFaction.ENEMY));
+                return NumberUtil.format(dungeon.countMobs(MobFaction.ENEMY));
             }
             if (var.equalsIgnoreCase("alive_ally_mobs")) {
-                return NumberUtil.format(dungeon.getCounters().countAliveMobs(MobFaction.ALLY));
+                return NumberUtil.format(dungeon.countMobs(MobFaction.ALLY));
             }
 
             if (var.equalsIgnoreCase("alive_players")) {

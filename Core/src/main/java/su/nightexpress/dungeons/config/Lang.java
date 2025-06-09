@@ -41,6 +41,7 @@ public class Lang extends CoreLang {
 
     public static final LangString COMMAND_SET_STAGE_DESC       = LangString.of("Command.SetStage.Desc", "Set dungeon's game stage.");
     public static final LangString COMMAND_SET_LEVEL_DESC       = LangString.of("Command.SetLevel.Desc", "Set dungeon's game level.");
+    public static final LangString COMMAND_SET_SPOT_DESC       = LangString.of("Command.SetSpot.Desc", "Set dungeon's spot state.");
 
     public static final LangString COMMAND_SPAWNER_DESC        = LangString.of("Command.Spawner.Desc", "Spawner commands.");
     public static final LangString COMMAND_SPAWNER_CREATE_DESC = LangString.of("Command.Spawner.Create.Desc", "Create a new spawner.");
@@ -90,6 +91,12 @@ public class Lang extends CoreLang {
 
     public static final LangText ERROR_COMMAND_INVALID_LEVEL_ARGUMENT = LangText.of("Error.Command.InvalidArgument.Level",
         LIGHT_GRAY.wrap(LIGHT_RED.wrap(GENERIC_VALUE) + " is not a valid dungeon level!"));
+
+    public static final LangText ERROR_COMMAND_INVALID_SPOT_ARGUMENT = LangText.of("Error.Command.InvalidArgument.Spot",
+        LIGHT_GRAY.wrap(LIGHT_RED.wrap(GENERIC_VALUE) + " is not a valid dungeon spot!"));
+
+    public static final LangText ERROR_COMMAND_INVALID_STATE_ARGUMENT = LangText.of("Error.Command.InvalidArgument.State",
+        LIGHT_GRAY.wrap(LIGHT_RED.wrap(GENERIC_VALUE) + " is not a valid spot state!"));
 
 
 
@@ -248,6 +255,9 @@ public class Lang extends CoreLang {
 
     public static final LangText DUNGEON_ADMIN_SET_STAGE = LangText.of("Dungeon.Admin.SetStage",
         GRAY.wrap("Set " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + "'s stage to " + LIGHT_YELLOW.wrap(STAGE_NAME) + "."));
+
+    public static final LangText DUNGEON_ADMIN_SET_SPOT = LangText.of("Dungeon.Admin.SetSpot",
+        GRAY.wrap("Set " + LIGHT_YELLOW.wrap(SPOT_NAME) + "'s state to " + LIGHT_YELLOW.wrap(SPOT_STATE_ID) + "."));
 
 
 

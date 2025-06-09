@@ -287,20 +287,24 @@ public class DungeonConfig extends AbstractFileData<DungeonPlugin> {
         return Placeholders.DUNGEON_CONFIG.replacer(this);
     }
 
-    public boolean isInProtection(@NotNull BlockPos blockPos) {
-        return this.cuboid.contains(blockPos);
+    public boolean isInProtection(@NotNull Entity entity) {
+        return this.isInProtection(entity.getLocation());
     }
 
     public boolean isInProtection(@NotNull Block block) {
         return this.isInProtection(BlockPos.from(block));
     }
 
-    public boolean isInProtection(@NotNull Location location) {
-        return this.cuboid.contains(location);
+    public boolean isInProtection(@NotNull ExactPos exactPos) {
+        return this.isInProtection(exactPos.toBlockPos());
     }
 
-    public boolean isInProtection(@NotNull Entity entity) {
-        return this.isInProtection(entity.getLocation());
+    public boolean isInProtection(@NotNull BlockPos blockPos) {
+        return this.cuboid.contains(blockPos);
+    }
+
+    public boolean isInProtection(@NotNull Location location) {
+        return this.cuboid.contains(location);
     }
 
     public boolean isWorld(@NotNull World world) {
