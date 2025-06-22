@@ -7,7 +7,7 @@
     <groupId>su.nightexpress.dungeonarena</groupId>
     <artifactId>AdvancedDungeonArena</artifactId>
     <packaging>pom</packaging>
-    <version>8.1.0</version>
+    <version>8.1.1</version>
     <modules>
         <module>API</module>
         <module>Core</module>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>su.nightexpress.nightcore</groupId>
             <artifactId>main</artifactId>
-            <version>2.7.6.1</version>
+            <version>2.7.8</version>
         </dependency>
 
         <dependency>

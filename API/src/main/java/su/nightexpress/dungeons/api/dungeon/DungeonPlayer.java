@@ -1,5 +1,6 @@
 package su.nightexpress.dungeons.api.dungeon;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.dungeons.api.type.GameState;
@@ -9,6 +10,8 @@ public interface DungeonPlayer {
     void tick();
 
     void revive();
+
+    void teleport(@NotNull Location location);
 
     void handleDeath();
 

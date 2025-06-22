@@ -22,6 +22,8 @@ public class DungeonEventHandler implements Writeable {
 
     private DungeonEventType eventType;
 
+    // TODO Add Criteria instead of dirty event-related conditions?
+
     public DungeonEventHandler(@NotNull String id, @NotNull DungeonEventType eventType, @NotNull ConditionList conditionList, @NotNull Map<String, ActionInfo> actionMap) {
         this.id = id;
         this.setEventType(eventType);

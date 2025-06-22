@@ -450,10 +450,9 @@ public class DungeonInstance implements Dungeon {
             kit.applyAttributeModifiers(player);
         }
 
-        player.teleport(this.level.getSpawnLocation(this.world)); // Teleport to current level's spawn.
-        player.setHealth(EntityUtil.getAttribute(player, Attribute.MAX_HEALTH)); // Restore health.
-
+        gamer.teleport(this.level.getSpawnLocation(this.world)); // Teleport to current level's spawn.
         gamer.setState(GameState.INGAME);
+        player.setHealth(EntityUtil.getAttribute(player, Attribute.MAX_HEALTH)); // Restore health.
 
         this.taskProgress.forEach((stageTask, progress) -> progress.onPlayerJoined(gamer)); // Adjust task progress for new players amount.
 
@@ -571,7 +570,7 @@ public class DungeonInstance implements Dungeon {
         }
 
         // Now clear all player's active effects, god modes, etc.
-        player.teleport(this.getLobbyLocation());
+        gamer.teleport(this.getLobbyLocation());
         player.setGameMode(this.getGameMode());
         PlayerSnapshot.clear(player);
         UniParticle.of(Particle.CLOUD).play(player.getLocation(), 0.25, 0.15, 30);
@@ -592,7 +591,7 @@ public class DungeonInstance implements Dungeon {
             }
             if (!confiscate.isEmpty()) {
                 Lang.DUNGEON_CONFISACATE_INFO.getMessage().send(player, replacer -> replacer
-                    .replace(Placeholders.GENERIC_ITEM, confiscate.stream().map(ItemUtil::getSerializedName).collect(Collectors.joining(", ")))
+                    .replace(Placeholders.GENERIC_ITEM, confiscate.stream().map(ItemUtil::getNameSerialized).collect(Collectors.joining(", ")))
                 );
             }
         }
@@ -611,7 +610,7 @@ public class DungeonInstance implements Dungeon {
         if (this.state == GameState.INGAME) {
             gamer.setDead(true);
             player.setGameMode(GameMode.SPECTATOR);
-            player.teleport(this.level.getSpawnLocation(this.world));
+            gamer.teleport(this.level.getSpawnLocation(this.world));
         }
     }
 

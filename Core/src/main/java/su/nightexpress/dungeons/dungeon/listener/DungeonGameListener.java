@@ -190,7 +190,8 @@ public class DungeonGameListener extends AbstractListener<DungeonPlugin> {
         if (fromDungeon == toDungeon) return;
 
         DungeonGamer gamer = this.manager.getDungeonPlayer(player);
-        if (gamer != null && !gamer.getDungeon().isAboutToEnd()) {
+        if (gamer != null && !gamer.isTeleporting() && !gamer.getDungeon().isAboutToEnd() && toDungeon != gamer.getDungeon()) {
+            System.out.println(player.getName() + " tries to escape");
             event.setCancelled(true);
             return;
         }

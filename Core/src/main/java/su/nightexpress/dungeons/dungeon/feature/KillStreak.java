@@ -3,7 +3,6 @@ package su.nightexpress.dungeons.dungeon.feature;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.dungeons.Placeholders;
-import su.nightexpress.dungeons.DungeonsAPI;
 import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
 import su.nightexpress.dungeons.dungeon.player.DungeonGamer;
 import su.nightexpress.nightcore.config.ConfigValue;
@@ -30,7 +29,7 @@ public class KillStreak implements Writeable {
         this.kills = kills;
         this.repeatable = repeatable;
         this.rawMessage = rawMessage;
-        this.message = LangMessage.parse(DungeonsAPI.getPlugin(), rawMessage);
+        this.message = LangMessage.parse(rawMessage, null);
         this.commands = commands;
     }
 

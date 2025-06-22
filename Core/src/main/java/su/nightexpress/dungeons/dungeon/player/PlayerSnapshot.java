@@ -96,7 +96,7 @@ public class PlayerSnapshot {
         World world = Bukkit.getWorld(snapshot.getWorldName());
         if (world == null) world = Bukkit.getWorlds().getFirst();
 
-        player.teleport(snapshot.getBlockPos().toLocation(world));
+        gamer.teleport(snapshot.getBlockPos().toLocation(world));
         player.setFoodLevel(snapshot.getFoodLevel());
         player.setSaturation(snapshot.getSaturation());
         player.setExhaustion(snapshot.getExhaustion());

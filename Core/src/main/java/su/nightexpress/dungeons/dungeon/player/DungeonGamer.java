@@ -49,6 +49,8 @@ public class DungeonGamer implements DungeonPlayer {
     private int     kills;
     private int     score;
 
+    private boolean teleporting;
+
     public DungeonGamer(/*@NotNull DungeonPlugin plugin, */@NotNull Player player, @NotNull DungeonInstance dungeon) {
         //this.plugin = plugin;
         this.player = player;
@@ -102,11 +104,18 @@ public class DungeonGamer implements DungeonPlayer {
     }
 
     @Override
+    public void teleport(@NotNull Location location) {
+        this.teleporting = true;
+        this.player.teleport(location);
+        this.teleporting = false;
+    }
+
+    @Override
     public void revive() {
         if (!this.isDead() || !this.hasExtraLives()) return;
 
         Level level = this.dungeon.getLevel();
-        this.player.teleport(level.getSpawnLocation(this.dungeon.getWorld()));
+        this.teleport(level.getSpawnLocation(this.dungeon.getWorld()));
 
         this.setDead(false);
         this.player.setGameMode(this.dungeon.getGameMode());
@@ -339,5 +348,13 @@ public class DungeonGamer implements DungeonPlayer {
 
     public void addKill() {
         this.kills++;
+    }
+
+    public boolean isTeleporting() {
+        return this.teleporting;
+    }
+
+    public void setTeleporting(boolean teleporting) {
+        this.teleporting = teleporting;
     }
 }
