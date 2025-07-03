@@ -655,7 +655,7 @@ public class DungeonInstance implements Dungeon {
 
             // Set cooldown only if dungeon have been started.
             if (!player.hasPermission(Perms.BYPASS_DUNGEON_COOLDOWN)) {
-                this.plugin.getDungeonManager().setJoinCooldown(player, this);
+                this.plugin.getDungeonManager().setJoinCooldown(player, this, gameResult);
             }
         }
     }
