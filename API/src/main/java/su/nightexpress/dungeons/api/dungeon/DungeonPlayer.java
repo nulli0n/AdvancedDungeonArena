@@ -3,7 +3,11 @@ package su.nightexpress.dungeons.api.dungeon;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import su.nightexpress.dungeons.api.compat.BoardPlugin;
+import su.nightexpress.dungeons.api.compat.GodPlugin;
 import su.nightexpress.dungeons.api.type.GameState;
+
+import java.util.function.Consumer;
 
 public interface DungeonPlayer {
 
@@ -20,6 +24,10 @@ public interface DungeonPlayer {
     void removeBoard();
 
     void updateBoard();
+
+    void manageExternalGod(@NotNull Consumer<GodPlugin> consumer);
+
+    void manageExternalBoard(@NotNull Consumer<BoardPlugin> consumer);
 
     boolean isAlive();
 

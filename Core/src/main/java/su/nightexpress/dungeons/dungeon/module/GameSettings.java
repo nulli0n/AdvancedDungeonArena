@@ -1,8 +1,6 @@
 package su.nightexpress.dungeons.dungeon.module;
 
-import org.bukkit.Material;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.dungeons.Placeholders;
@@ -51,7 +49,7 @@ public class GameSettings implements Writeable {
     private boolean mobsDropLoot;
 
     private Set<String>                         allowedCommands;
-    private Set<Material>                       bannedItems;
+    //private Set<Material>                       bannedItems;
     private Set<CreatureSpawnEvent.SpawnReason> allowedExternalMobSpawns;
 
     private       boolean              kitsEnabled;
@@ -61,7 +59,7 @@ public class GameSettings implements Writeable {
     private boolean mcmmoAllowed;
 
     public GameSettings(@NotNull DungeonConfig dungeonConfig) {
-        this.bannedItems = Lists.newSet(Material.ENDER_PEARL);
+        //this.bannedItems = Lists.newSet(Material.ENDER_PEARL);
         this.allowedExternalMobSpawns = Lists.newSet(CreatureSpawnEvent.SpawnReason.CUSTOM);
         this.allowedCommands = new HashSet<>();
         this.kitsLimits = new HashMap<>();
@@ -119,8 +117,7 @@ public class GameSettings implements Writeable {
         this.setKeepInventoryEnabled(config.getBoolean(path + ".General.KeepInventory.Enabled", this.keepInventoryEnabled));
         this.setKeepInventoryRequiresLives(ConfigValue.create(path + ".General.KeepInventory.LivesRequired", false).read(config));
         this.setAllowedCommands(config.getStringSet(path + ".General.AllowedCommands"));
-        this.bannedItems = new HashSet<>(config.getStringSet(path + ".General.Banned_Items").stream()
-            .map(Material::getMaterial).filter(Objects::nonNull).toList());
+        //this.bannedItems = new HashSet<>(config.getStringSet(path + ".General.Banned_Items").stream().map(Material::getMaterial).filter(Objects::nonNull).toList());
 
         this.setStartAnnouncement(config.getBoolean(path + ".Announcements.OnStart", this.startAnnouncement));
         this.setEndAnnouncement(config.getBoolean(path + ".Announcements.OnEnd", this.endAnnouncement));
@@ -166,7 +163,7 @@ public class GameSettings implements Writeable {
         config.set(path + ".General.KeepInventory.Enabled", this.keepInventoryEnabled);
         config.set(path + ".General.KeepInventory.LivesRequired", this.keepInventoryRequiresLives);
         config.set(path + ".General.AllowedCommands", this.allowedCommands);
-        config.set(path + ".General.Banned_Items", this.bannedItems.stream().map(Material::name).toList());
+        //config.set(path + ".General.Banned_Items", this.bannedItems.stream().map(Material::name).toList());
 
         config.set(path + ".Announcements.OnStart", this.startAnnouncement);
         config.set(path + ".Announcements.OnEnd", this.endAnnouncement);
@@ -201,9 +198,10 @@ public class GameSettings implements Writeable {
         return Config.getDungeonBoard(this.scoreboardLayoutId);
     }
 
+    /*@Deprecated
     public boolean isBannedItem(@NotNull ItemStack item) {
         return this.bannedItems.contains(item.getType());
-    }
+    }*/
 
     public boolean isAllowedCommand(@NotNull String command) {
         if (this.allowedCommands.isEmpty()) return false;
@@ -335,11 +333,6 @@ public class GameSettings implements Writeable {
 
     public void setLeaveOnDeath(boolean leaveOnDeath) {
         this.leaveOnDeath = leaveOnDeath;
-    }
-
-    @NotNull
-    public Set<Material> getBannedItems() {
-        return this.bannedItems;
     }
 
 

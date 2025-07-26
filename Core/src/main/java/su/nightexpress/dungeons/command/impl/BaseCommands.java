@@ -6,6 +6,7 @@ import su.nightexpress.dungeons.DungeonPlugin;
 import su.nightexpress.dungeons.Placeholders;
 import su.nightexpress.dungeons.api.type.GameState;
 import su.nightexpress.dungeons.command.CommandArguments;
+import su.nightexpress.dungeons.command.CommandFlags;
 import su.nightexpress.dungeons.config.Lang;
 import su.nightexpress.dungeons.config.Perms;
 import su.nightexpress.dungeons.dungeon.config.DungeonConfig;
@@ -14,6 +15,7 @@ import su.nightexpress.dungeons.dungeon.level.Level;
 import su.nightexpress.dungeons.dungeon.spot.Spot;
 import su.nightexpress.dungeons.dungeon.spot.SpotState;
 import su.nightexpress.dungeons.dungeon.stage.Stage;
+import su.nightexpress.dungeons.kit.impl.Kit;
 import su.nightexpress.dungeons.selection.SelectionType;
 import su.nightexpress.nightcore.command.experimental.CommandContext;
 import su.nightexpress.nightcore.command.experimental.argument.ArgumentTypes;
@@ -51,8 +53,17 @@ public class BaseCommands {
             .description(Lang.COMMAND_JOIN_DESC)
             .permission(Perms.COMMAND_JOIN)
             .withArgument(CommandArguments.forDungeon(plugin).required())
-            .withArgument(ArgumentTypes.player(CommandArguments.PLAYER).permission(Perms.COMMAND_JOIN_OTHERS))
             .executes((context, arguments) -> joinDungeon(plugin, context, arguments))
+        );
+
+        root.addChildren(DirectNode.builder(plugin, "send")
+            .description(Lang.COMMAND_SEND_DESC)
+            .permission(Perms.COMMAND_SEND)
+            .withArgument(ArgumentTypes.player(CommandArguments.PLAYER).required())
+            .withArgument(CommandArguments.forDungeon(plugin).required())
+            .withArgument(CommandArguments.forKit(plugin))
+            .withFlag(CommandFlags.force())
+            .executes((context, arguments) -> sendToDungeon(plugin, context, arguments))
         );
 
         root.addChildren(DirectNode.builder(plugin, "leave")
@@ -194,7 +205,7 @@ public class BaseCommands {
             spot.build(dungeon.getWorld(), state);
         }
 
-        Lang.DUNGEON_ADMIN_SET_LEVEL.getMessage().send(player, replacer -> replacer
+        Lang.DUNGEON_ADMIN_SET_SPOT.getMessage().send(player, replacer -> replacer
             .replace(config.replacePlaceholders())
             .replace(spot.replacePlaceholders())
             .replace(state.replacePlaceholders())
@@ -216,6 +227,21 @@ public class BaseCommands {
 
         DungeonConfig config = arguments.getArgument(CommandArguments.DUNGEON, DungeonConfig.class);
         plugin.getDungeonManager().prepareForInstance(player, config.getInstance());
+        return true;
+    }
+
+    private static boolean sendToDungeon(@NotNull DungeonPlugin plugin, @NotNull CommandContext context, @NotNull ParsedArguments arguments) {
+        Player player = arguments.getPlayerArgument(CommandArguments.PLAYER);
+        DungeonConfig config = arguments.getArgument(CommandArguments.DUNGEON, DungeonConfig.class);
+        Kit kit = arguments.hasArgument(CommandArguments.KIT) ? arguments.getArgument(CommandArguments.KIT, Kit.class) : null;
+        boolean force = arguments.hasFlag(CommandFlags.FORCE);
+        DungeonInstance instance = config.getInstance();
+
+        boolean result = plugin.getDungeonManager().enterInstance(player, instance, kit, force);
+        (result ? Lang.DUNGEON_SEND_SENT : Lang.DUNGEON_SEND_FAIL).getMessage().send(context.getSender(), replacer -> replacer
+            .replace(instance.replacePlaceholders())
+            .replace(Placeholders.forPlayer(player))
+        );
         return true;
     }
 

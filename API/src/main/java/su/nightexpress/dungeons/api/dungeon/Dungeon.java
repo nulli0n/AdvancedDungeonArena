@@ -23,7 +23,7 @@ public interface Dungeon {
 
     @NotNull GameState getState();
 
-    void handlePlayerJoin(@NotNull DungeonPlayer player);
+    void handlePlayerJoin(@NotNull DungeonPlayer player, boolean forced);
 
     void handlePlayerLeave(@NotNull DungeonPlayer player);
 

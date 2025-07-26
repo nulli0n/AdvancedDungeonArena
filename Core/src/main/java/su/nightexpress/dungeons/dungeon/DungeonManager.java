@@ -38,6 +38,7 @@ import su.nightexpress.dungeons.util.MobUitls;
 import su.nightexpress.nightcore.manager.AbstractManager;
 import su.nightexpress.nightcore.ui.UIUtils;
 import su.nightexpress.nightcore.ui.menu.confirmation.Confirmation;
+import su.nightexpress.nightcore.util.BlockUtil;
 import su.nightexpress.nightcore.util.FileUtil;
 import su.nightexpress.nightcore.util.LocationUtil;
 import su.nightexpress.nightcore.util.TimeUtil;
@@ -154,21 +155,25 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
             UIUtils.openConfirmation(player, Confirmation.builder()
                 .setIcon(dungeon.getConfig().getIcon()
                     .localized(Lang.UI_CONFIRMATION_DUNGEON_ENTER_NO_KITS)
-                    .setHideComponents(true)
+                    .hideAllComponents()
                     .replacement(replacer -> replacer.replace(dungeon.replacePlaceholders())))
-                .onAccept((viewer, event) -> this.enterInstance(player, dungeon, null))
+                .onAccept((viewer, event) -> this.enterInstance(player, dungeon,null))
                 .onReturn((viewer, event) -> plugin.runTask(task -> player.closeInventory()))
                 .build());
         }
     }
 
     public boolean enterInstance(@NotNull Player player, @NotNull DungeonInstance dungeon, @Nullable Kit kit) {
+        return this.enterInstance(player, dungeon, kit, false);
+    }
+
+    public boolean enterInstance(@NotNull Player player, @NotNull DungeonInstance dungeon, @Nullable Kit kit, boolean force) {
         if (this.isPlaying(player)) {
             Lang.DUNGEON_ERROR_MUST_BE_OUT.getMessage().send(player);
             return false;
         }
 
-        if (!dungeon.canJoin(player, true)) {
+        if (!dungeon.canJoin(player, force, true)) {
             return false;
         }
 
@@ -178,26 +183,28 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
                 return false;
             }
 
-            // Double check kit restrictions after selection and confirmation since things can change in meanwhile.
-            if (!kit.hasPermission(player)) {
-                Lang.DUNGEON_ENTER_ERROR_NO_KIT_PERMISSION.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()).replace(dungeon.replacePlaceholders()));
-                return false;
-            }
+            if (!force) {
+                // Double check kit restrictions after selection and confirmation since things can change in meanwhile.
+                if (!kit.hasPermission(player)) {
+                    Lang.DUNGEON_ENTER_ERROR_NO_KIT_PERMISSION.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()).replace(dungeon.replacePlaceholders()));
+                    return false;
+                }
 
-            if (!dungeon.isKitAllowed(kit)) {
-                Lang.DUNGEON_ENTER_ERROR_KIT_NOT_ALLOWED.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()).replace(dungeon.replacePlaceholders()));
-                return false;
-            }
+                if (!dungeon.isKitAllowed(kit)) {
+                    Lang.DUNGEON_ENTER_ERROR_KIT_NOT_ALLOWED.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()).replace(dungeon.replacePlaceholders()));
+                    return false;
+                }
 
-            if (dungeon.isKitLimitReached(kit)) {
-                Lang.DUNGEON_ENTER_ERROR_NO_KIT_SLOTS.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()).replace(dungeon.replacePlaceholders()));
-                return false;
-            }
+                if (dungeon.isKitLimitReached(kit)) {
+                    Lang.DUNGEON_ENTER_ERROR_NO_KIT_SLOTS.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()).replace(dungeon.replacePlaceholders()));
+                    return false;
+                }
 
-            // Check if player can pay for kit rent.
-            if (KitUtils.isRentMode() && !kit.canAfford(player)) {
-                Lang.KIT_BUY_ERROR_INSUFFICIENT_FUNDS.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()));
-                return false;
+                // Check if player can pay for kit rent.
+                if (KitUtils.isRentMode() && !kit.canAfford(player)) {
+                    Lang.KIT_BUY_ERROR_INSUFFICIENT_FUNDS.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()));
+                    return false;
+                }
             }
         }
 
@@ -215,7 +222,7 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
         }
 
         this.playerByIdMap.put(player.getUniqueId(), gamer);
-        dungeon.handlePlayerJoin(gamer);
+        dungeon.handlePlayerJoin(gamer, force);
 
         // Call joined event after everything.
         DungeonJoinedEvent joinedEvent = new DungeonJoinedEvent(dungeon, gamer);
@@ -250,7 +257,7 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
     }
 
     public void setJoinCooldown(@NotNull Player player, @NotNull DungeonInstance dungeon) {
-        int cooldown = dungeon.getConfig().features().getEntranceCooldown().getSmallest(player);
+        int cooldown = dungeon.getConfig().features().getEntranceCooldown().getSmallest(player).intValue();
         if (cooldown == 0) return;
 
         DungeonUser user = this.plugin.getUserManager().getOrFetch(player);
@@ -508,7 +515,7 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
             if (blockType == Material.CAMPFIRE || blockType == Material.DECORATED_POT) {
                 return false;
             }
-            if (blockType.isInteractable()) {
+            if (BlockUtil.isFunctional(blockType)) {
                 return true;
             }
         }

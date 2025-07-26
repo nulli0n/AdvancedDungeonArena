@@ -27,6 +27,9 @@ import su.nightexpress.dungeons.mob.variant.MobVariantRegistry;
 import su.nightexpress.dungeons.nms.DungeonNMS;
 import su.nightexpress.dungeons.nms.mc_1_21_3.MC_1_21_3;
 import su.nightexpress.dungeons.nms.mc_1_21_5.MC_1_21_5;
+import su.nightexpress.dungeons.nms.mc_1_21_8.MC_1_21_8;
+import su.nightexpress.dungeons.registry.compat.GodPluginRegistry;
+import su.nightexpress.dungeons.registry.compat.BoardPluginRegistry;
 import su.nightexpress.dungeons.registry.level.LevelRegistry;
 import su.nightexpress.dungeons.registry.mob.MobRegistry;
 import su.nightexpress.dungeons.registry.pet.PetRegistry;
@@ -122,6 +125,8 @@ public class DungeonPlugin extends NightPlugin implements ImprovedCommands {
         DungeonEntityBridge.clear();
         MobVariantRegistry.clear();
         CriteriaRegistry.clear();
+        GodPluginRegistry.clear();
+        BoardPluginRegistry.clear();
         Keys.clear();
         DungeonsAPI.clear();
     }
@@ -130,6 +135,7 @@ public class DungeonPlugin extends NightPlugin implements ImprovedCommands {
         this.internals = switch (Version.getCurrent()) {
             case MC_1_21_4 -> new MC_1_21_3();
             case MC_1_21_5 -> new MC_1_21_5();
+            case MC_1_21_8 -> new MC_1_21_8();
             default -> null;
         };
 
@@ -145,6 +151,8 @@ public class DungeonPlugin extends NightPlugin implements ImprovedCommands {
     private void loadEngine() {
         DungeonsAPI.load(this);
         Keys.load(this);
+        GodPluginRegistry.load(this);
+        BoardPluginRegistry.load(this);
         CriteriaRegistry.load(this);
         MobRegistry.load(this);
         LevelRegistry.load(this);

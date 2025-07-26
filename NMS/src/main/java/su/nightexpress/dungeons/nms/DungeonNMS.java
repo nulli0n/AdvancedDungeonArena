@@ -24,7 +24,7 @@ public interface DungeonNMS {
 
     @Nullable EntityType getSpawnEggType(@NotNull ItemStack itemStack);
 
-    void setBlockStateFromTag(@NotNull Block block, @NotNull Object compoundTag);
+    //void setBlockStateFromTag(@NotNull Block block, @NotNull Object compoundTag);
 
     void setSchemaBlock(@NotNull World world, @NotNull SchemaBlock schemaBlock);
 

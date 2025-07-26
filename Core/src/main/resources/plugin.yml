@@ -10,8 +10,6 @@ softdepend:
   - BossMania
   - mcMMO
   - PlaceholderAPI
-  - SunLight
-  - Essentials
   - MCPets
   - AdvancedPets
   - CombatPets

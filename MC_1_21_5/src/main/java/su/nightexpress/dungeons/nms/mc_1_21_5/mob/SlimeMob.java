@@ -33,6 +33,7 @@ public class SlimeMob extends Slime implements DungeonHolder {
 
     @Override
     public void push(Entity pusher) {
+        if (!this.isValidDungeon()) return;
         if (pusher.getBukkitEntity() instanceof org.bukkit.entity.LivingEntity bukkitMob && this.getFaction() != this.getDungeon().getMobFaction(bukkitMob)) {
             this.dealDamage((LivingEntity) pusher);
         }
@@ -42,7 +43,7 @@ public class SlimeMob extends Slime implements DungeonHolder {
 
     @Override
     public void playerTouch(Player player) {
-        if (this.getFaction() == MobFaction.ALLY) return;
+        if (this.isValidDungeon() && this.getFaction() == MobFaction.ALLY) return;
 
         super.playerTouch(player);
     }

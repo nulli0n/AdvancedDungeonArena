@@ -4,15 +4,28 @@ import com.earth2me.essentials.Essentials;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import su.nightexpress.dungeons.api.compat.GodPlugin;
 import su.nightexpress.dungeons.hook.HookId;
 
-public class EssentialsHook {
+public class EssentialsHook implements GodPlugin {
 
-    private static final Essentials ESSENTIALS = (Essentials) Bukkit.getPluginManager().getPlugin(HookId.ESSENTIALS);
+    private final Essentials essentials;
 
-    public static void disableGod(@NotNull Player player) {
-        if (ESSENTIALS != null) {
-            ESSENTIALS.getUser(player).setGodModeEnabled(false);
-        }
+    public EssentialsHook() {
+        this.essentials = (Essentials) Bukkit.getPluginManager().getPlugin(HookId.ESSENTIALS);
+    }
+
+    @Override
+    public boolean isGodEnabled(@NotNull Player player) {
+        return this.essentials.getUser(player).isGodModeEnabled();
+    }
+
+    public void disableGod(@NotNull Player player) {
+        this.essentials.getUser(player).setGodModeEnabled(false);
+    }
+
+    @Override
+    public void enableGod(@NotNull Player player) {
+        this.essentials.getUser(player).setGodModeEnabled(true);
     }
 }

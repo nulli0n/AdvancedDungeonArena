@@ -109,9 +109,9 @@ public class DungeonBrowseMenu extends NormalMenu<DungeonPlugin> implements Fill
         boolean onCooldown = user.isOnCooldown(dungeon);
 
         return config.getIcon()
-            .setHideComponents(true)
+            .hideAllComponents()
             .setDisplayName(this.dungeonName)
-            .setLore(dungeon.canJoin(player, false) ? this.dungeonUnlockedInfo : (onCooldown ? this.dungeonCooldownInfo : this.dungeonLockedInfo))
+            .setLore(dungeon.canJoin(player, false, false) ? this.dungeonUnlockedInfo : (onCooldown ? this.dungeonCooldownInfo : this.dungeonLockedInfo))
             .replacement(replacer -> replacer
                 .replace(dungeon.replacePlaceholders())
                 .replace(COOLDOWN, () -> {
@@ -120,7 +120,7 @@ public class DungeonBrowseMenu extends NormalMenu<DungeonPlugin> implements Fill
                     }
 
                     Features features = config.features();
-                    int cooldown = features.getEntranceCooldown().getSmallest(player);
+                    int cooldown = features.getEntranceCooldown().getSmallest(player).intValue();
                     if (cooldown == 0L) return Lang.OTHER_NONE.getString();
 
                     return TimeFormats.formatAmount(cooldown * 1000L, TimeFormatType.LITERAL);

@@ -12,12 +12,8 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.dungeons.api.dungeon.DungeonPlayer;
 import su.nightexpress.dungeons.config.Config;
 import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
-import su.nightexpress.dungeons.hook.HookId;
-import su.nightexpress.dungeons.hook.impl.EssentialsHook;
-import su.nightexpress.dungeons.hook.impl.SunLightHook;
 import su.nightexpress.nightcore.util.EntityUtil;
 import su.nightexpress.nightcore.util.Players;
-import su.nightexpress.nightcore.util.Plugins;
 import su.nightexpress.nightcore.util.geodata.pos.ExactPos;
 
 import java.util.*;
@@ -78,12 +74,6 @@ public class PlayerSnapshot {
         player.setFireTicks(0);
         player.leaveVehicle();
         player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
-        if (Plugins.isLoaded(HookId.ESSENTIALS)) {
-            EssentialsHook.disableGod(player);
-        }
-        if (Plugins.isLoaded(HookId.SUNLIGHT)) {
-            SunLightHook.disableGod(player);
-        }
     }
 
     public static void restore(@NotNull DungeonPlayer gamer) {

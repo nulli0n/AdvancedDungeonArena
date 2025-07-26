@@ -38,7 +38,7 @@ public class Perms {
     public static final UniPermission COMMAND_START          = new UniPermission(PREFIX + "command.start");
 
     public static final UniPermission COMMAND_JOIN          = new UniPermission(PREFIX + "command.join");
-    public static final UniPermission COMMAND_JOIN_OTHERS   = new UniPermission(PREFIX + "command.join.others");
+    public static final UniPermission COMMAND_SEND          = new UniPermission(PREFIX + "command.send");
     public static final UniPermission COMMAND_LEAVE         = new UniPermission(PREFIX + "command.leave");
     public static final UniPermission COMMAND_BROWSE        = new UniPermission(PREFIX + "command.browse");
     public static final UniPermission COMMAND_BROWSE_OTHERS = new UniPermission(PREFIX + "command.browse.others");
@@ -82,7 +82,7 @@ public class Perms {
             COMMAND_STOP,
             COMMAND_START,
             COMMAND_JOIN,
-            COMMAND_JOIN_OTHERS,
+            COMMAND_SEND,
             COMMAND_LEAVE,
             COMMAND_BROWSE,
             COMMAND_BROWSE_OTHERS

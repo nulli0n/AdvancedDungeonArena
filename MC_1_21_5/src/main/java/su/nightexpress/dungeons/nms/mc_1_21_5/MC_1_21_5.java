@@ -18,10 +18,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.TileState;
 import org.bukkit.craftbukkit.v1_21_R4.CraftRegistry;
 import org.bukkit.craftbukkit.v1_21_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_21_R4.block.CraftBlockEntityState;
+import org.bukkit.craftbukkit.v1_21_R4.block.CraftBlock;
 import org.bukkit.craftbukkit.v1_21_R4.block.CraftBlockState;
 import org.bukkit.craftbukkit.v1_21_R4.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.v1_21_R4.entity.CraftEntityType;
@@ -163,21 +162,26 @@ public class MC_1_21_5 implements DungeonNMS {
         instance.setBaseValue(value);
     }
 
-    public void setBlockStateFromTag(@NotNull Block block, @Nullable Object compoundTag) {
-        if (!(compoundTag instanceof CompoundTag tag)) return;
-        if (!(block.getState() instanceof TileState tileState)) return;
-
-        CraftBlockEntityState<?> entityState = (CraftBlockEntityState<?>) tileState;
-
-        entityState.loadData(tag);
-        entityState.update(true, false);
-    }
-
+    @Override
     public void setSchemaBlock(@NotNull World world, @NotNull SchemaBlock schemaBlock) {
-        Block block = schemaBlock.getBlockPos().toLocation(world).getBlock();
-        block.setBlockData(schemaBlock.getBlockData());
+        ServerLevel level = ((CraftWorld)world).getHandle();
 
-        this.setBlockStateFromTag(block, schemaBlock.getNbt());
+        CraftBlock craftBlock = (CraftBlock) schemaBlock.getBlockPos().toLocation(world).getBlock();
+        craftBlock.setBlockData(schemaBlock.getBlockData());
+
+        if (schemaBlock.getNbt() instanceof CompoundTag tag) {
+            BlockPos blockPos = craftBlock.getPosition();
+            BlockEntity blockEntity = level.getBlockEntity(blockPos);
+            if (blockEntity == null) return;
+
+            //entityState.loadData(tag);
+            //entityState.update(true, false);
+
+            // Load NBT data directly to NMS block.
+            // CraftBlockEntityState#load wipes out some data, for example CraftSign overrides #load() and wipes out sign text.
+            blockEntity.loadWithComponents(tag, level.registryAccess());
+            blockEntity.setChanged();
+        }
     }
 
     @NotNull

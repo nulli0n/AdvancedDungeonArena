@@ -22,4 +22,8 @@ public interface DungeonHolder {
     default DungeonEntity getEntity() {
         return DungeonEntityBridge.getByMobId(this.getUUID());
     }
+
+    default boolean isValidDungeon() {
+        return DungeonEntityBridge.getByMobId(this.getUUID()) != null;
+    }
 }

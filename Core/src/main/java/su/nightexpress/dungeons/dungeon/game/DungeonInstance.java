@@ -29,6 +29,8 @@ import su.nightexpress.dungeons.dungeon.event.normal.DungeonEndEvent;
 import su.nightexpress.dungeons.dungeon.event.normal.DungeonStartedEvent;
 import su.nightexpress.dungeons.dungeon.feature.KillStreak;
 import su.nightexpress.dungeons.dungeon.feature.LevelRequirement;
+import su.nightexpress.dungeons.dungeon.feature.itemfilter.ItemFilterCriteria;
+import su.nightexpress.dungeons.dungeon.feature.itemfilter.ItemFilterMode;
 import su.nightexpress.dungeons.dungeon.level.Level;
 import su.nightexpress.dungeons.dungeon.lootchest.LootChest;
 import su.nightexpress.dungeons.dungeon.mob.DungeonMob;
@@ -135,6 +137,7 @@ public class DungeonInstance implements Dungeon {
         this.mobByIdMap.clear();
         this.tickCount = 0L;
         this.countdown = this.config.gameSettings().getLobbyTime();
+        this.setTimeLeft(0L);
 
         this.level = null;
         this.stage = null;
@@ -450,7 +453,7 @@ public class DungeonInstance implements Dungeon {
             kit.applyAttributeModifiers(player);
         }
 
-        gamer.teleport(this.level.getSpawnLocation(this.world)); // Teleport to current level's spawn.
+        gamer.teleport(this.getSpawnLocation()); // Teleport to current level's spawn.
         gamer.setState(GameState.INGAME);
         player.setHealth(EntityUtil.getAttribute(player, Attribute.MAX_HEALTH)); // Restore health.
 
@@ -498,25 +501,35 @@ public class DungeonInstance implements Dungeon {
         });
     }
 
-    public boolean canJoin(@NotNull Player player, boolean notify) {
+    public void confiscateBadItems(@NotNull Player player, @NotNull List<ItemStack> confiscate) {
+        ItemFilterMode mode = this.config.features().getItemFilterMode();
+        if (mode == ItemFilterMode.NONE) return;
+
+        ItemFilterCriteria criteria = this.config.features().getItemFilterCriteria();
+
+        for (ItemStack itemStack : player.getInventory().getContents()) {
+            if (itemStack == null) continue;
+
+            boolean matched = criteria.matches(itemStack);
+            boolean needConfiscated = (mode == ItemFilterMode.BAN_SPECIFIC && matched) || (mode == ItemFilterMode.ALLOW_SPECIFIC && !matched);
+
+            if (needConfiscated) {
+                confiscate.add(new ItemStack(itemStack));
+                itemStack.setAmount(0);
+            }
+        }
+
+        if (!confiscate.isEmpty()) {
+            this.getPrefixed(Lang.DUNGEON_CONFISACATE_INFO).send(player, replacer -> replacer
+                .replace(Placeholders.GENERIC_ITEM, confiscate.stream().map(ItemUtil::getNameSerialized).collect(Collectors.joining(", ")))
+            );
+        }
+    }
+
+    public boolean canJoin(@NotNull Player player, boolean force, boolean notify) {
         if (!this.isActive()) {
             if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_INACTIVE, replacer -> replacer.replace(this.replacePlaceholders()));
             return false;
-        }
-
-        if (this.config.features().isPermissionRequired() && !this.hasPermission(player)) {
-            if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_PERMISSION, replacer -> replacer.replace(this.replacePlaceholders()));
-            return false;
-        }
-
-        if (!player.hasPermission(Perms.BYPASS_DUNGEON_COOLDOWN)) {
-            DungeonUser user = this.plugin.getUserManager().getOrFetch(player);
-            if (user.isOnCooldown(this)) {
-                if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_COOLDOWN, replacer -> replacer
-                    .replace(Placeholders.GENERIC_TIME, TimeFormats.formatDuration(user.getArenaCooldown(this), TimeFormatType.LITERAL))
-                    .replace(this.replacePlaceholders()));
-                return false;
-            }
         }
 
         if (this.isAboutToEnd()) {
@@ -524,28 +537,45 @@ public class DungeonInstance implements Dungeon {
             return false;
         }
 
-        if (this.state == GameState.INGAME && !player.hasPermission(Perms.BYPASS_DUNGEON_JOIN_STARTED)) {
-            if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_STARTED, replacer -> replacer.replace(this.replacePlaceholders()));
-            return false;
-        }
-
-        int playerMax = this.config.gameSettings().getMaxPlayers();
-        if (playerMax > 0 && this.countPlayers() >= playerMax) {
-            if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_MAX_PLAYERS, replacer -> replacer.replace(this.replacePlaceholders()));
-            return false;
-        }
-
-        if (!player.hasPermission(Perms.BYPASS_DUNGEON_ENTRANCE_COST)) {
-            if (!this.canAffordEntrance(player)) {
-                if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_COST, replacer -> replacer.replace(this.replacePlaceholders()));
+        if (!force) {
+            if (this.config.features().isPermissionRequired() && !this.hasPermission(player)) {
+                if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_PERMISSION, replacer -> replacer.replace(this.replacePlaceholders()));
                 return false;
             }
-        }
 
-        if (!player.hasPermission(Perms.BYPASS_DUNGEON_ENTRANCE_LEVEL)) {
-            if (!this.hasGoodLevel(player)) {
-                if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_LEVEL, replacer -> replacer.replace(this.replacePlaceholders()));
+            if (!player.hasPermission(Perms.BYPASS_DUNGEON_COOLDOWN)) {
+                DungeonUser user = this.plugin.getUserManager().getOrFetch(player);
+                if (user.isOnCooldown(this)) {
+                    if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_COOLDOWN, replacer -> replacer
+                        .replace(Placeholders.GENERIC_TIME, TimeFormats.formatDuration(user.getArenaCooldown(this), TimeFormatType.LITERAL))
+                        .replace(this.replacePlaceholders()));
+                    return false;
+                }
+            }
+
+            if (this.state == GameState.INGAME && !player.hasPermission(Perms.BYPASS_DUNGEON_JOIN_STARTED)) {
+                if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_STARTED, replacer -> replacer.replace(this.replacePlaceholders()));
                 return false;
+            }
+
+            int playerMax = this.config.gameSettings().getMaxPlayers();
+            if (playerMax > 0 && this.countPlayers() >= playerMax) {
+                if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_MAX_PLAYERS, replacer -> replacer.replace(this.replacePlaceholders()));
+                return false;
+            }
+
+            if (!player.hasPermission(Perms.BYPASS_DUNGEON_ENTRANCE_COST)) {
+                if (!this.canAffordEntrance(player)) {
+                    if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_COST, replacer -> replacer.replace(this.replacePlaceholders()));
+                    return false;
+                }
+            }
+
+            if (!player.hasPermission(Perms.BYPASS_DUNGEON_ENTRANCE_LEVEL)) {
+                if (!this.hasGoodLevel(player)) {
+                    if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_LEVEL, replacer -> replacer.replace(this.replacePlaceholders()));
+                    return false;
+                }
             }
         }
 
@@ -553,7 +583,7 @@ public class DungeonInstance implements Dungeon {
     }
 
     @Override
-    public void handlePlayerJoin(@NotNull DungeonPlayer dungeonPlayer) {
+    public void handlePlayerJoin(@NotNull DungeonPlayer dungeonPlayer, boolean forced) {
         Player player = dungeonPlayer.getPlayer();
         DungeonGamer gamer = (DungeonGamer) dungeonPlayer;
         Kit kit = gamer.getKit();
@@ -561,18 +591,21 @@ public class DungeonInstance implements Dungeon {
         // Save the player inventory, effects, game modes, etc. before teleporting to the arena.
         PlayerSnapshot snapshot = PlayerSnapshot.doSnapshot(player);
 
-        // Pay for the entrance (and kit) before cleaning.
-        if (!player.hasPermission(Perms.BYPASS_DUNGEON_ENTRANCE_COST)) {
-            this.payEntrance(player);
-        }
-        if (kit != null && KitUtils.isRentMode() && kit.hasCost() && !player.hasPermission(Perms.BYPASS_KIT_COST)) {
-            kit.takeCosts(player);
+        if (!forced) {
+            // Pay for the entrance (and kit) before cleaning.
+            if (!player.hasPermission(Perms.BYPASS_DUNGEON_ENTRANCE_COST)) {
+                this.payEntrance(player);
+            }
+            if (kit != null && KitUtils.isRentMode() && kit.hasCost() && !player.hasPermission(Perms.BYPASS_KIT_COST)) {
+                kit.takeCosts(player);
+            }
         }
 
         // Now clear all player's active effects, god modes, etc.
         gamer.teleport(this.getLobbyLocation());
         player.setGameMode(this.getGameMode());
         PlayerSnapshot.clear(player);
+        Players.dispatchCommands(player, this.config.features().getEntranceCommands());
         UniParticle.of(Particle.CLOUD).play(player.getLocation(), 0.25, 0.15, 30);
 
         if (this.isKitsMode() && kit != null) {
@@ -580,26 +613,17 @@ public class DungeonInstance implements Dungeon {
             kit.give(player);
         }
         else {
-            List<ItemStack> confiscate = snapshot.getConfiscate();
-
-            for (ItemStack item : player.getInventory().getContents()) {
-                if (item == null || item.getType().isAir()) continue;
-                if (this.config.gameSettings().isBannedItem(item)) {
-                    confiscate.add(new ItemStack(item));
-                    item.setAmount(0);
-                }
-            }
-            if (!confiscate.isEmpty()) {
-                Lang.DUNGEON_CONFISACATE_INFO.getMessage().send(player, replacer -> replacer
-                    .replace(Placeholders.GENERIC_ITEM, confiscate.stream().map(ItemUtil::getNameSerialized).collect(Collectors.joining(", ")))
-                );
-            }
+            this.confiscateBadItems(player, snapshot.getConfiscate()); // TODO Permission?
         }
 
         this.sendMessage(player, Lang.DUNGEON_JOIN_LOBBY, replacer -> replacer.replace(this.replacePlaceholders()));
         this.broadcast(Lang.DUNGEON_JOIN_NOTIFY, replacer -> replacer.replace(this.replacePlaceholders()).replace(gamer.replacePlaceholders()));
 
         this.players.put(player.getUniqueId(), gamer);
+
+        // Disable external Scoreboard and God mode.
+        gamer.manageExternalBoard(boardPlugin -> boardPlugin.disableBoard(player));
+        gamer.manageExternalGod(godPlugin -> godPlugin.disableGod(player));
 
         if (this.config.gameSettings().isScoreboardEnabled() && DungeonUtils.hasPacketLibrary()) {
             gamer.addBoard();
@@ -610,7 +634,7 @@ public class DungeonInstance implements Dungeon {
         if (this.state == GameState.INGAME) {
             gamer.setDead(true);
             player.setGameMode(GameMode.SPECTATOR);
-            gamer.teleport(this.level.getSpawnLocation(this.world));
+            gamer.teleport(this.getSpawnLocation());
         }
     }
 
@@ -640,6 +664,7 @@ public class DungeonInstance implements Dungeon {
 
         // Restore player data.
         PlayerSnapshot.restore(gamer);
+        Players.dispatchCommands(player, this.config.features().getExitCommands());
 
         // Refund payments.
         if (this.state != GameState.INGAME) {
@@ -658,6 +683,10 @@ public class DungeonInstance implements Dungeon {
                 this.plugin.getDungeonManager().setJoinCooldown(player, this);
             }
         }
+
+        // Enable back external Scoreboard and God mode.
+        gamer.manageExternalBoard(boardPlugin -> boardPlugin.enableBoard(player));
+        gamer.manageExternalGod(godPlugin -> godPlugin.enableGod(player));
     }
 
     public void handlePlayerDeath(@NotNull DungeonGamer gamer) {
@@ -1258,6 +1287,15 @@ public class DungeonInstance implements Dungeon {
     @NotNull
     public Location getLobbyLocation() {
         return this.config.getLobbyPos().toLocation(this.world);
+    }
+
+    /**
+     *
+     * @return Spawn location of the current dungeon level.
+     */
+    @NotNull
+    public Location getSpawnLocation() {
+        return this.level.getSpawnLocation(this.world);
     }
 
     public int getCountdown() {

@@ -32,6 +32,8 @@
 - **Dungeon Chat**. Dedicated chat room for dungeon players!
 - [**Dungeon Cooldown**](https://nightexpressdev.com/dungeon-arena/dungeons/features/entrance-cooldown/). Apply dungeon cooldown based on player's rank or permissions!
 - [**Entrance Cost**](https://nightexpressdev.com/dungeon-arena/dungeons/features/entrance-cost/). Set dungeon entrance cost with support of various currency plugins!
+- - [**Leave & Enter Commands**](https://nightexpressdev.com/dungeon-arena/dungeons/features/leave-enter-commands/). Run custom commands when players leaves and enters dungeons!
+- [**Inventory Filter**](https://nightexpressdev.com/dungeon-arena/dungeons/features/inventory-filter/). Restrict which items are allowed to use in dungeons!
 - [**Level Requiremets**](https://nightexpressdev.com/dungeon-arena/dungeons/features/level-requirement/). Set player level requirements to enter a dungeon!
 - [**Player Lives**](https://nightexpressdev.com/dungeon-arena/dungeons/setup/dungeon-settings/#player-lives). Set how many times players can be revived in a dungeon!
 - [**Item Sharing**](https://nightexpressdev.com/dungeon-arena/dungeons/setup/dungeon-settings/#item-drop-pickup). Toggle item drop/pickup in a dungeon!

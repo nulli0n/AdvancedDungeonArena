@@ -1,31 +1,32 @@
 package su.nightexpress.dungeons.dungeon.player;
 
-import org.bukkit.EntityEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.dungeons.Placeholders;
+import su.nightexpress.dungeons.api.compat.BoardPlugin;
+import su.nightexpress.dungeons.api.compat.GodPlugin;
 import su.nightexpress.dungeons.api.dungeon.Board;
 import su.nightexpress.dungeons.api.dungeon.DungeonPlayer;
 import su.nightexpress.dungeons.api.type.GameState;
-import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
+import su.nightexpress.dungeons.config.Lang;
 import su.nightexpress.dungeons.dungeon.feature.board.BoardLayout;
 import su.nightexpress.dungeons.dungeon.feature.board.impl.PacketsBoard;
 import su.nightexpress.dungeons.dungeon.feature.board.impl.ProtocolBoard;
+import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
 import su.nightexpress.dungeons.dungeon.level.Level;
 import su.nightexpress.dungeons.dungeon.reward.GameReward;
-import su.nightexpress.dungeons.config.Lang;
-import su.nightexpress.dungeons.hook.HookId;
-import su.nightexpress.dungeons.hook.impl.SunLightHook;
 import su.nightexpress.dungeons.kit.impl.Kit;
+import su.nightexpress.dungeons.registry.compat.BoardPluginRegistry;
+import su.nightexpress.dungeons.registry.compat.GodPluginRegistry;
 import su.nightexpress.dungeons.util.DungeonUtils;
 import su.nightexpress.nightcore.language.entry.LangText;
-import su.nightexpress.nightcore.util.Plugins;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 public class DungeonGamer implements DungeonPlayer {
@@ -34,6 +35,9 @@ public class DungeonGamer implements DungeonPlayer {
     private final Player           player;
     private final DungeonInstance  dungeon;
     private final List<GameReward> rewards;
+
+    private final GodPlugin   godPlugin;
+    private final BoardPlugin boardPlugin;
 
     private GameState state;
     private Board board;
@@ -51,8 +55,7 @@ public class DungeonGamer implements DungeonPlayer {
 
     private boolean teleporting;
 
-    public DungeonGamer(/*@NotNull DungeonPlugin plugin, */@NotNull Player player, @NotNull DungeonInstance dungeon) {
-        //this.plugin = plugin;
+    public DungeonGamer(@NotNull Player player, @NotNull DungeonInstance dungeon) {
         this.player = player;
         this.dungeon = dungeon;
         this.state = GameState.WAITING;
@@ -60,6 +63,9 @@ public class DungeonGamer implements DungeonPlayer {
         this.setDead(false);
         this.deathTime = -1L;
         this.setLives(dungeon.getConfig().gameSettings().getPlayerLives());
+
+        this.godPlugin = GodPluginRegistry.getGodProvider(player);
+        this.boardPlugin = BoardPluginRegistry.getBoardProvider(player);
     }
 
     @NotNull
@@ -124,7 +130,7 @@ public class DungeonGamer implements DungeonPlayer {
             this.kit.applyPotionEffects(this.player);
             this.kit.applyAttributeModifiers(this.player);
         }
-        this.player.playEffect(EntityEffect.TOTEM_RESURRECT);
+        //this.player.playEffect(EntityEffect.TOTEM_RESURRECT);
 
         LangText lang = this.hasExtraLives() ? Lang.DUNGEON_REVIVE_WITH_LIFES : Lang.DUNGEON_REVIVE_NO_LIFES;
         this.dungeon.sendMessage(this.player, lang, replacer -> replacer.replace(this.replacePlaceholders()));
@@ -132,7 +138,12 @@ public class DungeonGamer implements DungeonPlayer {
 
     @Override
     public void handleDeath() {
-        this.setDeathLocation(this.player.getLocation());
+        Location location = this.player.getLocation();
+        if (!this.dungeon.contains(location)) {
+            location = this.dungeon.getSpawnLocation();
+        }
+
+        this.setDeathLocation(location);
         this.setDead(true);
         this.deathTime = System.currentTimeMillis();
         this.takeExtraLive();
@@ -168,13 +179,23 @@ public class DungeonGamer implements DungeonPlayer {
     }
 
     @Override
+    public void manageExternalGod(@NotNull Consumer<GodPlugin> consumer) {
+        if (this.godPlugin != null) {
+            consumer.accept(this.godPlugin);
+        }
+    }
+
+    @Override
+    public void manageExternalBoard(@NotNull Consumer<BoardPlugin> consumer) {
+        if (this.boardPlugin != null) {
+            consumer.accept(this.boardPlugin);
+        }
+    }
+
+    @Override
     public void addBoard() {
         BoardLayout layout = this.dungeon.getConfig().gameSettings().getBoardLayout();
         if (layout == null) return;
-
-        if (Plugins.isLoaded(HookId.SUNLIGHT)) {
-            SunLightHook.disableBoard(this.player);
-        }
 
         if (DungeonUtils.hasPacketEvents()) {
             this.board = new PacketsBoard(this, layout);

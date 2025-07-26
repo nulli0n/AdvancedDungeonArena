@@ -47,15 +47,14 @@ public class BlockPacketsHighlighter extends BlockHighlighter {
         EntityType type = EntityType.BLOCK_DISPLAY;
         UUID uuid = UUID.randomUUID();
         String entityUID = uuid.toString();
-        //StateType stateType = this.stateTypeMap.computeIfAbsent(material,  k -> StateTypes.getByName(BukkitThing.toString(material)));
-        WrappedBlockState state = WrappedBlockState.getByString(blockData.getAsString());//WrappedBlockState.getDefaultState(stateType);
+        WrappedBlockState state = WrappedBlockState.getByString(blockData.getAsString());
 
         var spawnPacket = this.createSpawnPacket(type, location, entityID, uuid);
 
         var dataPacket = this.createMetadataPacket(entityID, dataList -> {
-            dataList.add(new EntityData(0, EntityDataTypes.BYTE, (byte) (0x20 | 0x40))); // glow
-            dataList.add(new EntityData(12, EntityDataTypes.VECTOR3F, new Vector3f(size, size, size))); // scale
-            dataList.add(new EntityData(23, EntityDataTypes.BLOCK_STATE, state.getGlobalId())); // block ID
+            dataList.add(new EntityData<>(0, EntityDataTypes.BYTE, (byte) (0x20 | 0x40))); // glow
+            dataList.add(new EntityData<>(12, EntityDataTypes.VECTOR3F, new Vector3f(size, size, size))); // scale
+            dataList.add(new EntityData<>(23, EntityDataTypes.BLOCK_STATE, state.getGlobalId())); // block ID
         });
 
         ScoreBoardTeamInfo info = new ScoreBoardTeamInfo(
@@ -98,8 +97,8 @@ public class BlockPacketsHighlighter extends BlockHighlighter {
     }
 
     @NotNull
-    private PacketWrapper<?> createMetadataPacket(int entityID, @NotNull Consumer<List<EntityData>> consumer) {
-        List<EntityData> dataList = new ArrayList<>();
+    private PacketWrapper<?> createMetadataPacket(int entityID, @NotNull Consumer<List<EntityData<?>>> consumer) {
+        List<EntityData<?>> dataList = new ArrayList<>();
 
         consumer.accept(dataList);
 

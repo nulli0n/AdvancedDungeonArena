@@ -32,7 +32,6 @@ import su.nightexpress.nightcore.util.CommandUtil;
 import su.nightexpress.nightcore.util.Lists;
 import su.nightexpress.nightcore.util.placeholder.Replacer;
 
-@SuppressWarnings("UnstableApiUsage")
 public class DungeonGameListener extends AbstractListener<DungeonPlugin> {
 
     private final DungeonManager manager;

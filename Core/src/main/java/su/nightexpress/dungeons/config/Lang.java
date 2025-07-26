@@ -1,6 +1,5 @@
 package su.nightexpress.dungeons.config;
 
-import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import su.nightexpress.dungeons.api.type.GameState;
@@ -8,6 +7,7 @@ import su.nightexpress.dungeons.selection.SelectionType;
 import su.nightexpress.nightcore.core.CoreLang;
 import su.nightexpress.nightcore.language.entry.*;
 import su.nightexpress.nightcore.language.message.OutputType;
+import su.nightexpress.nightcore.util.bridge.RegistryType;
 
 import static su.nightexpress.dungeons.Placeholders.*;
 import static su.nightexpress.nightcore.language.tag.MessageTags.OUTPUT;
@@ -17,7 +17,7 @@ import static su.nightexpress.nightcore.util.text.tag.Tags.*;
 
 public class Lang extends CoreLang {
 
-    public static final LangKeyed<Attribute> ATTRIBUTE = LangKeyed.of("Attribute", Registry.ATTRIBUTE);
+    public static final LangRegistry<Attribute> ATTRIBUTE = LangRegistry.of("Attribute", RegistryType.ATTRIBUTE);
     public static final LangEnum<GameState> GAME_STATE = LangEnum.of("GameState", GameState.class);
 
     public static final LangString COMMAND_ARGUMENT_NAME_DUNGEON    = LangString.of("Command.Argument.Name.Dungeon", "dungeon");
@@ -33,6 +33,7 @@ public class Lang extends CoreLang {
     public static final LangString COMMAND_BROWSE_DESC = LangString.of("Command.Browse.Desc", "Browse the dungeons.");
     public static final LangString COMMAND_JOIN_DESC   = LangString.of("Command.Join.Desc", "Enter the dungeon.");
     public static final LangString COMMAND_LEAVE_DESC  = LangString.of("Command.Leave.Desc", "Leave the dungeon.");
+    public static final LangString COMMAND_SEND_DESC   = LangString.of("Command.Send.Send", "Send player to the dungeon.");
     public static final LangString COMMAND_WAND_DESC   = LangString.of("Command.Wand.Desc", "Get selection tool.");
     public static final LangString COMMAND_CREATE_DESC = LangString.of("Command.Create.Desc", "Create new dungeon from selection.");
 
@@ -261,6 +262,14 @@ public class Lang extends CoreLang {
 
 
 
+    public static final LangText DUNGEON_SEND_SENT = LangText.of("Dungeon.Send.Sent",
+        GRAY.wrap("Successfully sent " + LIGHT_YELLOW.wrap(PLAYER_NAME) + " to the " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + " dungeon.")
+    );
+
+    public static final LangText DUNGEON_SEND_FAIL = LangText.of("Dungeon.Send.Fail",
+        GRAY.wrap("Player " + LIGHT_RED.wrap(PLAYER_NAME) + " was unable to join the " + LIGHT_RED.wrap(DUNGEON_NAME) + " dungeon.")
+    );
+
     public static final LangText DUNGEON_ENTER_ERROR_INACTIVE = LangText.of("Dungeon.Enter.Error.Inactive",
         LIGHT_RED.wrap("Dungeon " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + " is not available currently.")
     );
@@ -327,7 +336,7 @@ public class Lang extends CoreLang {
     );
 
     public static final LangText DUNGEON_CONFISACATE_INFO = LangText.of("Dungeon.Confiscate.Info",
-        LIGHT_GRAY.wrap("The following items are not allowed to use in this dungeon: " + GENERIC_ITEM)
+        GRAY.wrap("The following items are not allowed to use in this dungeon: " + LIGHT_RED.wrap(GENERIC_ITEM))
     );
 
     public static final LangText DUNGEON_LEAVE_INFO = LangText.of("Dungeon.Leave.Info",
