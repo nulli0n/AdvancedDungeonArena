@@ -6,7 +6,7 @@
     <parent>
         <groupId>su.nightexpress.dungeonarena</groupId>
         <artifactId>AdvancedDungeonArena</artifactId>
-        <version>8.2.0</version>
+        <version>8.3.0</version>
     </parent>
 
     <artifactId>MC_1_21_5</artifactId>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>NMS</artifactId>
-            <version>8.2.0</version>
+            <version>8.3.0</version>
         </dependency>
     </dependencies>
 

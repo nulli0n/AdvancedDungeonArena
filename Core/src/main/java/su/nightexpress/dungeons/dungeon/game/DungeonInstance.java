@@ -521,6 +521,7 @@ public class DungeonInstance implements Dungeon {
 
         if (!confiscate.isEmpty()) {
             this.getPrefixed(Lang.DUNGEON_CONFISACATE_INFO).send(player, replacer -> replacer
+                .replace(this.replacePlaceholders())
                 .replace(Placeholders.GENERIC_ITEM, confiscate.stream().map(ItemUtil::getNameSerialized).collect(Collectors.joining(", ")))
             );
         }
@@ -823,6 +824,7 @@ public class DungeonInstance implements Dungeon {
 
     @Override
     public void killMobs() {
+        this.getMobs().forEach(dungeonMob -> dungeonMob.getBukkitEntity().remove());
         this.getMobs().forEach(this::eliminateMob);
         this.mobByIdMap.clear();
     }

@@ -8,6 +8,7 @@ import su.nightexpress.dungeons.dungeon.script.action.ActionId;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
 
+@Deprecated
 public class CreateVarAction implements Action {
 
     private final String  name;

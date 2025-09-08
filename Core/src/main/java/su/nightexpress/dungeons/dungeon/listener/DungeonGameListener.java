@@ -288,7 +288,7 @@ public class DungeonGameListener extends AbstractListener<DungeonPlugin> {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDungeonMobSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity.getType() == EntityType.ARMOR_STAND) return;
+        //if (entity.getType() == EntityType.ARMOR_STAND) return;
 
         Location location = entity.getLocation();
         DungeonInstance dungeon = this.manager.getInstanceByLocation(location);

@@ -18,4 +18,7 @@ public class ActionId {
     public static final String CREATE_VAR = "create_var";
     public static final String MODIFY_VAR = "modify_var";
     public static final String REMOVE_VAR = "remove_var";
+
+    public static final String DEFINE_VARIABLE = "define_variable";
+    public static final String RESET_VARIABLE = "reset_variable";
 }

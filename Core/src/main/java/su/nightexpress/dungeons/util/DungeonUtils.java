@@ -19,9 +19,7 @@ import su.nightexpress.dungeons.dungeon.script.action.ActionInfo;
 import su.nightexpress.dungeons.dungeon.script.action.impl.DungeonEndAction;
 import su.nightexpress.dungeons.dungeon.script.action.impl.RunCommandAction;
 import su.nightexpress.dungeons.dungeon.script.action.impl.SpawnMobAction;
-import su.nightexpress.dungeons.dungeon.script.condition.Condition;
-import su.nightexpress.dungeons.dungeon.script.condition.ConditionList;
-import su.nightexpress.dungeons.dungeon.script.condition.ValidationType;
+import su.nightexpress.dungeons.dungeon.script.condition.ConditionInfo;
 import su.nightexpress.dungeons.dungeon.script.condition.impl.AliveMobsAmountCondition;
 import su.nightexpress.dungeons.dungeon.script.condition.impl.TaskCompletedCondition;
 import su.nightexpress.dungeons.dungeon.script.condition.impl.TickIntervalCondition;
@@ -76,29 +74,23 @@ public class DungeonUtils {
     public static void setStageDefaults(@NotNull Stage stage) {
         MobIdentifier zombieId = new MobIdentifier(MobProviderId.ADA, BukkitThing.toString(EntityType.ZOMBIE));
 
-        Map<String, Condition> tickConditionMap = new LinkedHashMap<>();
-        tickConditionMap.put("every_5_seconds", new TickIntervalCondition(5));
-        tickConditionMap.put("task_incompleted", new TaskCompletedCondition("kill_zombies", true));
-        tickConditionMap.put("low_mobs", new AliveMobsAmountCondition(NumberComparators.getByOperator("<="), 1, true, MobFaction.ENEMY));
-        ConditionList tickConditions = new ConditionList(ValidationType.ALL, tickConditionMap);
+        Map<String, ConditionInfo> tickConditionMap = new LinkedHashMap<>();
+        tickConditionMap.put("every_5_seconds", new ConditionInfo(false, new TickIntervalCondition(5)));
+        tickConditionMap.put("task_incompleted", new ConditionInfo(false, new TaskCompletedCondition("kill_zombies", true)));
+        tickConditionMap.put("low_mobs", new ConditionInfo(false, new AliveMobsAmountCondition(NumberComparators.getByOperator("<="), 1, true, MobFaction.ENEMY)));
 
         Map<String, ActionInfo> tickActionMap = new LinkedHashMap<>();
 
         ScalableAmount spawnAmount = new ScalableAmount("1", "3", true, Collections.emptyMap());
         ScalableAmount level = new ScalableAmount("1", "1", true, Collections.emptyMap());
         SpawnMobAction spawnMobAction = new SpawnMobAction(zombieId, Placeholders.DEFAULT, spawnAmount, level);
-        tickActionMap.put("spawn_zombies", new ActionInfo(100D, spawnMobAction));
+        tickActionMap.put("spawn_zombies", new ActionInfo("every_5_seconds && task_incompleted && low_mobs", 100D, spawnMobAction));
 
-        DungeonEventHandler onTickHandler = new DungeonEventHandler("onDungeonTick", DungeonEventType.DUNGEON_TICK, tickConditions, tickActionMap);
+        DungeonEventHandler onTickHandler = new DungeonEventHandler("onDungeonTick", DungeonEventType.DUNGEON_TICK, tickConditionMap, tickActionMap);
 
-        Map<String, Condition> endConditionMap = new LinkedHashMap<>();
         Map<String, ActionInfo> endActionMap = new LinkedHashMap<>();
-
-        endActionMap.put("finish_dungeon", new ActionInfo(100D, new DungeonEndAction(10, true)));
-
-        ConditionList endConditions = new ConditionList(ValidationType.ALL, endConditionMap);
-
-        DungeonEventHandler onFinishHandler = new DungeonEventHandler("onStageFinish", DungeonEventType.STAGE_FINISHED, endConditions, endActionMap);
+        endActionMap.put("finish_dungeon", new ActionInfo(null, 100D, new DungeonEndAction(10, true)));
+        DungeonEventHandler onFinishHandler = new DungeonEventHandler("onStageFinish", DungeonEventType.STAGE_FINISHED, new HashMap<>(), endActionMap);
 
         Map<String, StageTask> taskMap = new HashMap<>();
         StageTask stageTask = new StageTask("kill_zombies", new KillMobTask(zombieId), new TaskParams("Kill Zombies", UniInt.of(10, 10), false, true));
@@ -110,15 +102,11 @@ public class DungeonUtils {
     }
 
     public static void setLevelDefaults(@NotNull Level level) {
-        Map<String, Condition> conditions = new LinkedHashMap<>();
-        //conditions.add(new TickIntervalCondition(5));
-        ConditionList conditionList = new ConditionList(ValidationType.ALL, conditions);
-
         Map<String, ActionInfo> actions = new LinkedHashMap<>();
         RunCommandAction action = new RunCommandAction(Lists.newList("money give " + Placeholders.PLAYER_NAME + " 1"), DungeonTarget.EVENT_PLAYER);
-        actions.put("kill_reward", new ActionInfo(100D, action));
+        actions.put("kill_reward", new ActionInfo(null, 100D, action));
 
-        DungeonEventHandler handler = new DungeonEventHandler("onMobKill", DungeonEventType.MOB_KILLED, conditionList, actions);
+        DungeonEventHandler handler = new DungeonEventHandler("onMobKill", DungeonEventType.MOB_KILLED, new HashMap<>(), actions);
 
         level.addHandler(handler);
     }

@@ -27,6 +27,10 @@ public class Variable {
         this.setValue(function.apply(this.value));
     }
 
+    public void reset() {
+        this.value = initial;
+    }
+
     public double getValue() {
         return this.value;
     }

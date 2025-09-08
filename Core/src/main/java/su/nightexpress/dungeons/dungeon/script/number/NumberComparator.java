@@ -8,10 +8,10 @@ public interface NumberComparator {
 
     @NotNull String getName();
 
-    boolean test(int value, int compareWith);
+    boolean test(double value, double compareWith);
 
     @NotNull
-    static NumberComparator create(@NotNull String name, @NotNull BiPredicate<Integer, Integer> predicate) {
+    static NumberComparator create(@NotNull String name, @NotNull BiPredicate<Double, Double> predicate) {
         return new NumberComparator() {
 
             @NotNull
@@ -21,7 +21,7 @@ public interface NumberComparator {
             }
 
             @Override
-            public boolean test(int value, int compareWith) {
+            public boolean test(double value, double compareWith) {
                 return predicate.test(value, compareWith);
             }
         };

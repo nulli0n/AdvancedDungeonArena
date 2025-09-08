@@ -25,7 +25,7 @@ public class KilledMobsAmountCondition extends MobsAmountCondition {
     }
 
     @Override
-    protected int getDungeonValue(@NotNull DungeonInstance dungeon) {
+    protected double getDungeonValue(@NotNull DungeonInstance dungeon) {
         return dungeon.getStats().countMobKills(stage -> true, byFaction(this.getFactionLookup()));
     }
 }

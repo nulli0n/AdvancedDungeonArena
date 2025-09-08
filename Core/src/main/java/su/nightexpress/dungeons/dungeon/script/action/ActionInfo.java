@@ -1,16 +1,19 @@
 package su.nightexpress.dungeons.dungeon.script.action;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.dungeons.dungeon.event.game.DungeonGameEvent;
 import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
 import su.nightexpress.nightcore.util.random.Rnd;
 
 public class ActionInfo {
 
+    private final String runIfCondition;
     private final double chance;
     private final Action action;
 
-    public ActionInfo(double chance, Action action) {
+    public ActionInfo(@Nullable String runIfCondition, double chance, Action action) {
+        this.runIfCondition = runIfCondition;
         this.chance = chance;
         this.action = action;
     }
@@ -21,6 +24,11 @@ public class ActionInfo {
             return true;
         }
         return false;
+    }
+
+    @Nullable
+    public String getRunIfCondition() {
+        return this.runIfCondition;
     }
 
     @NotNull

@@ -16,7 +16,7 @@ public class AliveMobsAmountCondition extends MobsAmountCondition {
         super(data);
     }
 
-    public AliveMobsAmountCondition(@NotNull NumberComparator comparator, int compareValue, boolean checkFaction, @Nullable MobFaction faction) {
+    public AliveMobsAmountCondition(@NotNull NumberComparator comparator, double compareValue, boolean checkFaction, @Nullable MobFaction faction) {
         super(comparator, compareValue, checkFaction, faction);
     }
 
@@ -32,7 +32,7 @@ public class AliveMobsAmountCondition extends MobsAmountCondition {
     }
 
     @Override
-    protected int getDungeonValue(@NotNull DungeonInstance dungeon) {
+    protected double getDungeonValue(@NotNull DungeonInstance dungeon) {
         return dungeon.countMobs(byFaction(this.getFactionLookup()));
     }
 }

@@ -18,7 +18,7 @@ public class ModifyVarAction implements Action {
     private final double    value;
 
     public enum Operation {
-        PLUS, MINUS, MULTIPLY, DIVIDE
+        PLUS, MINUS, MULTIPLY, DIVIDE, SET
     }
 
     public ModifyVarAction(@NotNull String varName, @NotNull Operation operation, double value) {
@@ -62,12 +62,13 @@ public class ModifyVarAction implements Action {
         variable.modify(this::modifyAmount);
     }
 
-    private double modifyAmount(double origin) {
+    private double modifyAmount(double current) {
         return switch (this.operation) {
-            case PLUS -> origin + this.value;
-            case MINUS -> origin - this.value;
-            case MULTIPLY -> origin * this.value;
-            case DIVIDE -> origin / this.value;
+            case PLUS -> current + this.value;
+            case MINUS -> current - this.value;
+            case MULTIPLY -> current * this.value;
+            case DIVIDE -> current / this.value;
+            case SET -> this.value;
         };
     }
 }

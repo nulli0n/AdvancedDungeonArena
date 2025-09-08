@@ -21,8 +21,8 @@ public class Lang extends CoreLang {
     public static final LangEnum<GameState> GAME_STATE = LangEnum.of("GameState", GameState.class);
 
     public static final LangString COMMAND_ARGUMENT_NAME_DUNGEON    = LangString.of("Command.Argument.Name.Dungeon", "dungeon");
-    public static final LangString COMMAND_ARGUMENT_NAME_STAGE      = LangString.of("Command.Argument.Name.Dungeon", "stage");
-    public static final LangString COMMAND_ARGUMENT_NAME_LEVEL      = LangString.of("Command.Argument.Name.Dungeon", "level");
+    public static final LangString COMMAND_ARGUMENT_NAME_STAGE      = LangString.of("Command.Argument.Name.Stage", "stage");
+    public static final LangString COMMAND_ARGUMENT_NAME_LEVEL      = LangString.of("Command.Argument.Name.Level", "level");
     public static final LangString COMMAND_ARGUMENT_NAME_SPOT       = LangString.of("Command.Argument.Name.Spot", "spot");
     public static final LangString COMMAND_ARGUMENT_NAME_REWARD     = LangString.of("Command.Argument.Name.Reward", "reward");
     public static final LangString COMMAND_ARGUMENT_NAME_STATE      = LangString.of("Command.Argument.Name.State", "state");

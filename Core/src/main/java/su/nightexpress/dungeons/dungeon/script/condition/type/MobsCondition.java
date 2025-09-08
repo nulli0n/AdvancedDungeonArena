@@ -17,7 +17,7 @@ public abstract class MobsCondition extends NumberCompareCondition {
     public record CriteriaData(CriteriaProvider<CriterionMob> mobCriterias, CriteriaProvider<Stage> stageCriterias) {}
 
     public MobsCondition(@NotNull NumberComparator comparator,
-                               int compareValue,
+                         double compareValue,
                                @NotNull CriteriaProvider<CriterionMob> mobCriterias,
                                @NotNull CriteriaProvider<Stage> stageCriterias) {
         super(comparator, compareValue);

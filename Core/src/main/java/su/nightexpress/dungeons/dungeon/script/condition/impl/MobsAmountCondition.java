@@ -14,7 +14,7 @@ import su.nightexpress.nightcore.config.FileConfig;
 public class MobsAmountCondition extends MobsCondition {
 
     public MobsAmountCondition(@NotNull NumberComparator comparator,
-                               int compareValue,
+                               double compareValue,
                                @NotNull CriteriaProvider<CriterionMob> mobCriterias,
                                @NotNull CriteriaProvider<Stage> stageCriterias) {
         super(comparator, compareValue, mobCriterias, stageCriterias);
@@ -35,7 +35,7 @@ public class MobsAmountCondition extends MobsCondition {
     }
 
     @Override
-    protected int getDungeonValue(@NotNull DungeonInstance dungeon) {
+    protected double getDungeonValue(@NotNull DungeonInstance dungeon) {
         return dungeon.countMobs(this.mobCriterias.getPredicate(mob -> mob.isFaction(MobFaction.ENEMY)));
     }
 }

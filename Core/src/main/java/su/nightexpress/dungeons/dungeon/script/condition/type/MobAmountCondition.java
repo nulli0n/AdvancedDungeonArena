@@ -10,13 +10,13 @@ public abstract class MobAmountCondition extends NumberCompareCondition {
 
     protected final MobIdentifier identifier;
 
-    public record MobData(NumberComparator comparator, int compareValue, MobIdentifier identifier){}
+    public record MobData(NumberComparator comparator, double compareValue, MobIdentifier identifier){}
 
     protected MobAmountCondition(@NotNull MobData mobData) {
         this(mobData.comparator, mobData.compareValue, mobData.identifier);
     }
 
-    public MobAmountCondition(@NotNull NumberComparator comparator, int compareValue, @NotNull MobIdentifier identifier) {
+    public MobAmountCondition(@NotNull NumberComparator comparator, double compareValue, @NotNull MobIdentifier identifier) {
         super(comparator, compareValue);
         this.identifier = identifier;
     }

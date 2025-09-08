@@ -27,6 +27,9 @@ public class ActionRegistry {
         addLoader(ActionId.GENERATE_LOOT, GenerateLootAction::load);
         addLoader(ActionId.CREATE_VAR, CreateVarAction::load);
         addLoader(ActionId.MODIFY_VAR, ModifyVarAction::load);
+
+        addLoader(ActionId.DEFINE_VARIABLE, DefineVariableAction::load);
+        addLoader(ActionId.RESET_VARIABLE, ResetVariableAction::load);
     }
 
     public static void clear() {

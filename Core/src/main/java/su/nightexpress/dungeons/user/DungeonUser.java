@@ -35,7 +35,7 @@ public class DungeonUser extends AbstractUser {
                        @NotNull Map<String, Long> cooldownMap) {
         super(uuid, name, dateCreated, lastLogin);
 
-        this.purchasedKits = new HashSet<>();
+        this.purchasedKits = new HashSet<>(purchasedKits);
         this.cooldownMap = new HashMap<>(cooldownMap);
         this.cooldownMap.values().removeIf(TimeUtil::isPassed);
     }

@@ -31,4 +31,6 @@ public class ConditionId {
     public static final String TASK_NOT_PRESENT    = "task_not_present";
     public static final String TASK_COMPLETED      = "task_completed";
     public static final String TASK_INCOMPLETED    = "task_incompleted";
+
+    public static final String VAR_VALUE = "var_value";
 }

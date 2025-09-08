@@ -25,7 +25,7 @@ public class AliveMobAmountCondition extends MobAmountCondition {
     }
 
     @Override
-    protected int getDungeonValue(@NotNull DungeonInstance dungeon) {
+    protected double getDungeonValue(@NotNull DungeonInstance dungeon) {
         return dungeon.countMobs(mob -> mob.isMob(this.identifier));
     }
 }

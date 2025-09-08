@@ -16,13 +16,13 @@ public abstract class MobsAmountCondition extends NumberCompareCondition {
     protected final boolean checkFaction;
     protected final MobFaction faction;
 
-    public record MobsData(NumberComparator comparator, int compareValue, boolean checkFaction, MobFaction faction){}
+    public record MobsData(NumberComparator comparator, double compareValue, boolean checkFaction, MobFaction faction){}
 
     protected MobsAmountCondition(@NotNull MobsData data) {
         this(data.comparator, data.compareValue, data.checkFaction, data.faction);
     }
 
-    public MobsAmountCondition(@NotNull NumberComparator comparator, int compareValue, boolean checkFaction, @Nullable MobFaction faction) {
+    public MobsAmountCondition(@NotNull NumberComparator comparator, double compareValue, boolean checkFaction, @Nullable MobFaction faction) {
         super(comparator, compareValue);
         this.checkFaction = checkFaction;
         this.faction = faction;

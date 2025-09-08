@@ -12,14 +12,14 @@ import su.nightexpress.nightcore.config.FileConfig;
 public abstract class NumberCompareCondition implements Condition {
 
     protected final NumberComparator comparator;
-    protected final int compareValue;
+    protected final double compareValue;
 
-    public NumberCompareCondition(@NotNull NumberComparator comparator, int compareValue) {
+    public NumberCompareCondition(@NotNull NumberComparator comparator, double compareValue) {
         this.comparator = comparator;
         this.compareValue = compareValue;
     }
 
-    public record NumberData(NumberComparator comparator, int compareValue){}
+    public record NumberData(NumberComparator comparator, double compareValue){}
 
     @NotNull
     public static NumberData readNumberData(@NotNull FileConfig config, @NotNull String path) {
@@ -30,7 +30,7 @@ public abstract class NumberCompareCondition implements Condition {
             comparator = NumberComparators.DUMMY;
         }
 
-        int compareValue = config.getInt(path + ".Value");
+        double compareValue = config.getDouble(path + ".Value");
 
         return new NumberData(comparator, compareValue);
     }
@@ -46,10 +46,10 @@ public abstract class NumberCompareCondition implements Condition {
 
     @Override
     public boolean test(@NotNull DungeonInstance dungeon, @NotNull DungeonGameEvent event) {
-        int dungeonValue = this.getDungeonValue(dungeon);
+        double dungeonValue = this.getDungeonValue(dungeon);
 
         return this.comparator.test(dungeonValue, this.compareValue);
     }
 
-    protected abstract int getDungeonValue(@NotNull DungeonInstance dungeon);
+    protected abstract double getDungeonValue(@NotNull DungeonInstance dungeon);
 }

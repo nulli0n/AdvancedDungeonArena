@@ -8,6 +8,7 @@ import su.nightexpress.nightcore.util.placeholder.Replacer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 public class DungeonVariables {
@@ -35,6 +36,11 @@ public class DungeonVariables {
 
     public void clear() {
         this.variableMap.clear();
+    }
+
+    @NotNull
+    public Optional<Variable> variable(@NotNull String name) {
+        return Optional.ofNullable(this.getVariable(name));
     }
 
     @Nullable

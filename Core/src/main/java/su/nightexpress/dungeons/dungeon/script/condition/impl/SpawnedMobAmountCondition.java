@@ -25,7 +25,7 @@ public class SpawnedMobAmountCondition extends MobAmountCondition {
     }
 
     @Override
-    protected int getDungeonValue(@NotNull DungeonInstance dungeon) {
+    protected double getDungeonValue(@NotNull DungeonInstance dungeon) {
         return dungeon.getStats().countMobSpawns(stage -> true, mob -> mob.isMob(this.identifier));
     }
 }

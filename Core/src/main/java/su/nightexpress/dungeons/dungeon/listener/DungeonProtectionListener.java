@@ -21,7 +21,6 @@ import su.nightexpress.dungeons.DungeonPlugin;
 import su.nightexpress.dungeons.dungeon.DungeonManager;
 import su.nightexpress.nightcore.manager.AbstractListener;
 
-@SuppressWarnings("UnstableApiUsage")
 public class DungeonProtectionListener extends AbstractListener<DungeonPlugin> {
 
     private final DungeonManager manager;

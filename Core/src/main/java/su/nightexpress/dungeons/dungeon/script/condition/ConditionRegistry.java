@@ -36,6 +36,8 @@ public class ConditionRegistry {
         addLoader(ConditionId.SPOT_NOT_IN_STATE, (config, path) -> SpotStateCondition.load(config, path, true));
         addLoader(ConditionId.TASK_COMPLETED, (config, path) -> TaskCompletedCondition.load(config, path, false));
         addLoader(ConditionId.TASK_INCOMPLETED, (config, path) -> TaskCompletedCondition.load(config, path, true));
+
+        addLoader(ConditionId.VAR_VALUE, VarValueCondition::load);
     }
 
     public static void clear() {
