@@ -18,9 +18,8 @@ import su.nightexpress.dungeons.Placeholders;
 import su.nightexpress.dungeons.config.Keys;
 import su.nightexpress.dungeons.config.Perms;
 import su.nightexpress.dungeons.kit.KitUtils;
-import su.nightexpress.dungeons.util.DungeonUtils;
-import su.nightexpress.economybridge.EconomyBridge;
 import su.nightexpress.nightcore.config.FileConfig;
+import su.nightexpress.nightcore.integration.currency.EconomyBridge;
 import su.nightexpress.nightcore.manager.AbstractFileData;
 import su.nightexpress.nightcore.util.BukkitThing;
 import su.nightexpress.nightcore.util.ItemNbt;
@@ -180,8 +179,6 @@ public class Kit extends AbstractFileData<DungeonPlugin> {
     }
 
     public boolean hasCost() {
-        if (!DungeonUtils.hasEconomyBridge()) return false;
-
         return this.costMap.keySet().stream().anyMatch(EconomyBridge::hasCurrency);
     }
 
@@ -201,14 +198,10 @@ public class Kit extends AbstractFileData<DungeonPlugin> {
     }
 
     public void takeCosts(@NotNull Player player) {
-        if (!DungeonUtils.hasEconomyBridge()) return;
-
         this.costMap.forEach((id, amount) -> EconomyBridge.withdraw(player, id, amount));
     }
 
     public void refundCosts(@NotNull Player player) {
-        if (!DungeonUtils.hasEconomyBridge()) return;
-
         this.costMap.forEach((id, amount) -> EconomyBridge.deposit(player, id, amount));
     }
 

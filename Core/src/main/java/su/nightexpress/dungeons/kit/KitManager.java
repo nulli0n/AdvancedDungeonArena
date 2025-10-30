@@ -110,7 +110,7 @@ public class KitManager extends AbstractManager<DungeonPlugin> {
     public boolean createKit(@NotNull Player player, @NotNull String name) {
         String id = StringUtil.transformForID(name);
         if (id.isBlank()) {
-            Lang.SETUP_ERROR_INVALID_NAME.getMessage().send(player);
+            Lang.SETUP_ERROR_INVALID_NAME.message().send(player);
             return false;
         }
 
@@ -119,7 +119,7 @@ public class KitManager extends AbstractManager<DungeonPlugin> {
         this.createKit(id, kit -> {
             kit.setIcon(NightItem.fromType(Material.GOLDEN_SWORD));
             //KitUtils.setKitContent(kit, inventory);
-            Lang.KIT_CREATE_DONE_NEW.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()));
+            Lang.KIT_CREATE_DONE_NEW.message().send(player, replacer -> replacer.replace(kit.replacePlaceholders()));
         });
         return true;
     }
@@ -129,7 +129,7 @@ public class KitManager extends AbstractManager<DungeonPlugin> {
 
         KitUtils.setKitContent(kit, inventory);
         kit.save();
-        Lang.KIT_CREATE_DONE_UPDATE.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()));
+        Lang.KIT_CREATE_DONE_UPDATE.message().send(player, replacer -> replacer.replace(kit.replacePlaceholders()));
     }
 
     private void createKit(@NotNull String id, @NotNull Consumer<Kit> consumer) {
@@ -219,13 +219,13 @@ public class KitManager extends AbstractManager<DungeonPlugin> {
         }
 
         if (!kit.canAfford(player)) {
-            Lang.KIT_BUY_ERROR_INSUFFICIENT_FUNDS.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()));
+            Lang.KIT_BUY_ERROR_INSUFFICIENT_FUNDS.message().send(player, replacer -> replacer.replace(kit.replacePlaceholders()));
             return false;
         }
 
         kit.takeCosts(player);
 
-        Lang.KIT_BUY_SUCCESS.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()));
+        Lang.KIT_BUY_SUCCESS.message().send(player, replacer -> replacer.replace(kit.replacePlaceholders()));
         user.addKit(kit);
         this.plugin.getUserManager().save(user);
         return true;

@@ -5,15 +5,18 @@ import org.jetbrains.annotations.NotNull;
 import su.nightexpress.dungeons.Placeholders;
 import su.nightexpress.dungeons.api.dungeon.Board;
 import su.nightexpress.dungeons.api.type.GameState;
-import su.nightexpress.dungeons.dungeon.player.DungeonGamer;
-import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
 import su.nightexpress.dungeons.config.Config;
 import su.nightexpress.dungeons.config.Lang;
-import su.nightexpress.nightcore.language.entry.LangString;
+import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
+import su.nightexpress.dungeons.dungeon.player.DungeonGamer;
+import su.nightexpress.nightcore.locale.entry.TextLocale;
 import su.nightexpress.nightcore.util.Players;
 import su.nightexpress.nightcore.util.placeholder.Replacer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractBoard<T> implements Board {
@@ -106,13 +109,13 @@ public abstract class AbstractBoard<T> implements Board {
         List<String> list = new ArrayList<>();
 
         if (!dungeon.hasTasks()) {
-            list.add(Lang.UI_TASK_EMPTY_LIST.getString());
+            list.add(Lang.UI_TASK_EMPTY_LIST.text());
             return list;
         }
 
         dungeon.getTaskProgress().forEach((stageTask, progress) -> {
-            LangString format = progress.isCompleted() ? Lang.UI_TASK_COMPLETED : Lang.UI_TASK_INCOMPLETED;
-            list.add(format.getString()
+            TextLocale format = progress.isCompleted() ? Lang.UI_TASK_COMPLETED : Lang.UI_TASK_INCOMPLETED;
+            list.add(format.text()
                 .replace(Placeholders.GENERIC_NAME, stageTask.getParams().getDisplay())
                 .replace(Placeholders.GENERIC_VALUE, progress.format(this.gamer.getPlayer()))
             );
@@ -127,8 +130,8 @@ public abstract class AbstractBoard<T> implements Board {
         List<String> list = new ArrayList<>();
 
         dungeon.getPlayers().forEach(gamer -> {
-            LangString format = gamer.isReady() ? Lang.UI_BOARD_PLAYER_READY : Lang.UI_BOARD_PLAYER_NOT_READY;
-            list.add(gamer.replacePlaceholders().apply(format.getString()));
+            TextLocale format = gamer.isReady() ? Lang.UI_BOARD_PLAYER_READY : Lang.UI_BOARD_PLAYER_NOT_READY;
+            list.add(gamer.replacePlaceholders().apply(format.text()));
         });
 
         return list;

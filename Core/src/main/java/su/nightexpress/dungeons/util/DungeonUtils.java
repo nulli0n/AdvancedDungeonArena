@@ -55,10 +55,6 @@ public class DungeonUtils {
         return Plugins.isInstalled(HookId.PROTOCOL_LIB);
     }
 
-    public static boolean hasEconomyBridge() {
-        return Plugins.isInstalled(HookId.ECONOMY_BRIDGE);
-    }
-
     public static boolean isKillStreaksEnabled() {
         return Config.KILL_STREAKS_ENABLED.get();
     }

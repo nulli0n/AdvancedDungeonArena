@@ -32,11 +32,11 @@ public class PositionSelection extends Selection {
     public void onSelect(@NotNull Player player, @NotNull BlockPos pos, @NotNull Action action) {
         if (action == Action.RIGHT_CLICK_BLOCK) {
             this.positions.remove(pos);
-            Lang.SELECTION_INFO_POSITION_REMOVE.getMessage().send(player);
+            Lang.SELECTION_INFO_POSITION_REMOVE.message().send(player);
         }
         else {
             this.positions.add(pos);
-            Lang.SELECTION_INFO_POSITION_ADD.getMessage().send(player);
+            Lang.SELECTION_INFO_POSITION_ADD.message().send(player);
         }
     }
 

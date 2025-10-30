@@ -9,55 +9,61 @@ import su.nightexpress.dungeons.config.Lang;
 import su.nightexpress.dungeons.config.Perms;
 import su.nightexpress.dungeons.kit.KitUtils;
 import su.nightexpress.dungeons.kit.impl.Kit;
-import su.nightexpress.nightcore.command.experimental.CommandContext;
-import su.nightexpress.nightcore.command.experimental.argument.ArgumentTypes;
-import su.nightexpress.nightcore.command.experimental.argument.ParsedArguments;
-import su.nightexpress.nightcore.command.experimental.node.ChainedNode;
-import su.nightexpress.nightcore.language.entry.LangText;
+import su.nightexpress.nightcore.commands.Arguments;
+import su.nightexpress.nightcore.commands.Commands;
+import su.nightexpress.nightcore.commands.builder.HubNodeBuilder;
+import su.nightexpress.nightcore.commands.context.CommandContext;
+import su.nightexpress.nightcore.commands.context.ParsedArguments;
+import su.nightexpress.nightcore.core.config.CoreLang;
+import su.nightexpress.nightcore.locale.entry.MessageLocale;
 
 public class KitCommands {
 
-    public static void load(@NotNull DungeonPlugin plugin, @NotNull ChainedNode root) {
-        var kitRoot = ChainedNode.builder(plugin, "kit")
+    public static void load(@NotNull DungeonPlugin plugin, @NotNull HubNodeBuilder root) {
+        var kitRoot = Commands.hub( "kit")
             .description(Lang.COMMAND_KIT_DESC)
             .permission(Perms.COMMAND_KIT);
 
-        kitRoot.addDirect("create", builder -> builder
+        kitRoot.branch(Commands.literal("create")
             .playerOnly()
             .description(Lang.COMMAND_KIT_CREATE_DESC)
-            .withArgument(ArgumentTypes.string(CommandArguments.NAME).required().localized(Lang.COMMAND_ARGUMENT_NAME_NAME))
+            .withArguments(Arguments.string(CommandArguments.NAME).localized(CoreLang.COMMAND_ARGUMENT_NAME_NAME))
             .executes((context, arguments) -> createKit(plugin, context, arguments))
         );
 
-        kitRoot.addDirect("setitems", builder -> builder
+        kitRoot.branch(Commands.literal("setitems")
             .playerOnly()
             .description(Lang.COMMAND_KIT_SET_ITEMS_DESC)
-            .withArgument(CommandArguments.forKit(plugin).required())
+            .withArguments(CommandArguments.forKit(plugin))
             .executes((context, arguments) -> updateKit(plugin, context, arguments))
         );
 
         if (!KitUtils.isRentMode()) {
-            kitRoot.addDirect("grant", builder -> builder
+            kitRoot.branch(Commands.literal("grant")
                 .description(Lang.COMMAND_KIT_GRANT_DESC)
-                .withArgument(CommandArguments.forKit(plugin).required())
-                .withArgument(ArgumentTypes.playerName(CommandArguments.PLAYER).required())
+                .withArguments(
+                    CommandArguments.forKit(plugin),
+                    Arguments.playerName(CommandArguments.PLAYER)
+                )
                 .executes((context, arguments) -> grantOrRevokeKit(plugin, context, arguments, true))
             );
 
-            kitRoot.addDirect("revoke", builder -> builder
+            kitRoot.branch(Commands.literal("revoke")
                 .description(Lang.COMMAND_KIT_REVOKE_DESC)
-                .withArgument(CommandArguments.forKit(plugin).required())
-                .withArgument(ArgumentTypes.playerName(CommandArguments.PLAYER).required())
+                .withArguments(
+                    CommandArguments.forKit(plugin),
+                    Arguments.playerName(CommandArguments.PLAYER)
+                )
                 .executes((context, arguments) -> grantOrRevokeKit(plugin, context, arguments, false))
             );
         }
 
-        root.addChildren(kitRoot);
+        root.branch(kitRoot);
     }
 
     private static boolean createKit(@NotNull DungeonPlugin plugin, @NotNull CommandContext context, @NotNull ParsedArguments arguments) {
         Player player = context.getPlayerOrThrow();
-        String name = arguments.getStringArgument(CommandArguments.NAME);
+        String name = arguments.getString(CommandArguments.NAME);
 
         plugin.getKitManager().createKit(player, name);
         return true;
@@ -65,15 +71,15 @@ public class KitCommands {
 
     private static boolean updateKit(@NotNull DungeonPlugin plugin, @NotNull CommandContext context, @NotNull ParsedArguments arguments) {
         Player player = context.getPlayerOrThrow();
-        Kit kit = arguments.getArgument(CommandArguments.KIT, Kit.class);
+        Kit kit = arguments.get(CommandArguments.KIT, Kit.class);
 
         plugin.getKitManager().updateKit(player, kit);
         return true;
     }
 
     private static boolean grantOrRevokeKit(@NotNull DungeonPlugin plugin, @NotNull CommandContext context, @NotNull ParsedArguments arguments, boolean grant) {
-        String playerName = arguments.getStringArgument(CommandArguments.PLAYER);
-        Kit kit = arguments.getArgument(CommandArguments.KIT, Kit.class);
+        String playerName = arguments.getString(CommandArguments.PLAYER);
+        Kit kit = arguments.get(CommandArguments.KIT, Kit.class);
 
         plugin.getUserManager().manageUser(playerName, user -> {
             if (user == null) {
@@ -81,7 +87,7 @@ public class KitCommands {
                 return;
             }
 
-            LangText text;
+            MessageLocale text;
             if (grant) {
                 user.addKit(kit);
                 text = Lang.KIT_GRANT_DONE;

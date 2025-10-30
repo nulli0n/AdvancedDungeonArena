@@ -25,23 +25,24 @@ import su.nightexpress.dungeons.kit.KitManager;
 import su.nightexpress.dungeons.mob.MobManager;
 import su.nightexpress.dungeons.mob.variant.MobVariantRegistry;
 import su.nightexpress.dungeons.nms.DungeonNMS;
+import su.nightexpress.dungeons.nms.mc_1_21_10.MC_1_21_10;
 import su.nightexpress.dungeons.nms.mc_1_21_3.MC_1_21_3;
 import su.nightexpress.dungeons.nms.mc_1_21_5.MC_1_21_5;
 import su.nightexpress.dungeons.nms.mc_1_21_8.MC_1_21_8;
-import su.nightexpress.dungeons.registry.compat.GodPluginRegistry;
 import su.nightexpress.dungeons.registry.compat.BoardPluginRegistry;
+import su.nightexpress.dungeons.registry.compat.GodPluginRegistry;
 import su.nightexpress.dungeons.registry.level.LevelRegistry;
 import su.nightexpress.dungeons.registry.mob.MobRegistry;
 import su.nightexpress.dungeons.registry.pet.PetRegistry;
 import su.nightexpress.dungeons.selection.SelectionManager;
 import su.nightexpress.dungeons.user.UserManager;
 import su.nightexpress.nightcore.NightPlugin;
-import su.nightexpress.nightcore.command.experimental.ImprovedCommands;
+import su.nightexpress.nightcore.commands.command.NightCommand;
 import su.nightexpress.nightcore.config.PluginDetails;
 import su.nightexpress.nightcore.util.Plugins;
 import su.nightexpress.nightcore.util.Version;
 
-public class DungeonPlugin extends NightPlugin implements ImprovedCommands {
+public class DungeonPlugin extends NightPlugin {
 
     private DataHandler dataHandler;
     private UserManager userManager;
@@ -59,8 +60,17 @@ public class DungeonPlugin extends NightPlugin implements ImprovedCommands {
     protected PluginDetails getDefaultDetails() {
         return PluginDetails.create("Dungeons", new String[]{"ada", "dungeon", "dungeons", "dungeonarena"})
             .setConfigClass(Config.class)
-            .setLangClass(Lang.class)
             .setPermissionsClass(Perms.class);
+    }
+
+    @Override
+    protected void addRegistries() {
+        this.registerLang(Lang.class);
+    }
+
+    @Override
+    protected boolean disableCommandManager() {
+        return true;
     }
 
     @Override
@@ -68,7 +78,6 @@ public class DungeonPlugin extends NightPlugin implements ImprovedCommands {
         if (!this.loadInternals()) return;
 
         this.loadEngine();
-        this.loadCommands();
 
         this.dataHandler = new DataHandler(this);
         this.dataHandler.setup();
@@ -90,6 +99,8 @@ public class DungeonPlugin extends NightPlugin implements ImprovedCommands {
 
         this.dungeonSetup = new DungeonSetup(this);
         this.dungeonSetup.setup();
+
+        this.loadCommands();
 
         if (Plugins.hasPlaceholderAPI()) {
             PlaceholderHook.setup(this);
@@ -136,6 +147,7 @@ public class DungeonPlugin extends NightPlugin implements ImprovedCommands {
             case MC_1_21_4 -> new MC_1_21_3();
             case MC_1_21_5 -> new MC_1_21_5();
             case MC_1_21_8 -> new MC_1_21_8();
+            case MC_1_21_10 -> new MC_1_21_10();
             default -> null;
         };
 
@@ -166,9 +178,11 @@ public class DungeonPlugin extends NightPlugin implements ImprovedCommands {
     }
 
     private void loadCommands() {
-        BaseCommands.load(this);
-        SetupCommands.load(this, this.getRootNode());
-        KitCommands.load(this, this.getRootNode());
+        this.rootCommand = NightCommand.forPlugin(this, builder -> {
+            BaseCommands.load(this, builder);
+            SetupCommands.load(this, builder);
+            KitCommands.load(this, builder);
+        });
     }
 
     @NotNull

@@ -42,7 +42,7 @@ public class CuboidSelection extends Selection {
             value = 2;
         }
 
-        Lang.SELECTION_INFO_CUBOID.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, value));
+        Lang.SELECTION_INFO_CUBOID.message().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, value));
     }
 
     @Nullable

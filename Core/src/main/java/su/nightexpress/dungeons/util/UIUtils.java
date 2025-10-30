@@ -5,10 +5,10 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.dungeons.config.Lang;
-import su.nightexpress.economybridge.EconomyBridge;
-import su.nightexpress.economybridge.api.Currency;
+import su.nightexpress.nightcore.bridge.currency.Currency;
+import su.nightexpress.nightcore.integration.currency.EconomyBridge;
 import su.nightexpress.nightcore.language.LangAssets;
-import su.nightexpress.nightcore.language.entry.LangString;
+import su.nightexpress.nightcore.locale.entry.TextLocale;
 import su.nightexpress.nightcore.util.NumberUtil;
 import su.nightexpress.nightcore.util.placeholder.Replacer;
 
@@ -44,7 +44,7 @@ public class UIUtils {
         return Replacer.create()
             .replace(GENERIC_NAME, LangAssets.get(effect.getType()))
             .replace(GENERIC_AMOUNT, NumberUtil.toRoman(effect.getAmplifier() + 1))
-            .apply(Lang.UI_POTION_EFFECT_ENTRY.getString());
+            .apply(Lang.UI_POTION_EFFECT_ENTRY.text());
     }
 
     @NotNull
@@ -53,7 +53,7 @@ public class UIUtils {
         boolean scalar = modifier.getOperation() == AttributeModifier.Operation.ADD_SCALAR;
         boolean negative = amount < 0D;
 
-        LangString valueString;
+        TextLocale valueString;
         if (scalar) {
             valueString = negative ? Lang.UI_ATTRIBUTE_NEGATIVE_SCALAR : Lang.UI_ATTRIBUTE_POSITIVE_SCALAR;
         }
@@ -63,7 +63,7 @@ public class UIUtils {
 
         return Replacer.create()
             .replace(GENERIC_NAME, () -> Lang.ATTRIBUTE.getLocalized(attribute))
-            .replace(GENERIC_AMOUNT, () -> valueString.getString().replace(GENERIC_VALUE, NumberUtil.format(scalar ? (amount * 100D) : amount)))
-            .apply(Lang.UI_ATTRIBUTE_ENTRY.getString());
+            .replace(GENERIC_AMOUNT, () -> valueString.text().replace(GENERIC_VALUE, NumberUtil.format(scalar ? (amount * 100D) : amount)))
+            .apply(Lang.UI_ATTRIBUTE_ENTRY.text());
     }
 }

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.dungeons.DungeonPlugin;
 import su.nightexpress.dungeons.Placeholders;
 import su.nightexpress.dungeons.api.dungeon.DungeonPos;
+import su.nightexpress.dungeons.config.Config;
 import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
 import su.nightexpress.dungeons.dungeon.level.Level;
 import su.nightexpress.dungeons.dungeon.lootchest.LootChest;
@@ -17,7 +18,6 @@ import su.nightexpress.dungeons.dungeon.module.GameSettings;
 import su.nightexpress.dungeons.dungeon.reward.Reward;
 import su.nightexpress.dungeons.dungeon.spot.Spot;
 import su.nightexpress.dungeons.dungeon.stage.Stage;
-import su.nightexpress.dungeons.config.Config;
 import su.nightexpress.dungeons.util.ErrorHandler;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.manager.AbstractFileData;
@@ -27,7 +27,7 @@ import su.nightexpress.nightcore.util.bukkit.NightItem;
 import su.nightexpress.nightcore.util.geodata.Cuboid;
 import su.nightexpress.nightcore.util.geodata.pos.BlockPos;
 import su.nightexpress.nightcore.util.geodata.pos.ExactPos;
-import su.nightexpress.nightcore.util.text.tag.Tags;
+import su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers;
 
 import java.io.File;
 import java.util.*;
@@ -84,7 +84,7 @@ public class DungeonConfig extends AbstractFileData<DungeonPlugin> {
         this.setStartStageId(String.valueOf(config.getString("StartStage")));
         this.setName(config.getString("Name", StringUtil.capitalizeUnderscored(this.getId())));
         this.setDescription(config.getStringList("Description"));
-        this.setPrefix(config.getString("Prefix", Tags.GRAY.wrap("[" + Placeholders.DUNGEON_NAME + "]")));
+        this.setPrefix(config.getString("Prefix", TagWrappers.GRAY.wrap("[" + Placeholders.DUNGEON_NAME + "]")));
         this.setIcon(config.getCosmeticItem("Icon"));
         this.setLobbyPos(ExactPos.read(config, "LobbyPos"));
 

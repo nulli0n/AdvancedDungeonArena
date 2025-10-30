@@ -16,6 +16,9 @@ import su.nightexpress.dungeons.DungeonPlugin;
 import su.nightexpress.dungeons.api.dungeon.DungeonPos;
 import su.nightexpress.dungeons.api.type.GameState;
 import su.nightexpress.dungeons.api.type.MobFaction;
+import su.nightexpress.dungeons.config.Config;
+import su.nightexpress.dungeons.config.Lang;
+import su.nightexpress.dungeons.config.Perms;
 import su.nightexpress.dungeons.dungeon.config.DungeonConfig;
 import su.nightexpress.dungeons.dungeon.event.normal.DungeonJoinEvent;
 import su.nightexpress.dungeons.dungeon.event.normal.DungeonJoinedEvent;
@@ -25,15 +28,12 @@ import su.nightexpress.dungeons.dungeon.listener.DungeonGameListener;
 import su.nightexpress.dungeons.dungeon.listener.DungeonGenericListener;
 import su.nightexpress.dungeons.dungeon.listener.DungeonPotionListener;
 import su.nightexpress.dungeons.dungeon.listener.DungeonProtectionListener;
-import su.nightexpress.dungeons.config.Config;
-import su.nightexpress.dungeons.config.Lang;
-import su.nightexpress.dungeons.config.Perms;
-import su.nightexpress.dungeons.user.DungeonUser;
 import su.nightexpress.dungeons.dungeon.menu.DungeonBrowseMenu;
 import su.nightexpress.dungeons.dungeon.mob.DungeonMob;
 import su.nightexpress.dungeons.dungeon.player.DungeonGamer;
 import su.nightexpress.dungeons.kit.KitUtils;
 import su.nightexpress.dungeons.kit.impl.Kit;
+import su.nightexpress.dungeons.user.DungeonUser;
 import su.nightexpress.dungeons.util.MobUitls;
 import su.nightexpress.nightcore.manager.AbstractManager;
 import su.nightexpress.nightcore.ui.UIUtils;
@@ -169,7 +169,7 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
 
     public boolean enterInstance(@NotNull Player player, @NotNull DungeonInstance dungeon, @Nullable Kit kit, boolean force) {
         if (this.isPlaying(player)) {
-            Lang.DUNGEON_ERROR_MUST_BE_OUT.getMessage().send(player);
+            Lang.DUNGEON_ERROR_MUST_BE_OUT.message().send(player);
             return false;
         }
 
@@ -179,30 +179,30 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
 
         if (dungeon.isKitsMode()) {
             if (kit == null) {
-                Lang.DUNGEON_ENTER_ERROR_NO_KIT.getMessage().send(player, replacer -> replacer.replace(dungeon.replacePlaceholders()));
+                Lang.DUNGEON_ENTER_ERROR_NO_KIT.message().send(player, replacer -> replacer.replace(dungeon.replacePlaceholders()));
                 return false;
             }
 
             if (!force) {
                 // Double check kit restrictions after selection and confirmation since things can change in meanwhile.
                 if (!kit.hasPermission(player)) {
-                    Lang.DUNGEON_ENTER_ERROR_NO_KIT_PERMISSION.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()).replace(dungeon.replacePlaceholders()));
+                    Lang.DUNGEON_ENTER_ERROR_NO_KIT_PERMISSION.message().send(player, replacer -> replacer.replace(kit.replacePlaceholders()).replace(dungeon.replacePlaceholders()));
                     return false;
                 }
 
                 if (!dungeon.isKitAllowed(kit)) {
-                    Lang.DUNGEON_ENTER_ERROR_KIT_NOT_ALLOWED.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()).replace(dungeon.replacePlaceholders()));
+                    Lang.DUNGEON_ENTER_ERROR_KIT_NOT_ALLOWED.message().send(player, replacer -> replacer.replace(kit.replacePlaceholders()).replace(dungeon.replacePlaceholders()));
                     return false;
                 }
 
                 if (dungeon.isKitLimitReached(kit)) {
-                    Lang.DUNGEON_ENTER_ERROR_NO_KIT_SLOTS.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()).replace(dungeon.replacePlaceholders()));
+                    Lang.DUNGEON_ENTER_ERROR_NO_KIT_SLOTS.message().send(player, replacer -> replacer.replace(kit.replacePlaceholders()).replace(dungeon.replacePlaceholders()));
                     return false;
                 }
 
                 // Check if player can pay for kit rent.
                 if (KitUtils.isRentMode() && !kit.canAfford(player)) {
-                    Lang.KIT_BUY_ERROR_INSUFFICIENT_FUNDS.getMessage().send(player, replacer -> replacer.replace(kit.replacePlaceholders()));
+                    Lang.KIT_BUY_ERROR_INSUFFICIENT_FUNDS.message().send(player, replacer -> replacer.replace(kit.replacePlaceholders()));
                     return false;
                 }
             }
@@ -234,7 +234,7 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
     public boolean leaveInstance(@NotNull Player player) {
         DungeonGamer gamer = this.getDungeonPlayer(player);
         if (gamer == null) {
-            Lang.DUNGEON_ERROR_MUST_BE_IN.getMessage().send(player);
+            Lang.DUNGEON_ERROR_MUST_BE_IN.message().send(player);
             return false;
         }
 
@@ -248,7 +248,7 @@ public class DungeonManager extends AbstractManager<DungeonPlugin> {
         dungeon.handlePlayerLeave(gamer);
 
         this.playerByIdMap.remove(player.getUniqueId());
-        Lang.DUNGEON_LEAVE_INFO.getMessage().send(player, replacer -> replacer.replace(dungeon.replacePlaceholders()));
+        Lang.DUNGEON_LEAVE_INFO.message().send(player, replacer -> replacer.replace(dungeon.replacePlaceholders()));
 
         DungeonLeftEvent event = new DungeonLeftEvent(dungeon, gamer);
         this.plugin.getPluginManager().callEvent(event);

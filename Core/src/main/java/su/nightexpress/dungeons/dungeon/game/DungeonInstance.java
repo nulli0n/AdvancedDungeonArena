@@ -51,10 +51,9 @@ import su.nightexpress.dungeons.user.DungeonUser;
 import su.nightexpress.dungeons.util.DungeonUtils;
 import su.nightexpress.dungeons.util.ErrorHandler;
 import su.nightexpress.dungeons.util.MobUitls;
-import su.nightexpress.economybridge.EconomyBridge;
-import su.nightexpress.nightcore.language.entry.LangText;
-import su.nightexpress.nightcore.language.message.LangMessage;
-import su.nightexpress.nightcore.language.message.OutputType;
+import su.nightexpress.nightcore.integration.currency.EconomyBridge;
+import su.nightexpress.nightcore.locale.entry.MessageLocale;
+import su.nightexpress.nightcore.locale.message.LangMessage;
 import su.nightexpress.nightcore.util.EntityUtil;
 import su.nightexpress.nightcore.util.ItemUtil;
 import su.nightexpress.nightcore.util.Players;
@@ -75,9 +74,9 @@ import java.util.stream.Collectors;
 
 public class DungeonInstance implements Dungeon {
 
-    private final DungeonPlugin   plugin;
-    private final DungeonConfig   config;
-    private final DungeonStats stats;
+    private final DungeonPlugin    plugin;
+    private final DungeonConfig    config;
+    private final DungeonStats     stats;
     private final DungeonVariables variables;
 
     private final List<DungeonEventReceiver>   eventReceivers;
@@ -85,6 +84,8 @@ public class DungeonInstance implements Dungeon {
     private final Map<UUID, DungeonGamer>      players;
     private final Map<UUID, DungeonMob>        mobByIdMap;
     private final Set<Item>                    groundItems;
+
+    private final String prefix;
 
     private World world;
     private long  tickCount;
@@ -110,6 +111,8 @@ public class DungeonInstance implements Dungeon {
         this.groundItems = new HashSet<>();
 
         this.reset();
+
+        this.prefix = this.replacePlaceholders().apply(config.getPrefix());
     }
 
     @NotNull
@@ -152,8 +155,10 @@ public class DungeonInstance implements Dungeon {
             this.plugin.getPluginManager().callEvent(event);
 
             if (this.config.gameSettings().isEndAnnouncement()) {
-                Lang.DUNGEON_ANNOUNCE_END.getMessage().broadcast(replacer -> replacer.replace(this.replacePlaceholders()));
+                Lang.DUNGEON_ANNOUNCE_END.message().broadcast(replacer -> replacer.replace(this.replacePlaceholders()));
             }
+
+            this.unholdChunks();
         }
 
         this.getPlayers().forEach(this::leavePlayer);
@@ -244,7 +249,7 @@ public class DungeonInstance implements Dungeon {
                         if (this.plugin.getDungeonManager().isPlaying(player)) return;
                         if (!this.hasPermission(player)) return;
 
-                        Lang.DUNGEON_ANNOUNCE_START.getMessage().send(player, replacer -> replacer
+                        Lang.DUNGEON_ANNOUNCE_START.message().send(player, replacer -> replacer
                             .replace(this.replacePlaceholders())
                             .replace(Placeholders.GENERIC_TIME, this.countdown));
                     });
@@ -278,6 +283,8 @@ public class DungeonInstance implements Dungeon {
             this.countdown = -1;
             this.setTimeLeft(this.config.gameSettings().hasTimeleft() ? this.config.gameSettings().getTimeleft() * 60L : -1L);
 
+            this.holdChunks();
+
             DungeonStartedEvent event = new DungeonStartedEvent(this);
             this.plugin.getPluginManager().callEvent(event);
             return;
@@ -301,8 +308,11 @@ public class DungeonInstance implements Dungeon {
         }
 
         if (!this.hasAlivePlayers()) {
-            this.setCountdown(Config.DUNGEON_COUNTDOWN_DEFEAT.get(), GameResult.DEFEAT);
-            this.broadcast(Lang.DUNGEON_END_ALL_DEAD, replacer -> replacer.replace(this.replacePlaceholders()));
+            long lastDeathTime = this.getDeadPlayers().stream().mapToLong(DungeonGamer::getDeathTime).max().orElse(0L);
+            if (System.currentTimeMillis() - lastDeathTime > Config.DUNGEON_TIME_TO_REVIVE.get() * 1000L) {
+                this.setCountdown(Config.DUNGEON_COUNTDOWN_DEFEAT.get(), GameResult.DEFEAT);
+                this.broadcast(Lang.DUNGEON_END_ALL_DEAD, replacer -> replacer.replace(this.replacePlaceholders()));
+            }
             return;
         }
 
@@ -317,6 +327,22 @@ public class DungeonInstance implements Dungeon {
         if (this.isTasksCompleted() && !this.stageCompleted) {
             this.handleStageEnd();
         }
+    }
+
+    private void holdChunks() {
+        this.config.getCuboid().getIntersectingChunks(this.world).forEach(chunk -> {
+            if (chunk.addPluginChunkTicket(this.plugin)) {
+                //this.plugin.info("Chunk ticket added: " + ChunkPos.from(chunk));
+            }
+        });
+    }
+
+    private void unholdChunks() {
+        this.config.getCuboid().getIntersectingChunks(this.world).forEach(chunk -> {
+            if (chunk.removePluginChunkTicket(this.plugin)) {
+                //this.plugin.info("Chunk ticket removed: " + ChunkPos.from(chunk));
+            }
+        });
     }
 
     private void broadcastEvent(@NotNull DungeonGameEvent event) {
@@ -353,25 +379,23 @@ public class DungeonInstance implements Dungeon {
         });
     }
 
-    public void broadcast(@NotNull LangText lang, @NotNull Consumer<Replacer> consumer) {
-        this.getPlayers().forEach(player -> this.getPrefixed(lang).send(player.getPlayer(), consumer));
+    public void broadcast(@NotNull MessageLocale locale, @NotNull Consumer<Replacer> consumer) {
+        this.getPlayers().forEach(player -> this.getPrefixed(locale).send(player.getPlayer(), consumer));
     }
 
-    public void broadcast(@NotNull LangText lang, @NotNull BiConsumer<Player, Replacer> consumer) {
-        this.getPlayers().forEach(gamer -> this.getPrefixed(lang).send(gamer.getPlayer(), replacer -> consumer.accept(gamer.getPlayer(), replacer)));
+    public void broadcast(@NotNull MessageLocale locale, @NotNull BiConsumer<Player, Replacer> consumer) {
+        this.getPlayers().forEach(gamer -> this.getPrefixed(locale).send(gamer.getPlayer(), replacer -> consumer.accept(gamer.getPlayer(), replacer)));
     }
 
     public void broadcast(@NotNull String message) {
-        this.getPlayers().forEach(player -> Players.sendModernMessage(player.getPlayer(), message));
+        this.getPlayers().forEach(gamer -> Players.sendMessage(gamer.getPlayer(), message));
     }
 
-    public void sendMessage(@NotNull Player player, @NotNull LangText lang, @NotNull Consumer<Replacer> consumer) {
-        this.getPrefixed(lang).send(player, consumer);
+    public void sendMessage(@NotNull Player player, @NotNull MessageLocale locale, @NotNull Consumer<Replacer> consumer) {
+        this.getPrefixed(locale).send(player, consumer);
     }
 
     public void runCommand(@NotNull List<String> commands, @NotNull DungeonTarget target, @Nullable DungeonGameEvent event) {
-        //String command = this.replacePlaceholders().apply(cmd);
-
         if (target == DungeonTarget.GLOBAL) {
             commands.forEach(command -> {
                 this.plugin.getServer().dispatchCommand(this.plugin.getServer().getConsoleSender(), command);
@@ -420,8 +444,8 @@ public class DungeonInstance implements Dungeon {
     }
 
     @NotNull
-    private LangMessage getPrefixed(@NotNull LangText lang) {
-        return lang.getMessage().getOptions().getOutputType() == OutputType.CHAT ? lang.getMessage().setPrefix(this.config.getPrefix()) : lang.getMessage();
+    private LangMessage getPrefixed(@NotNull MessageLocale locale) {
+        return locale.withPrefix(this.prefix);
     }
 
     private void showStatus() {
@@ -459,7 +483,7 @@ public class DungeonInstance implements Dungeon {
 
         this.taskProgress.forEach((stageTask, progress) -> progress.onPlayerJoined(gamer)); // Adjust task progress for new players amount.
 
-        Lang.DUNGEON_GAME_STARTED.getMessage().send(player);
+        Lang.DUNGEON_GAME_STARTED.message().send(player);
     }
 
     private void leavePlayer(@NotNull DungeonPlayer gamer) {
@@ -473,7 +497,7 @@ public class DungeonInstance implements Dungeon {
     }
 
     public boolean canAffordEntrance(@NotNull Player player) {
-        if (!DungeonUtils.hasEconomyBridge() || !this.config.features().hasEntranceCost()) return true;
+        if (!this.config.features().hasEntranceCost()) return true;
 
         return this.config.features().getEntranceCostMap().entrySet().stream().allMatch(entry -> EconomyBridge.hasEnough(player, entry.getKey(), entry.getValue()));
     }
@@ -486,16 +510,12 @@ public class DungeonInstance implements Dungeon {
     }
 
     public void payEntrance(@NotNull Player player) {
-        if (!DungeonUtils.hasEconomyBridge()) return;
-
         this.config.features().getEntranceCostMap().forEach((id, price) -> {
             EconomyBridge.withdraw(player, id, price);
         });
     }
 
     public void refundEntrance(@NotNull Player player) {
-        if (!DungeonUtils.hasEconomyBridge()) return;
-
         this.config.features().getEntranceCostMap().forEach((id, price) -> {
             EconomyBridge.deposit(player, id, price);
         });

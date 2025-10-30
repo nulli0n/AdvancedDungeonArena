@@ -7,14 +7,14 @@ import org.bukkit.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.dungeons.DungeonPlugin;
 import su.nightexpress.dungeons.config.Config;
-import su.nightexpress.dungeons.config.Lang;
-import su.nightexpress.dungeons.user.DungeonUser;
 import su.nightexpress.dungeons.dungeon.config.DungeonConfig;
 import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
 import su.nightexpress.dungeons.dungeon.module.Features;
+import su.nightexpress.dungeons.user.DungeonUser;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.config.Writeable;
+import su.nightexpress.nightcore.core.config.CoreLang;
 import su.nightexpress.nightcore.ui.menu.MenuViewer;
 import su.nightexpress.nightcore.ui.menu.data.ConfigBased;
 import su.nightexpress.nightcore.ui.menu.data.Filled;
@@ -27,12 +27,14 @@ import su.nightexpress.nightcore.util.bukkit.NightItem;
 import su.nightexpress.nightcore.util.time.TimeFormatType;
 import su.nightexpress.nightcore.util.time.TimeFormats;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-import static su.nightexpress.nightcore.util.text.tag.Tags.*;
 import static su.nightexpress.dungeons.Placeholders.*;
+import static su.nightexpress.nightcore.util.text.tag.Tags.*;
 
 public class DungeonBrowseMenu extends NormalMenu<DungeonPlugin> implements Filled<DungeonConfig>, ConfigBased {
 
@@ -121,7 +123,7 @@ public class DungeonBrowseMenu extends NormalMenu<DungeonPlugin> implements Fill
 
                     Features features = config.features();
                     int cooldown = features.getEntranceCooldown().getSmallest(player).intValue();
-                    if (cooldown == 0L) return Lang.OTHER_NONE.getString();
+                    if (cooldown == 0L) return CoreLang.OTHER_NONE.text();
 
                     return TimeFormats.formatAmount(cooldown * 1000L, TimeFormatType.LITERAL);
                 })

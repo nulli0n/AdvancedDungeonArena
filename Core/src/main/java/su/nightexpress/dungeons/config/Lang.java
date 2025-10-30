@@ -4,580 +4,574 @@ import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import su.nightexpress.dungeons.api.type.GameState;
 import su.nightexpress.dungeons.selection.SelectionType;
-import su.nightexpress.nightcore.core.CoreLang;
-import su.nightexpress.nightcore.language.entry.*;
-import su.nightexpress.nightcore.language.message.OutputType;
+import su.nightexpress.nightcore.locale.LangContainer;
+import su.nightexpress.nightcore.locale.LangEntry;
+import su.nightexpress.nightcore.locale.entry.*;
+import su.nightexpress.nightcore.locale.message.MessageData;
 import su.nightexpress.nightcore.util.bridge.RegistryType;
 
 import static su.nightexpress.dungeons.Placeholders.*;
-import static su.nightexpress.nightcore.language.tag.MessageTags.OUTPUT;
-import static su.nightexpress.nightcore.language.tag.MessageTags.SOUND;
-import static su.nightexpress.nightcore.util.Placeholders.GENERIC_VALUE;
-import static su.nightexpress.nightcore.util.text.tag.Tags.*;
+import static su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers.*;
 
-public class Lang extends CoreLang {
+public class Lang implements LangContainer {
 
-    public static final LangRegistry<Attribute> ATTRIBUTE = LangRegistry.of("Attribute", RegistryType.ATTRIBUTE);
-    public static final LangEnum<GameState> GAME_STATE = LangEnum.of("GameState", GameState.class);
+    public static final RegistryLocale<Attribute> ATTRIBUTE  = LangEntry.builder("Attribute").registry(RegistryType.ATTRIBUTE);
+    public static final EnumLocale<GameState>     GAME_STATE = LangEntry.builder("GameState").enumeration(GameState.class);
 
-    public static final LangString COMMAND_ARGUMENT_NAME_DUNGEON    = LangString.of("Command.Argument.Name.Dungeon", "dungeon");
-    public static final LangString COMMAND_ARGUMENT_NAME_STAGE      = LangString.of("Command.Argument.Name.Stage", "stage");
-    public static final LangString COMMAND_ARGUMENT_NAME_LEVEL      = LangString.of("Command.Argument.Name.Level", "level");
-    public static final LangString COMMAND_ARGUMENT_NAME_SPOT       = LangString.of("Command.Argument.Name.Spot", "spot");
-    public static final LangString COMMAND_ARGUMENT_NAME_REWARD     = LangString.of("Command.Argument.Name.Reward", "reward");
-    public static final LangString COMMAND_ARGUMENT_NAME_STATE      = LangString.of("Command.Argument.Name.State", "state");
-    public static final LangString COMMAND_ARGUMENT_NAME_KIT        = LangString.of("Command.Argument.Name.Kit", "kit");
-    public static final LangString COMMAND_ARGUMENT_NAME_LOOT_CHEST = LangString.of("Command.Argument.Name.LootChest", "lootChest");
-    public static final LangString COMMAND_ARGUMENT_NAME_WEIGHT     = LangString.of("Command.Argument.Name.Weight", "weight");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_DUNGEON = LangEntry.builder("Command.Argument.Name.Dungeon").text("dungeon");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_STAGE   = LangEntry.builder("Command.Argument.Name.Stage").text("stage");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_LEVEL      = LangEntry.builder("Command.Argument.Name.Level").text("level");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_SPOT       = LangEntry.builder("Command.Argument.Name.Spot").text("spot");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_REWARD     = LangEntry.builder("Command.Argument.Name.Reward").text("reward");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_STATE      = LangEntry.builder("Command.Argument.Name.State").text("state");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_KIT        = LangEntry.builder("Command.Argument.Name.Kit").text("kit");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_LOOT_CHEST = LangEntry.builder("Command.Argument.Name.LootChest").text("lootChest");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_WEIGHT     = LangEntry.builder("Command.Argument.Name.Weight").text("weight");
 
-    public static final LangString COMMAND_BROWSE_DESC = LangString.of("Command.Browse.Desc", "Browse the dungeons.");
-    public static final LangString COMMAND_JOIN_DESC   = LangString.of("Command.Join.Desc", "Enter the dungeon.");
-    public static final LangString COMMAND_LEAVE_DESC  = LangString.of("Command.Leave.Desc", "Leave the dungeon.");
-    public static final LangString COMMAND_SEND_DESC   = LangString.of("Command.Send.Send", "Send player to the dungeon.");
-    public static final LangString COMMAND_WAND_DESC   = LangString.of("Command.Wand.Desc", "Get selection tool.");
-    public static final LangString COMMAND_CREATE_DESC = LangString.of("Command.Create.Desc", "Create new dungeon from selection.");
+    public static final TextLocale COMMAND_BROWSE_DESC = LangEntry.builder("Command.Browse.Desc").text("Browse the dungeons.");
+    public static final TextLocale COMMAND_JOIN_DESC   = LangEntry.builder("Command.Join.Desc").text("Enter the dungeon.");
+    public static final TextLocale COMMAND_LEAVE_DESC  = LangEntry.builder("Command.Leave.Desc").text("Leave the dungeon.");
+    public static final TextLocale COMMAND_SEND_DESC   = LangEntry.builder("Command.Send.Send").text("Send player to the dungeon.");
+    public static final TextLocale COMMAND_WAND_DESC   = LangEntry.builder("Command.Wand.Desc").text("Get selection tool.");
+    public static final TextLocale COMMAND_CREATE_DESC = LangEntry.builder("Command.Create.Desc").text("Create new dungeon from selection.");
 
-    public static final LangString COMMAND_SET_PROTECTION_DESC  = LangString.of("Command.SetProtection.Desc", "Update dungeon's protection area.");
-    public static final LangString COMMAND_SET_LOBBY_DESC       = LangString.of("Command.SetLobby.Desc", "Set dungeon's lobby position.");
+    public static final TextLocale COMMAND_SET_PROTECTION_DESC  = LangEntry.builder("Command.SetProtection.Desc").text("Update dungeon's protection area.");
+    public static final TextLocale COMMAND_SET_LOBBY_DESC       = LangEntry.builder("Command.SetLobby.Desc").text("Set dungeon's lobby position.");
 
-    public static final LangString COMMAND_SET_STAGE_DESC       = LangString.of("Command.SetStage.Desc", "Set dungeon's game stage.");
-    public static final LangString COMMAND_SET_LEVEL_DESC       = LangString.of("Command.SetLevel.Desc", "Set dungeon's game level.");
-    public static final LangString COMMAND_SET_SPOT_DESC       = LangString.of("Command.SetSpot.Desc", "Set dungeon's spot state.");
+    public static final TextLocale COMMAND_SET_STAGE_DESC       = LangEntry.builder("Command.SetStage.Desc").text("Set dungeon's game stage.");
+    public static final TextLocale COMMAND_SET_LEVEL_DESC       = LangEntry.builder("Command.SetLevel.Desc").text("Set dungeon's game level.");
+    public static final TextLocale COMMAND_SET_SPOT_DESC       = LangEntry.builder("Command.SetSpot.Desc").text("Set dungeon's spot state.");
 
-    public static final LangString COMMAND_SPAWNER_DESC        = LangString.of("Command.Spawner.Desc", "Spawner commands.");
-    public static final LangString COMMAND_SPAWNER_CREATE_DESC = LangString.of("Command.Spawner.Create.Desc", "Create a new spawner.");
+    public static final TextLocale COMMAND_SPAWNER_DESC        = LangEntry.builder("Command.Spawner.Desc").text("Spawner commands.");
+    public static final TextLocale COMMAND_SPAWNER_CREATE_DESC = LangEntry.builder("Command.Spawner.Create.Desc").text("Create a new spawner.");
 
-    public static final LangString COMMAND_LEVEL_DESC           = LangString.of("Command.Level.Desc", "Level commands.");
-    public static final LangString COMMAND_LEVEL_CREATE_DESC    = LangString.of("Command.Level.Create.Desc", "Create empty level config.");
-    public static final LangString COMMAND_LEVEL_SET_SPAWN_DESC = LangString.of("Command.Level.SetSpawn.Desc", "Set level's spawn.");
+    public static final TextLocale COMMAND_LEVEL_DESC           = LangEntry.builder("Command.Level.Desc").text("Level commands.");
+    public static final TextLocale COMMAND_LEVEL_CREATE_DESC    = LangEntry.builder("Command.Level.Create.Desc").text("Create empty level config.");
+    public static final TextLocale COMMAND_LEVEL_SET_SPAWN_DESC = LangEntry.builder("Command.Level.SetSpawn.Desc").text("Set level's spawn.");
 
-    public static final LangString COMMAND_STAGE_DESC        = LangString.of("Command.Stage.Desc", "Stage commands.");
-    public static final LangString COMMAND_STAGE_CREATE_DESC = LangString.of("Command.Stage.Create.Desc", "Create empty stage config.");
+    public static final TextLocale COMMAND_STAGE_DESC        = LangEntry.builder("Command.Stage.Desc").text("Stage commands.");
+    public static final TextLocale COMMAND_STAGE_CREATE_DESC = LangEntry.builder("Command.Stage.Create.Desc").text("Create empty stage config.");
 
-    public static final LangString COMMAND_SPOT_DESC           = LangString.of("Command.Spot.Desc", "Spot commands.");
-    public static final LangString COMMAND_SPOT_CREATE_DESC    = LangString.of("Command.Spot.Create.Desc", "Create a new spot from selection.");
-    public static final LangString COMMAND_SPOT_REMOVE_DESC    = LangString.of("Command.Spot.Remove.Desc", "Delete a spot.");
-    public static final LangString COMMAND_SPOT_ADD_STATE_DESC = LangString.of("Command.Spot.AddState.Desc", "Add a spot state from selection.");
+    public static final TextLocale COMMAND_SPOT_DESC           = LangEntry.builder("Command.Spot.Desc").text("Spot commands.");
+    public static final TextLocale COMMAND_SPOT_CREATE_DESC    = LangEntry.builder("Command.Spot.Create.Desc").text("Create a new spot from selection.");
+    public static final TextLocale COMMAND_SPOT_REMOVE_DESC    = LangEntry.builder("Command.Spot.Remove.Desc").text("Delete a spot.");
+    public static final TextLocale COMMAND_SPOT_ADD_STATE_DESC = LangEntry.builder("Command.Spot.AddState.Desc").text("Add a spot state from selection.");
 
-    public static final LangString COMMAND_KIT_DESC           = LangString.of("Command.Kit.Desc", "Kit Commands.");
-    public static final LangString COMMAND_KIT_CREATE_DESC    = LangString.of("Command.Kit.Create.Desc", "Create a new kit.");
-    public static final LangString COMMAND_KIT_SET_ITEMS_DESC = LangString.of("Command.Kit.SetItems.Desc", "Update kit with current inventory.");
-    public static final LangString COMMAND_KIT_GRANT_DESC     = LangString.of("Command.Kit.Grant.Desc", "Grant kit access to a player.");
-    public static final LangString COMMAND_KIT_REVOKE_DESC    = LangString.of("Command.Kit.Revoke.Desc", "Revoke kit access from a player.");
+    public static final TextLocale COMMAND_KIT_DESC           = LangEntry.builder("Command.Kit.Desc").text("Kit Commands.");
+    public static final TextLocale COMMAND_KIT_CREATE_DESC    = LangEntry.builder("Command.Kit.Create.Desc").text("Create a new kit.");
+    public static final TextLocale COMMAND_KIT_SET_ITEMS_DESC = LangEntry.builder("Command.Kit.SetItems.Desc").text("Update kit with current inventory.");
+    public static final TextLocale COMMAND_KIT_GRANT_DESC     = LangEntry.builder("Command.Kit.Grant.Desc").text("Grant kit access to a player.");
+    public static final TextLocale COMMAND_KIT_REVOKE_DESC    = LangEntry.builder("Command.Kit.Revoke.Desc").text("Revoke kit access from a player.");
 
-    public static final LangString COMMAND_REWARD_DESC          = LangString.of("Command.Reward.Desc", "Reward commands.");
-    public static final LangString COMMAND_REWARD_CREATE_DESC   = LangString.of("Command.Reward.Create.Desc", "Create a new reward.");
-    public static final LangString COMMAND_REWARD_REMOVE_DESC   = LangString.of("Command.Reward.Remove.Desc", "Delete a reward.");
-    public static final LangString COMMAND_REWARD_ADD_ITEM_DESC = LangString.of("Command.Reward.AddItem.Desc", "Add item to the reward.");
+    public static final TextLocale COMMAND_REWARD_DESC          = LangEntry.builder("Command.Reward.Desc").text("Reward commands.");
+    public static final TextLocale COMMAND_REWARD_CREATE_DESC   = LangEntry.builder("Command.Reward.Create.Desc").text("Create a new reward.");
+    public static final TextLocale COMMAND_REWARD_REMOVE_DESC   = LangEntry.builder("Command.Reward.Remove.Desc").text("Delete a reward.");
+    public static final TextLocale COMMAND_REWARD_ADD_ITEM_DESC = LangEntry.builder("Command.Reward.AddItem.Desc").text("Add item to the reward.");
 
-    public static final LangString COMMAND_LOOT_CHEST_DESC          = LangString.of("Command.LootChest.Desc", "Loot Chest commands.");
-    public static final LangString COMMAND_LOOT_CHEST_CREATE_DESC   = LangString.of("Command.LootChest.Create.Desc", "Create a new loot chest.");
-    public static final LangString COMMAND_LOOT_CHEST_REMOVE_DESC   = LangString.of("Command.LootChest.Remove.Desc", "Delete a loot chest.");
-    public static final LangString COMMAND_LOOT_CHEST_ADD_ITEM_DESC = LangString.of("Command.LootChest.AddItem.Desc", "Add item to the loot chest.");
+    public static final TextLocale COMMAND_LOOT_CHEST_DESC          = LangEntry.builder("Command.LootChest.Desc").text("Loot Chest commands.");
+    public static final TextLocale COMMAND_LOOT_CHEST_CREATE_DESC   = LangEntry.builder("Command.LootChest.Create.Desc").text("Create a new loot chest.");
+    public static final TextLocale COMMAND_LOOT_CHEST_REMOVE_DESC   = LangEntry.builder("Command.LootChest.Remove.Desc").text("Delete a loot chest.");
+    public static final TextLocale COMMAND_LOOT_CHEST_ADD_ITEM_DESC = LangEntry.builder("Command.LootChest.AddItem.Desc").text("Add item to the loot chest.");
 
-    public static final LangString COMMAND_STOP_DESC  = LangString.of("Command.Stop.Desc", "Force stop the dungeon.");
-    public static final LangString COMMAND_START_DESC = LangString.of("Command.Start.Desc", "Force start the dungeon.");
+    public static final TextLocale COMMAND_STOP_DESC  = LangEntry.builder("Command.Stop.Desc").text("Force stop the dungeon.");
+    public static final TextLocale COMMAND_START_DESC = LangEntry.builder("Command.Start.Desc").text("Force start the dungeon.");
 
-    public static final LangText ERROR_COMMAND_INVALID_SELECTION_ARGUMENT = LangText.of("Error.Command.Argument.InvalidSelectionType",
-        LIGHT_GRAY.wrap(LIGHT_RED.wrap(GENERIC_VALUE) + " is not a valid type!"));
+    public static final MessageLocale ERROR_COMMAND_INVALID_SELECTION_ARGUMENT = LangEntry.builder("Command.Syntax.InvalidSelectionType").chatMessage(
+        GRAY.wrap(SOFT_RED.wrap(GENERIC_INPUT) + " is not a valid type!"));
 
-    public static final LangText ERROR_COMMAND_INVALID_DUNGEON_ARGUMENT = LangText.of("Error.Command.InvalidArgument.Dungeon",
-        LIGHT_GRAY.wrap(LIGHT_RED.wrap(GENERIC_VALUE) + " is not a valid dungeon!"));
+    public static final MessageLocale ERROR_COMMAND_INVALID_DUNGEON_ARGUMENT = LangEntry.builder("Command.Syntax.InvalidDungeon").chatMessage(
+        GRAY.wrap(SOFT_RED.wrap(GENERIC_INPUT) + " is not a valid dungeon!"));
 
-    public static final LangText ERROR_COMMAND_INVALID_KIT_ARGUMENT = LangText.of("Error.Command.InvalidArgument.Kit",
-        LIGHT_GRAY.wrap(LIGHT_RED.wrap(GENERIC_VALUE) + " is not a valid kit!"));
+    public static final MessageLocale ERROR_COMMAND_INVALID_KIT_ARGUMENT = LangEntry.builder("Command.Syntax.InvalidKit").chatMessage(
+        GRAY.wrap(SOFT_RED.wrap(GENERIC_INPUT) + " is not a valid kit!"));
 
-    public static final LangText ERROR_COMMAND_INVALID_STAGE_ARGUMENT = LangText.of("Error.Command.InvalidArgument.Stage",
-        LIGHT_GRAY.wrap(LIGHT_RED.wrap(GENERIC_VALUE) + " is not a valid dungeon stage!"));
+    public static final MessageLocale ERROR_COMMAND_INVALID_STAGE_ARGUMENT = LangEntry.builder("Error.Command.InvalidArgument.Stage").chatMessage(
+        GRAY.wrap(SOFT_RED.wrap(GENERIC_VALUE) + " is not a valid dungeon stage!"));
 
-    public static final LangText ERROR_COMMAND_INVALID_LEVEL_ARGUMENT = LangText.of("Error.Command.InvalidArgument.Level",
-        LIGHT_GRAY.wrap(LIGHT_RED.wrap(GENERIC_VALUE) + " is not a valid dungeon level!"));
+    public static final MessageLocale ERROR_COMMAND_INVALID_LEVEL_ARGUMENT = LangEntry.builder("Error.Command.InvalidArgument.Level").chatMessage(
+        GRAY.wrap(SOFT_RED.wrap(GENERIC_VALUE) + " is not a valid dungeon level!"));
 
-    public static final LangText ERROR_COMMAND_INVALID_SPOT_ARGUMENT = LangText.of("Error.Command.InvalidArgument.Spot",
-        LIGHT_GRAY.wrap(LIGHT_RED.wrap(GENERIC_VALUE) + " is not a valid dungeon spot!"));
+    public static final MessageLocale ERROR_COMMAND_INVALID_SPOT_ARGUMENT = LangEntry.builder("Error.Command.InvalidArgument.Spot").chatMessage(
+        GRAY.wrap(SOFT_RED.wrap(GENERIC_VALUE) + " is not a valid dungeon spot!"));
 
-    public static final LangText ERROR_COMMAND_INVALID_STATE_ARGUMENT = LangText.of("Error.Command.InvalidArgument.State",
-        LIGHT_GRAY.wrap(LIGHT_RED.wrap(GENERIC_VALUE) + " is not a valid spot state!"));
+    public static final MessageLocale ERROR_COMMAND_INVALID_STATE_ARGUMENT = LangEntry.builder("Error.Command.InvalidArgument.State").chatMessage(
+        GRAY.wrap(SOFT_RED.wrap(GENERIC_VALUE) + " is not a valid spot state!"));
 
 
 
-    public static final LangText SETUP_GENERIC_NO_ITEM = LangText.of("Setup.Generic.NoItem",
-        LIGHT_RED.wrap("You must hold an item in main hand."));
+    public static final MessageLocale SETUP_GENERIC_NO_ITEM = LangEntry.builder("Setup.Generic.NoItem").chatMessage(
+        SOFT_RED.wrap("You must hold an item in main hand."));
 
-    public static final LangText SETUP_GENERIC_BAD_ITEM = LangText.of("Setup.Generic.BadItem",
-        LIGHT_RED.wrap("Unable to get data of the item you hold."));
+    public static final MessageLocale SETUP_GENERIC_BAD_ITEM = LangEntry.builder("Setup.Generic.BadItem").chatMessage(
+        SOFT_RED.wrap("Unable to get data of the item you hold."));
 
 
 
-    public static final LangText SETUP_DUNGEON_EXISTS = LangText.of("Setup.Dungeon.AlreadyExists",
-        LIGHT_RED.wrap("Dungeon with such ID already exists."));
+    public static final MessageLocale SETUP_DUNGEON_EXISTS = LangEntry.builder("Setup.Dungeon.AlreadyExists").chatMessage(
+        SOFT_RED.wrap("Dungeon with such ID already exists."));
 
-    public static final LangText SETUP_DUNGEON_CREATED = LangText.of("Setup.Dungeon.Created",
+    public static final MessageLocale SETUP_DUNGEON_CREATED = LangEntry.builder("Setup.Dungeon.Created").chatMessage(
         GRAY.wrap("Dungeon created: " + GREEN.wrap(DUNGEON_NAME) + "!"));
 
 
 
-    public static final LangText SETUP_PROTECTION_SET = LangText.of("Setup.Protection.Set",
+    public static final MessageLocale SETUP_PROTECTION_SET = LangEntry.builder("Setup.Protection.Set").chatMessage(
         GRAY.wrap("Updated protection area for the " + GREEN.wrap(DUNGEON_NAME) + " dungeon."));
 
-    public static final LangText SETUP_LOBBY_SET = LangText.of("Setup.Lobby.Set",
+    public static final MessageLocale SETUP_LOBBY_SET = LangEntry.builder("Setup.Lobby.Set").chatMessage(
         GRAY.wrap("Set lobby position for the " + GREEN.wrap(DUNGEON_NAME) + " dungeon."));
 
 
 
-    public static final LangText SETUP_SPAWNER_CREATED = LangText.of("Setup.Spawner.Created",
+    public static final MessageLocale SETUP_SPAWNER_CREATED = LangEntry.builder("Setup.Spawner.Created").chatMessage(
         GRAY.wrap("Spawner created: " + GREEN.wrap(GENERIC_NAME) + "!"));
 
 
 
-    public static final LangText SETUP_LEVEL_EXISTS = LangText.of("Setup.Level.AlreadyExists",
-        LIGHT_RED.wrap("Level with such ID already exists."));
+    public static final MessageLocale SETUP_LEVEL_EXISTS = LangEntry.builder("Setup.Level.AlreadyExists").chatMessage(
+        SOFT_RED.wrap("Level with such ID already exists."));
 
-    public static final LangText SETUP_LEVEL_INVALID = LangText.of("Setup.Level.Invalid",
-        LIGHT_RED.wrap("Invalid level!"));
+    public static final MessageLocale SETUP_LEVEL_INVALID = LangEntry.builder("Setup.Level.Invalid").chatMessage(
+        SOFT_RED.wrap("Invalid level!"));
 
-    public static final LangText SETUP_LEVEL_CREATED = LangText.of("Setup.Level.Created",
+    public static final MessageLocale SETUP_LEVEL_CREATED = LangEntry.builder("Setup.Level.Created").chatMessage(
         GRAY.wrap("Level created: " + GREEN.wrap(LEVEL_NAME) + "!"));
 
-    public static final LangText SETUP_LEVEL_SPAWN_SET = LangText.of("Setup.Level.SpawnSet",
+    public static final MessageLocale SETUP_LEVEL_SPAWN_SET = LangEntry.builder("Setup.Level.SpawnSet").chatMessage(
         GRAY.wrap("Set level spawn: " + GREEN.wrap(LEVEL_NAME) + "!"));
 
 
 
-    public static final LangText SETUP_STAGE_EXISTS = LangText.of("Setup.Stage.AlreadyExists",
-        LIGHT_RED.wrap("Stage with such ID already exists."));
+    public static final MessageLocale SETUP_STAGE_EXISTS = LangEntry.builder("Setup.Stage.AlreadyExists").chatMessage(
+        SOFT_RED.wrap("Stage with such ID already exists."));
 
-    public static final LangText SETUP_STAGE_CREATED = LangText.of("Setup.Stage.Created",
+    public static final MessageLocale SETUP_STAGE_CREATED = LangEntry.builder("Setup.Stage.Created").chatMessage(
         GRAY.wrap("Stage created: " + GREEN.wrap(STAGE_NAME) + "!"));
 
 
 
-    public static final LangText SETUP_REWARD_EXISTS = LangText.of("Setup.Reward.AlreadyExists",
-        LIGHT_RED.wrap("Reward with such ID already exists."));
+    public static final MessageLocale SETUP_REWARD_EXISTS = LangEntry.builder("Setup.Reward.AlreadyExists").chatMessage(
+        SOFT_RED.wrap("Reward with such ID already exists."));
 
-    public static final LangText SETUP_REWARD_INVALID = LangText.of("Setup.Reward.Invalid",
-        LIGHT_RED.wrap("Invalid reward!"));
+    public static final MessageLocale SETUP_REWARD_INVALID = LangEntry.builder("Setup.Reward.Invalid").chatMessage(
+        SOFT_RED.wrap("Invalid reward!"));
 
-    public static final LangText SETUP_REWARD_CREATED = LangText.of("Setup.Reward.Created",
+    public static final MessageLocale SETUP_REWARD_CREATED = LangEntry.builder("Setup.Reward.Created").chatMessage(
         GRAY.wrap("Reward created: " + GREEN.wrap(REWARD_NAME) + "!"));
 
-    public static final LangText SETUP_REWARD_REMOVED = LangText.of("Setup.Reward.Removed",
+    public static final MessageLocale SETUP_REWARD_REMOVED = LangEntry.builder("Setup.Reward.Removed").chatMessage(
         GRAY.wrap("Reward removed: " + RED.wrap(REWARD_NAME) + "!"));
 
-    public static final LangText SETUP_REWARD_ITEM_ADDED = LangText.of("Setup.Reward.ItemAdded",
+    public static final MessageLocale SETUP_REWARD_ITEM_ADDED = LangEntry.builder("Setup.Reward.ItemAdded").chatMessage(
         GRAY.wrap("Added " + GREEN.wrap(GENERIC_NAME) + " to the " + GREEN.wrap(REWARD_NAME) + " reward!"));
 
 
 
-    public static final LangText SETUP_LOOT_CHEST_EXISTS = LangText.of("Setup.LootChest.AlreadyExists",
-        LIGHT_RED.wrap("Loot Chest with such ID already exists."));
+    public static final MessageLocale SETUP_LOOT_CHEST_EXISTS = LangEntry.builder("Setup.LootChest.AlreadyExists").chatMessage(
+        SOFT_RED.wrap("Loot Chest with such ID already exists."));
 
-    public static final LangText SETUP_LOOT_CHEST_INVALID = LangText.of("Setup.LootChest.Invalid",
-        LIGHT_RED.wrap("Invalid loot chest!"));
+    public static final MessageLocale SETUP_LOOT_CHEST_INVALID = LangEntry.builder("Setup.LootChest.Invalid").chatMessage(
+        SOFT_RED.wrap("Invalid loot chest!"));
 
-    public static final LangText SETUP_LOOT_CHEST_NOT_CONTAINER = LangText.of("Setup.LootChest.NotContainer",
-        LIGHT_RED.wrap("The loot chest block must be a container!"));
+    public static final MessageLocale SETUP_LOOT_CHEST_NOT_CONTAINER = LangEntry.builder("Setup.LootChest.NotContainer").chatMessage(
+        SOFT_RED.wrap("The loot chest block must be a container!"));
 
-    public static final LangText SETUP_LOOT_CHEST_CREATED = LangText.of("Setup.LootChest.Created",
+    public static final MessageLocale SETUP_LOOT_CHEST_CREATED = LangEntry.builder("Setup.LootChest.Created").chatMessage(
         GRAY.wrap("Loot Chest created: " + GREEN.wrap(LOOT_CHEST_ID) + "!"));
 
-    public static final LangText SETUP_LOOT_CHEST_REMOVED = LangText.of("Setup.LootChest.Removed",
+    public static final MessageLocale SETUP_LOOT_CHEST_REMOVED = LangEntry.builder("Setup.LootChest.Removed").chatMessage(
         GRAY.wrap("Loot Chest removed: " + RED.wrap(LOOT_CHEST_ID) + "!"));
 
-    public static final LangText SETUP_LOOT_CHEST_ITEM_ADDED = LangText.of("Setup.LootChest.ItemAdded",
+    public static final MessageLocale SETUP_LOOT_CHEST_ITEM_ADDED = LangEntry.builder("Setup.LootChest.ItemAdded").chatMessage(
         GRAY.wrap("Added " + GREEN.wrap(GENERIC_NAME) + " to the " + GREEN.wrap(LOOT_CHEST_ID) + " loot chest!"));
 
 
 
-    public static final LangText SETUP_SPOT_EXISTS = LangText.of("Setup.Spot.AlreadyExists",
-        LIGHT_RED.wrap("Spot with such ID already exists."));
+    public static final MessageLocale SETUP_SPOT_EXISTS = LangEntry.builder("Setup.Spot.AlreadyExists").chatMessage(
+        SOFT_RED.wrap("Spot with such ID already exists."));
 
-    public static final LangText SETUP_SPOT_INVALID = LangText.of("Setup.Spot.Invalid",
-        LIGHT_RED.wrap("Invalid spot!"));
+    public static final MessageLocale SETUP_SPOT_INVALID = LangEntry.builder("Setup.Spot.Invalid").chatMessage(
+        SOFT_RED.wrap("Invalid spot!"));
 
-    public static final LangText SETUP_SPOT_CREATED = LangText.of("Setup.Spot.Created",
+    public static final MessageLocale SETUP_SPOT_CREATED = LangEntry.builder("Setup.Spot.Created").chatMessage(
         GRAY.wrap("Spot created: " + GREEN.wrap(SPOT_NAME) + "!"));
 
-    public static final LangText SETUP_SPOT_REMOVED = LangText.of("Setup.Spot.Removed",
+    public static final MessageLocale SETUP_SPOT_REMOVED = LangEntry.builder("Setup.Spot.Removed").chatMessage(
         GRAY.wrap("Spot removed: " + RED.wrap(SPOT_NAME) + "!"));
 
-    public static final LangText SETUP_SPOT_STATE_ADDED = LangText.of("Setup.Spot.StateCreated",
-        GRAY.wrap("Spot state created: " + LIGHT_GREEN.wrap(SPOT_STATE_ID) + "!"));
+    public static final MessageLocale SETUP_SPOT_STATE_ADDED = LangEntry.builder("Setup.Spot.StateCreated").chatMessage(
+        GRAY.wrap("Spot state created: " + SOFT_GREEN.wrap(SPOT_STATE_ID) + "!"));
 
 
 
-    public static final LangText SETUP_ERROR_INVALID_NAME = LangText.of("Setup.Error.InvalidName",
-        LIGHT_RED.wrap("Invalid ID. Only latin letters and numbers are allowed."));
+    public static final MessageLocale SETUP_ERROR_INVALID_NAME = LangEntry.builder("Setup.Error.InvalidName").chatMessage(
+        SOFT_RED.wrap("Invalid ID. Only latin letters and numbers are allowed."));
 
 
 
-    public static final LangText SETUP_SELECTION_ACTIVATED = LangText.of("Setup.Selection.Activated",
+    public static final MessageLocale SETUP_SELECTION_ACTIVATED = LangEntry.builder("Setup.Selection.Activated").chatMessage(
         GRAY.wrap("Selection mode " + GREEN.wrap("activated") + "."));
 
-    public static final LangText SETUP_SELECTION_NO_CUBOID = LangText.of("Setup.Selection.NoCuboid",
-        LIGHT_RED.wrap("You must select cuboid area first: " + LIGHT_YELLOW.wrap("/" + ALIAS_BASIC + " " + ALIAS_WAND + " " + SelectionType.CUBOID.name().toLowerCase())));
+    public static final MessageLocale SETUP_SELECTION_NO_CUBOID = LangEntry.builder("Setup.Selection.NoCuboid").chatMessage(
+        SOFT_RED.wrap("You must select cuboid area first: " + SOFT_YELLOW.wrap("/" + ALIAS_BASIC + " " + ALIAS_WAND + " " + SelectionType.CUBOID.name().toLowerCase())));
 
-    public static final LangText SETUP_SELECTION_NO_POSITIONS = LangText.of("Setup.Selection.NoPositions",
-        LIGHT_RED.wrap("You must select block positions first: " + LIGHT_YELLOW.wrap("/" + ALIAS_BASIC + " " + ALIAS_WAND + " " + SelectionType.POSITION.name().toLowerCase())));
+    public static final MessageLocale SETUP_SELECTION_NO_POSITIONS = LangEntry.builder("Setup.Selection.NoPositions").chatMessage(
+        SOFT_RED.wrap("You must select block positions first: " + SOFT_YELLOW.wrap("/" + ALIAS_BASIC + " " + ALIAS_WAND + " " + SelectionType.POSITION.name().toLowerCase())));
 
-    public static final LangText SETUP_SELECTION_CUBOID_OUT_OF_PROTECTION = LangText.of("Setup.Selection.CuboidOutOfProtection",
-        LIGHT_RED.wrap("Selected cuboid must be inside the " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + "'s protection area."));
+    public static final MessageLocale SETUP_SELECTION_CUBOID_OUT_OF_PROTECTION = LangEntry.builder("Setup.Selection.CuboidOutOfProtection").chatMessage(
+        SOFT_RED.wrap("Selected cuboid must be inside the " + SOFT_YELLOW.wrap(DUNGEON_NAME) + "'s protection area."));
 
-    public static final LangText SETUP_SELECTION_POSITION_OUT_OF_PROTECTION = LangText.of("Setup.Selection.PositionOutOfProtection",
-        LIGHT_RED.wrap("Position must be inside the " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + "'s protection area."));
+    public static final MessageLocale SETUP_SELECTION_POSITION_OUT_OF_PROTECTION = LangEntry.builder("Setup.Selection.PositionOutOfProtection").chatMessage(
+        SOFT_RED.wrap("Position must be inside the " + SOFT_YELLOW.wrap(DUNGEON_NAME) + "'s protection area."));
 
-    public static final LangText SETUP_SELECTION_DUNGEON_OVERLAP = LangText.of("Setup.Selection.DungeonOverlap",
-        LIGHT_RED.wrap("Selected area overlaps with other dungeon(s)!"));
-
-
-
-    public static final LangText DUNGEON_ERROR_MUST_BE_IN = LangText.of("Dungeon.Error.MustBeIn",
-        LIGHT_RED.wrap("You're not in a dungeon!"));
-
-    public static final LangText DUNGEON_ERROR_MUST_BE_OUT = LangText.of("Dungeon.Error.MustBeOut",
-        LIGHT_RED.wrap("You can't do that in dungeon!"));
-
-    public static final LangText DUNGEON_ERROR_NOT_IN_GAME = LangText.of("Dungeon.ForceEnd.NotInGame",
-        LIGHT_GRAY.wrap("The " + RED.wrap(DUNGEON_NAME) + " dungeon is not in active game state."));
-
-    public static final LangText DUNGEON_ERROR_NOT_READY_TO_GAME = LangText.of("Dungeon.Error.NotReadyToGame",
-        LIGHT_GRAY.wrap("The " + RED.wrap(DUNGEON_NAME) + " dungeon is not ready to start the game."));
+    public static final MessageLocale SETUP_SELECTION_DUNGEON_OVERLAP = LangEntry.builder("Setup.Selection.DungeonOverlap").chatMessage(
+        SOFT_RED.wrap("Selected area overlaps with other dungeon(s)!"));
 
 
 
-    public static final LangText DUNGEON_START_DONE = LangText.of("Dungeon.Admin.Start",
+    public static final MessageLocale DUNGEON_ERROR_MUST_BE_IN = LangEntry.builder("Dungeon.Error.MustBeIn").chatMessage(
+        SOFT_RED.wrap("You're not in a dungeon!"));
+
+    public static final MessageLocale DUNGEON_ERROR_MUST_BE_OUT = LangEntry.builder("Dungeon.Error.MustBeOut").chatMessage(
+        SOFT_RED.wrap("You can't do that in dungeon!"));
+
+    public static final MessageLocale DUNGEON_ERROR_NOT_IN_GAME = LangEntry.builder("Dungeon.ForceEnd.NotInGame").chatMessage(
+        GRAY.wrap("The " + RED.wrap(DUNGEON_NAME) + " dungeon is not in active game state."));
+
+    public static final MessageLocale DUNGEON_ERROR_NOT_READY_TO_GAME = LangEntry.builder("Dungeon.Error.NotReadyToGame").chatMessage(
+        GRAY.wrap("The " + RED.wrap(DUNGEON_NAME) + " dungeon is not ready to start the game."));
+
+
+
+    public static final MessageLocale DUNGEON_START_DONE = LangEntry.builder("Dungeon.Admin.Start").chatMessage(
         GRAY.wrap("Started the " + GREEN.wrap(DUNGEON_NAME) + " dungeon."));
 
-    public static final LangText DUNGEON_ADMIN_STOP = LangText.of("Dungeon.Admin.Stop",
+    public static final MessageLocale DUNGEON_ADMIN_STOP = LangEntry.builder("Dungeon.Admin.Stop").chatMessage(
         GRAY.wrap("Stopped the " + GREEN.wrap(DUNGEON_NAME) + " dungeon."));
 
-    public static final LangText DUNGEON_ADMIN_SET_LEVEL = LangText.of("Dungeon.Admin.SetLevel",
-        GRAY.wrap("Set " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + "'s level to " + LIGHT_YELLOW.wrap(STAGE_NAME) + "."));
+    public static final MessageLocale DUNGEON_ADMIN_SET_LEVEL = LangEntry.builder("Dungeon.Admin.SetLevel").chatMessage(
+        GRAY.wrap("Set " + SOFT_YELLOW.wrap(DUNGEON_NAME) + "'s level to " + SOFT_YELLOW.wrap(STAGE_NAME) + "."));
 
-    public static final LangText DUNGEON_ADMIN_SET_STAGE = LangText.of("Dungeon.Admin.SetStage",
-        GRAY.wrap("Set " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + "'s stage to " + LIGHT_YELLOW.wrap(STAGE_NAME) + "."));
+    public static final MessageLocale DUNGEON_ADMIN_SET_STAGE = LangEntry.builder("Dungeon.Admin.SetStage").chatMessage(
+        GRAY.wrap("Set " + SOFT_YELLOW.wrap(DUNGEON_NAME) + "'s stage to " + SOFT_YELLOW.wrap(STAGE_NAME) + "."));
 
-    public static final LangText DUNGEON_ADMIN_SET_SPOT = LangText.of("Dungeon.Admin.SetSpot",
-        GRAY.wrap("Set " + LIGHT_YELLOW.wrap(SPOT_NAME) + "'s state to " + LIGHT_YELLOW.wrap(SPOT_STATE_ID) + "."));
+    public static final MessageLocale DUNGEON_ADMIN_SET_SPOT = LangEntry.builder("Dungeon.Admin.SetSpot").chatMessage(
+        GRAY.wrap("Set " + SOFT_YELLOW.wrap(SPOT_NAME) + "'s state to " + SOFT_YELLOW.wrap(SPOT_STATE_ID) + "."));
 
 
 
-    public static final LangText DUNGEON_SEND_SENT = LangText.of("Dungeon.Send.Sent",
-        GRAY.wrap("Successfully sent " + LIGHT_YELLOW.wrap(PLAYER_NAME) + " to the " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + " dungeon.")
+    public static final MessageLocale DUNGEON_SEND_SENT = LangEntry.builder("Dungeon.Send.Sent").chatMessage(
+        GRAY.wrap("Successfully sent " + SOFT_YELLOW.wrap(PLAYER_NAME) + " to the " + SOFT_YELLOW.wrap(DUNGEON_NAME) + " dungeon.")
     );
 
-    public static final LangText DUNGEON_SEND_FAIL = LangText.of("Dungeon.Send.Fail",
-        GRAY.wrap("Player " + LIGHT_RED.wrap(PLAYER_NAME) + " was unable to join the " + LIGHT_RED.wrap(DUNGEON_NAME) + " dungeon.")
+    public static final MessageLocale DUNGEON_SEND_FAIL = LangEntry.builder("Dungeon.Send.Fail").chatMessage(
+        GRAY.wrap("Player " + SOFT_RED.wrap(PLAYER_NAME) + " was unable to join the " + SOFT_RED.wrap(DUNGEON_NAME) + " dungeon.")
     );
 
-    public static final LangText DUNGEON_ENTER_ERROR_INACTIVE = LangText.of("Dungeon.Enter.Error.Inactive",
-        LIGHT_RED.wrap("Dungeon " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + " is not available currently.")
+    public static final MessageLocale DUNGEON_ENTER_ERROR_INACTIVE = LangEntry.builder("Dungeon.Enter.Error.Inactive").chatMessage(
+        SOFT_RED.wrap("Dungeon " + SOFT_YELLOW.wrap(DUNGEON_NAME) + " is not available currently.")
     );
 
-    public static final LangText DUNGEON_ENTER_ERROR_PERMISSION = LangText.of("Dungeon.Enter.Error.Permission",
-        LIGHT_GRAY.wrap("You don't have permission to enter the " + LIGHT_RED.wrap(DUNGEON_NAME) + " dungeon.")
+    public static final MessageLocale DUNGEON_ENTER_ERROR_PERMISSION = LangEntry.builder("Dungeon.Enter.Error.Permission").chatMessage(
+        GRAY.wrap("You don't have permission to enter the " + SOFT_RED.wrap(DUNGEON_NAME) + " dungeon.")
     );
 
-    public static final LangText DUNGEON_ENTER_ERROR_COST = LangText.of("Dungeon.Enter.Error.Payment",
-        LIGHT_GRAY.wrap("You don't have " + LIGHT_RED.wrap(DUNGEON_ENTRANCE_PAYMENT) + " to enter the " + LIGHT_RED.wrap(DUNGEON_NAME) + " dungeon!")
+    public static final MessageLocale DUNGEON_ENTER_ERROR_COST = LangEntry.builder("Dungeon.Enter.Error.Payment").chatMessage(
+        GRAY.wrap("You don't have " + SOFT_RED.wrap(DUNGEON_ENTRANCE_PAYMENT) + " to enter the " + SOFT_RED.wrap(DUNGEON_NAME) + " dungeon!")
     );
 
-    public static final LangText DUNGEON_ENTER_ERROR_LEVEL = LangText.of("Dungeon.Enter.Error.Level",
-        LIGHT_GRAY.wrap("Your level must be " + LIGHT_RED.wrap(DUNGEON_LEVEL_REQUIREMENT) + " to enter the " + LIGHT_RED.wrap(DUNGEON_NAME) + " dungeon!")
+    public static final MessageLocale DUNGEON_ENTER_ERROR_LEVEL = LangEntry.builder("Dungeon.Enter.Error.Level").chatMessage(
+        GRAY.wrap("Your level must be " + SOFT_RED.wrap(DUNGEON_LEVEL_REQUIREMENT) + " to enter the " + SOFT_RED.wrap(DUNGEON_NAME) + " dungeon!")
     );
 
-    public static final LangText DUNGEON_ENTER_ERROR_COOLDOWN = LangText.of("Dungeon.Enter.Error.Cooldown",
-        LIGHT_GRAY.wrap(LIGHT_RED.wrap(DUNGEON_NAME) + " is on cooldown: " + LIGHT_RED.wrap(GENERIC_TIME))
+    public static final MessageLocale DUNGEON_ENTER_ERROR_COOLDOWN = LangEntry.builder("Dungeon.Enter.Error.Cooldown").chatMessage(
+        GRAY.wrap(SOFT_RED.wrap(DUNGEON_NAME) + " is on cooldown: " + SOFT_RED.wrap(GENERIC_TIME))
     );
 
-    public static final LangText DUNGEON_ENTER_ERROR_MAX_PLAYERS = LangText.of("Dungeon.Enter.Error.Maximum",
-        LIGHT_GRAY.wrap("Dungeon " + LIGHT_RED.wrap(DUNGEON_NAME) + " has maximum players.")
+    public static final MessageLocale DUNGEON_ENTER_ERROR_MAX_PLAYERS = LangEntry.builder("Dungeon.Enter.Error.Maximum").chatMessage(
+        GRAY.wrap("Dungeon " + SOFT_RED.wrap(DUNGEON_NAME) + " has maximum players.")
     );
 
-    public static final LangText DUNGEON_ENTER_ERROR_STARTED = LangText.of("Dungeon.Enter.Error.Started",
-        LIGHT_GRAY.wrap("Dungeon " + LIGHT_RED.wrap(DUNGEON_NAME) + " is already started. You can't join now.")
+    public static final MessageLocale DUNGEON_ENTER_ERROR_STARTED = LangEntry.builder("Dungeon.Enter.Error.Started").chatMessage(
+        GRAY.wrap("Dungeon " + SOFT_RED.wrap(DUNGEON_NAME) + " is already started. You can't join now.")
     );
 
-    public static final LangText DUNGEON_ENTER_ERROR_ENDING = LangText.of("Dungeon.Enter.Error.Ending",
-        LIGHT_GRAY.wrap("Dungeon " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + " is being reset. Try again in a few moments.")
+    public static final MessageLocale DUNGEON_ENTER_ERROR_ENDING = LangEntry.builder("Dungeon.Enter.Error.Ending").chatMessage(
+        GRAY.wrap("Dungeon " + SOFT_YELLOW.wrap(DUNGEON_NAME) + " is being reset. Try again in a few moments.")
     );
 
-    public static final LangText DUNGEON_ENTER_ERROR_NO_KIT = LangText.of("Dungeon.Enter.Error.NoKit",
-        SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_GRAY.wrap("You must select a kit to join the " + LIGHT_RED.wrap(DUNGEON_NAME) + " dungeon!")
+    public static final MessageLocale DUNGEON_ENTER_ERROR_NO_KIT = LangEntry.builder("Dungeon.Enter.Error.NoKit").chatMessage(
+        Sound.ENTITY_VILLAGER_NO,
+        GRAY.wrap("You must select a kit to join the " + SOFT_RED.wrap(DUNGEON_NAME) + " dungeon!")
     );
 
-    public static final LangText DUNGEON_ENTER_ERROR_NO_KIT_SLOTS = LangText.of("Dungeon.Enter.Error.NoKitSlots",
-        SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_GRAY.wrap("There are already maximum players with the " + LIGHT_RED.wrap(KIT_NAME) + " kit.")
+    public static final MessageLocale DUNGEON_ENTER_ERROR_NO_KIT_SLOTS = LangEntry.builder("Dungeon.Enter.Error.NoKitSlots").chatMessage(
+        Sound.ENTITY_VILLAGER_NO,
+        GRAY.wrap("There are already maximum players with the " + SOFT_RED.wrap(KIT_NAME) + " kit.")
     );
 
-    public static final LangText DUNGEON_ENTER_ERROR_NO_KIT_PERMISSION = LangText.of("Dungeon.Enter.Error.NoKitPermission",
-        SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_GRAY.wrap("You're not allowed to use the " + LIGHT_RED.wrap(KIT_NAME) + " kit. Upgrade your rank to unlock it.")
+    public static final MessageLocale DUNGEON_ENTER_ERROR_NO_KIT_PERMISSION = LangEntry.builder("Dungeon.Enter.Error.NoKitPermission").chatMessage(
+        Sound.ENTITY_VILLAGER_NO,
+        GRAY.wrap("You're not allowed to use the " + SOFT_RED.wrap(KIT_NAME) + " kit. Upgrade your rank to unlock it.")
     );
 
-    public static final LangText DUNGEON_ENTER_ERROR_KIT_NOT_ALLOWED = LangText.of("Dungeon.Enter.Error.KitNotAllowed",
-        SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_GRAY.wrap("Kit " + LIGHT_RED.wrap(KIT_NAME) + " is not available for the " + LIGHT_RED.wrap(DUNGEON_NAME) + " dungeon.")
+    public static final MessageLocale DUNGEON_ENTER_ERROR_KIT_NOT_ALLOWED = LangEntry.builder("Dungeon.Enter.Error.KitNotAllowed").chatMessage(
+        Sound.ENTITY_VILLAGER_NO,
+        GRAY.wrap("Kit " + SOFT_RED.wrap(KIT_NAME) + " is not available for the " + SOFT_RED.wrap(DUNGEON_NAME) + " dungeon.")
     );
 
 
 
-    public static final LangText DUNGEON_JOIN_LOBBY = LangText.of("Dungeon.Join.Info",
-        OUTPUT.wrap(20, 60),
-        LIGHT_YELLOW.wrap(BOLD.wrap("Dungeon Hub")),
-        LIGHT_GRAY.wrap("You entered " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + " dungeon hub.")
+    public static final MessageLocale DUNGEON_JOIN_LOBBY = LangEntry.builder("Dungeon.Join.Info").titleMessage(
+        SOFT_YELLOW.wrap(BOLD.wrap("Dungeon Hub")),
+        GRAY.wrap("You entered " + SOFT_YELLOW.wrap(DUNGEON_NAME) + " dungeon hub.")
     );
 
-    public static final LangText DUNGEON_JOIN_NOTIFY = LangText.of("Dungeon.Join.Notify",
-        TAG_NO_PREFIX,
-        LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap(PLAYER_DISPLAY_NAME) + " joined the dungeon hub.")
+    public static final MessageLocale DUNGEON_JOIN_NOTIFY = LangEntry.builder("Dungeon.Join.Notify").message(
+        MessageData.CHAT_NO_PREFIX,
+        GRAY.wrap(SOFT_YELLOW.wrap(PLAYER_DISPLAY_NAME) + " joined the dungeon hub.")
     );
 
-    public static final LangText DUNGEON_CONFISACATE_INFO = LangText.of("Dungeon.Confiscate.Info",
-        GRAY.wrap("The following items are not allowed to use in this dungeon: " + LIGHT_RED.wrap(GENERIC_ITEM))
+    public static final MessageLocale DUNGEON_CONFISACATE_INFO = LangEntry.builder("Dungeon.Confiscate.Info").chatMessage(
+        GRAY.wrap("The following items are not allowed to use in this dungeon: " + SOFT_RED.wrap(GENERIC_ITEM))
     );
 
-    public static final LangText DUNGEON_LEAVE_INFO = LangText.of("Dungeon.Leave.Info",
+    public static final MessageLocale DUNGEON_LEAVE_INFO = LangEntry.builder("Dungeon.Leave.Info").chatMessage(
         "You has left the dungeon.");
 
 
 
-    public static final LangText DUNGEON_ANNOUNCE_START = LangText.of("Dungeon.Announce.Start",
-        TAG_NO_PREFIX,
+    public static final MessageLocale DUNGEON_ANNOUNCE_START = LangEntry.builder("Dungeon.Announce.Start").message(
+        MessageData.CHAT_NO_PREFIX,
         " ",
         "               " + YELLOW.wrap(BOLD.wrap("Dungeon Info")),
         " ",
-        "     " + LIGHT_GRAY.wrap("A raid is planned in the " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + " dungeon."),
-        "        " + LIGHT_GRAY.wrap("Raid will start in " + LIGHT_YELLOW.wrap(GENERIC_TIME) + " seconds."),
+        "     " + GRAY.wrap("A raid is planned in the " + SOFT_YELLOW.wrap(DUNGEON_NAME) + " dungeon."),
+        "        " + GRAY.wrap("Raid will start in " + SOFT_YELLOW.wrap(GENERIC_TIME) + " seconds."),
         " ",
         "           " +
-            CLICK.wrapRunCommand(
-                HOVER.wrapShowText(
-                    YELLOW.wrap(BOLD.wrap("CLICK TO JOIN NOW")), GRAY.wrap("Click to join the " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + " dungeon.")
-                ), "/" + ALIAS_BASIC + " " + ALIAS_JOIN + " " + DUNGEON_ID
+            RUN_COMMAND.with("/" + ALIAS_BASIC + " " + ALIAS_JOIN + " " + DUNGEON_ID).wrap(
+                SHOW_TEXT.with(GRAY.wrap("Click to join the " + SOFT_YELLOW.wrap(DUNGEON_NAME) + " dungeon.")).wrap(
+                    YELLOW.wrap(BOLD.wrap("CLICK TO JOIN NOW"))
+                )
             ),
         " "
     );
 
-    public static final LangText DUNGEON_ANNOUNCE_END = LangText.of("Dungeon.Announce.End",
-        TAG_NO_PREFIX,
+    public static final MessageLocale DUNGEON_ANNOUNCE_END = LangEntry.builder("Dungeon.Announce.End").message(
+        MessageData.CHAT_NO_PREFIX,
         " ",
         "               " + YELLOW.wrap(BOLD.wrap("Dungeon Info")),
         " ",
-        "     " + LIGHT_GRAY.wrap("The " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + " dungeon raid has been finished."),
-        "        " + LIGHT_GRAY.wrap("Dungeon is available for raids now."),
+        "     " + GRAY.wrap("The " + SOFT_YELLOW.wrap(DUNGEON_NAME) + " dungeon raid has been finished."),
+        "        " + GRAY.wrap("Dungeon is available for raids now."),
         " ",
         "           " +
-            CLICK.wrapRunCommand(
-                HOVER.wrapShowText(
-                    YELLOW.wrap(BOLD.wrap("CLICK TO RAID NOW")), GRAY.wrap("Click to join the " + LIGHT_YELLOW.wrap(DUNGEON_NAME) + " dungeon.")
-                ), "/" + ALIAS_BASIC + " " + ALIAS_JOIN + " " + DUNGEON_ID
+            RUN_COMMAND.with("/" + ALIAS_BASIC + " " + ALIAS_JOIN + " " + DUNGEON_ID).wrap(
+                SHOW_TEXT.with(GRAY.wrap("Click to join the " + SOFT_YELLOW.wrap(DUNGEON_NAME) + " dungeon.")).wrap(
+                    YELLOW.wrap(BOLD.wrap("CLICK TO RAID NOW"))
+                )
             ),
         " "
     );
 
-    public static final LangText DUNGEON_GAME_STARTED = LangText.of("Dungeon.Game.Start",
-        OUTPUT.wrap(10, 40) + SOUND.wrap(Sound.ENTITY_ENDERMAN_TELEPORT),
-        LIGHT_GREEN.wrap(BOLD.wrap("Dungeon Started")),
-        LIGHT_GRAY.wrap("Good luck and have fun!")
+    public static final MessageLocale DUNGEON_GAME_STARTED = LangEntry.builder("Dungeon.Game.Start").titleMessage(
+        SOFT_GREEN.wrap(BOLD.wrap("Dungeon Started")),
+        GRAY.wrap("Good luck and have fun!"),
+        10, 40, Sound.ENTITY_ENDERMAN_TELEPORT
     );
 
-    public static final LangText DUNGEON_GAME_BAD_COMMAND = LangText.of("Dungeon.Game.BadCommand",
-        LIGHT_GRAY.wrap("You can't use the " + LIGHT_RED.wrap("/" + GENERIC_COMMAND) + " command in the dungeon!")
+    public static final MessageLocale DUNGEON_GAME_BAD_COMMAND = LangEntry.builder("Dungeon.Game.BadCommand").chatMessage(
+        GRAY.wrap("You can't use the " + SOFT_RED.wrap("/" + GENERIC_COMMAND) + " command in the dungeon!")
     );
 
 
 
-    public static final LangText DUNGEON_GAME_LEVEL_CHANGED = LangText.of("Dungeon.Game.LevelChanged",
-        OUTPUT.wrap(20, 80) + SOUND.wrap(Sound.BLOCK_VAULT_ACTIVATE),
+    public static final MessageLocale DUNGEON_GAME_LEVEL_CHANGED = LangEntry.builder("Dungeon.Game.LevelChanged").titleMessage(
         LEVEL_NAME,
-        LEVEL_DESCRIPTION
+        LEVEL_DESCRIPTION,
+        20, 80, Sound.BLOCK_VAULT_ACTIVATE
     );
 
-    public static final LangText DUNGEON_GAME_STAGE_CHANGED = LangText.of("Dungeon.Game.StageChanged",
-        OUTPUT.wrap(20, 80) + SOUND.wrap(Sound.BLOCK_VAULT_ACTIVATE),
+    public static final MessageLocale DUNGEON_GAME_STAGE_CHANGED = LangEntry.builder("Dungeon.Game.StageChanged").titleMessage(
         STAGE_NAME,
-        STAGE_DESCRIPTION
+        STAGE_DESCRIPTION,
+        20, 80, Sound.BLOCK_VAULT_ACTIVATE
     );
 
-    public static final LangText DUNGEON_GAME_REWARD_RECEIVED = LangText.of("Dungeon.Game.RewardReceived",
-        GRAY.wrap("You received reward: " + HOVER.wrapShowText(LIGHT_GREEN.wrap(REWARD_NAME), GRAY.wrap(REWARD_DESCRIPTION)) + " " + DARK_GRAY.wrap("(hover for details)"))
+    public static final MessageLocale DUNGEON_GAME_REWARD_RECEIVED = LangEntry.builder("Dungeon.Game.RewardReceived").chatMessage(
+        GRAY.wrap("You received reward: " + SHOW_TEXT.with(GRAY.wrap(REWARD_DESCRIPTION)).wrap(SOFT_GREEN.wrap(REWARD_NAME)) + " " + DARK_GRAY.wrap("(hover for details)"))
     );
 
-    public static final LangText DUNGEON_GAME_PLAYER_DIED = LangText.of("Dungeon.Game.PlayerDied",
+    public static final MessageLocale DUNGEON_GAME_PLAYER_DIED = LangEntry.builder("Dungeon.Game.PlayerDied").chatMessage(
         GRAY.wrap(RED.wrap(PLAYER_NAME) + " died!")
     );
 
-    public static final LangText DUNGEON_TASK_COMPLETED_INFO = LangText.of("Dungeon.Task.CompletedInfo",
-        GRAY.wrap("Task completed: " + LIGHT_GREEN.wrap(GENERIC_NAME))
+    public static final MessageLocale DUNGEON_TASK_COMPLETED_INFO = LangEntry.builder("Dungeon.Task.CompletedInfo").chatMessage(
+        GRAY.wrap("Task completed: " + SOFT_GREEN.wrap(GENERIC_NAME))
     );
 
-    public static final LangText DUNGEON_TASK_CREATED_GLOBAL = LangText.of("Dungeon.Task.Created.Global",
-        GRAY.wrap("Global task received: " + LIGHT_GREEN.wrap(GENERIC_NAME + ": " + GENERIC_VALUE))
+    public static final MessageLocale DUNGEON_TASK_CREATED_GLOBAL = LangEntry.builder("Dungeon.Task.Created.Global").chatMessage(
+        GRAY.wrap("Global task received: " + SOFT_GREEN.wrap(GENERIC_NAME + ": " + GENERIC_VALUE))
     );
 
-    public static final LangText DUNGEON_TASK_CREATED_PERSONAL = LangText.of("Dungeon.Task.Created.Personal",
-        GRAY.wrap("Personal task received: " + LIGHT_GREEN.wrap(GENERIC_NAME + ": " + GENERIC_VALUE))
+    public static final MessageLocale DUNGEON_TASK_CREATED_PERSONAL = LangEntry.builder("Dungeon.Task.Created.Personal").chatMessage(
+        GRAY.wrap("Personal task received: " + SOFT_GREEN.wrap(GENERIC_NAME + ": " + GENERIC_VALUE))
     );
 
 
 
-    public static final LangText DUNGEON_STATUS_LOBBY_WAITING = LangText.of("Dungeon.Status.Lobby.Waiting",
-        OUTPUT.wrap(OutputType.ACTION_BAR),
+    public static final MessageLocale DUNGEON_STATUS_LOBBY_WAITING = LangEntry.builder("Dungeon.Status.Lobby.Waiting").actionBarMessage(
         GRAY.wrap("Waiting for more players: " + RED.wrap(GENERIC_CURRENT) + "/" + RED.wrap(GENERIC_MIN))
     );
 
-    public static final LangText DUNGEON_STATUS_LOBBY_READY_FAR = LangText.of("Dungeon.Status.Lobby.ReadyFar",
-        OUTPUT.wrap(OutputType.ACTION_BAR),
+    public static final MessageLocale DUNGEON_STATUS_LOBBY_READY_FAR = LangEntry.builder("Dungeon.Status.Lobby.ReadyFar").actionBarMessage(
         GRAY.wrap("Start In: " + YELLOW.wrap(GENERIC_TIME))
     );
 
-    public static final LangText DUNGEON_STATUS_LOBBY_READY_CLOSE = LangText.of("Dungeon.Status.Lobby.ReadyClose",
-        OUTPUT.wrap(OutputType.ACTION_BAR) + SOUND.wrap(Sound.BLOCK_NOTE_BLOCK_BANJO),
-        GRAY.wrap("Start In: " + RED.wrap(GENERIC_TIME))
+    public static final MessageLocale DUNGEON_STATUS_LOBBY_READY_CLOSE = LangEntry.builder("Dungeon.Status.Lobby.ReadyClose").actionBarMessage(
+        GRAY.wrap("Start In: " + RED.wrap(GENERIC_TIME)),
+        Sound.BLOCK_NOTE_BLOCK_BANJO
     );
 
-    public static final LangText DUNGEON_STATUS_ENDING_VICTORY = LangText.of("Dungeon.Status.Ending.Victory",
-        OUTPUT.wrap(OutputType.ACTION_BAR),
+    public static final MessageLocale DUNGEON_STATUS_ENDING_VICTORY = LangEntry.builder("Dungeon.Status.Ending.Victory").actionBarMessage(
         GREEN.wrap(BOLD.wrap("Dungeon Completed!")) + " " + GRAY.wrap("(" + WHITE.wrap(GENERIC_TIME) + ")")
     );
 
-    public static final LangText DUNGEON_STATUS_ENDING_DEFEAT = LangText.of("Dungeon.Status.Ending.Defeat",
-        OUTPUT.wrap(OutputType.ACTION_BAR),
+    public static final MessageLocale DUNGEON_STATUS_ENDING_DEFEAT = LangEntry.builder("Dungeon.Status.Ending.Defeat").actionBarMessage(
         RED.wrap(BOLD.wrap("Dungeon Raid Failed!")) + " " + GRAY.wrap("(" + WHITE.wrap(GENERIC_TIME) + ")")
     );
 
-    public static final LangText DUNGEON_STATUS_DEAD_LIVES = LangText.of("Dungeon.Status.Dead.WithLives",
-        OUTPUT.wrap(OutputType.ACTION_BAR),
-        RED.wrap("You're dead, but you have " + LIGHT_YELLOW.wrap(PLAYER_LIVES + "❤") + " lives and may be revived.")
+    public static final MessageLocale DUNGEON_STATUS_DEAD_LIVES = LangEntry.builder("Dungeon.Status.Dead.WithLives").actionBarMessage(
+        RED.wrap("You're dead, but you have " + SOFT_YELLOW.wrap(PLAYER_LIVES + "❤") + " lives and may be revived.")
     );
 
-    public static final LangText DUNGEON_STATUS_DEAD_NO_LIVES = LangText.of("Dungeon.Status.Dead.NoLives",
-        OUTPUT.wrap(OutputType.ACTION_BAR),
-        RED.wrap("You're dead, and you have " + LIGHT_YELLOW.wrap(PLAYER_LIVES + "❤") + " lives and can't be revived.")
-    );
-
-
-
-    public static final LangText DUNGEON_DEATH_WITH_LIFES = LangText.of("Dungeon.Death.WithLives",
-        OUTPUT.wrap(10, 50) + SOUND.wrap(Sound.ENTITY_ZOMBIE_DEATH),
-        LIGHT_ORANGE.wrap(BOLD.wrap("KNOCKED OUT")),
-        LIGHT_GRAY.wrap("You have " + LIGHT_ORANGE.wrap(PLAYER_LIVES + "❤") + " extra lives.")
-    );
-
-    public static final LangText DUNGEON_DEATH_NO_LIFES = LangText.of("Dungeon.Death.NoLives",
-        OUTPUT.wrap(10, 50) + SOUND.wrap(Sound.ENTITY_ZOMBIE_DEATH),
-        LIGHT_RED.wrap(BOLD.wrap("YOU DIED")),
-        LIGHT_GRAY.wrap("And you have " + LIGHT_RED.wrap("no extra lives") + " left.")
-    );
-
-    public static final LangText DUNGEON_REVIVE_WITH_LIFES = LangText.of("Dungeon.Revive.WithLives",
-        OUTPUT.wrap(10, 50) + SOUND.wrap(Sound.ITEM_TOTEM_USE),
-        LIGHT_GREEN.wrap(BOLD.wrap("REVIVED")),
-        LIGHT_GRAY.wrap("You have " + LIGHT_GREEN.wrap(PLAYER_LIVES + "❤") + " extra lives left.")
-    );
-
-    public static final LangText DUNGEON_REVIVE_NO_LIFES = LangText.of("Dungeon.Revive.NoLives",
-        OUTPUT.wrap(10, 50) + SOUND.wrap(Sound.ITEM_TOTEM_USE),
-        LIGHT_GREEN.wrap(BOLD.wrap("REVIVED")),
-        LIGHT_GRAY.wrap("You have " + LIGHT_RED.wrap("no extra lives") + " left.")
+    public static final MessageLocale DUNGEON_STATUS_DEAD_NO_LIVES = LangEntry.builder("Dungeon.Status.Dead.NoLives").actionBarMessage(
+        RED.wrap("You're dead, and you have " + SOFT_YELLOW.wrap(PLAYER_LIVES + "❤") + " lives and can't be revived.")
     );
 
 
 
-    public static final LangText DUNGEON_END_ALL_DEAD = LangText.of("Dungeon.Ending.AllDead",
-        OUTPUT.wrap(10, 80) + SOUND.wrap(Sound.ENTITY_BLAZE_DEATH),
-        LIGHT_RED.wrap(BOLD.wrap("Defeat")),
-        LIGHT_GRAY.wrap("All players died.")
+    public static final MessageLocale DUNGEON_DEATH_WITH_LIFES = LangEntry.builder("Dungeon.Death.WithLives").titleMessage(
+        ORANGE.wrap(BOLD.wrap("KNOCKED OUT")),
+        GRAY.wrap("You have " + ORANGE.wrap(PLAYER_LIVES + "❤") + " extra lives."),
+        10, 50, Sound.ENTITY_ZOMBIE_DEATH
     );
 
-    public static final LangText DUNGEON_END_TIMEOUT = LangText.of("Dungeon.Ending.Timeout",
-        OUTPUT.wrap(10, 80) + SOUND.wrap(Sound.ENTITY_BLAZE_DEATH),
-        LIGHT_RED.wrap(BOLD.wrap("Time Out")),
-        LIGHT_GRAY.wrap("The time has expired.")
+    public static final MessageLocale DUNGEON_DEATH_NO_LIFES = LangEntry.builder("Dungeon.Death.NoLives").titleMessage(
+        SOFT_RED.wrap(BOLD.wrap("YOU DIED")),
+        GRAY.wrap("And you have " + SOFT_RED.wrap("no extra lives") + " left."),
+        10, 50, Sound.ENTITY_ZOMBIE_DEATH
     );
 
-    public static final LangText DUNGEON_END_DEFEAT = LangText.of("Dungeon.Ending.Defeat",
-        OUTPUT.wrap(10, 80) + SOUND.wrap(Sound.ENTITY_PLAYER_LEVELUP),
-        LIGHT_RED.wrap(BOLD.wrap("Defeat")),
-        LIGHT_GRAY.wrap("You failed the " + LIGHT_RED.wrap(DUNGEON_NAME) + " dungeon.")
+    public static final MessageLocale DUNGEON_REVIVE_WITH_LIFES = LangEntry.builder("Dungeon.Revive.WithLives").titleMessage(
+        SOFT_GREEN.wrap(BOLD.wrap("REVIVED")),
+        GRAY.wrap("You have " + SOFT_GREEN.wrap(PLAYER_LIVES + "❤") + " extra lives left."),
+        10, 50, Sound.ITEM_TOTEM_USE
     );
 
-    public static final LangText DUNGEON_END_COMPLETED = LangText.of("Dungeon.Ending.Completed",
-        OUTPUT.wrap(10, 80) + SOUND.wrap(Sound.ENTITY_PLAYER_LEVELUP),
-        LIGHT_GREEN.wrap(BOLD.wrap("Completed")),
-        LIGHT_GRAY.wrap("You completed the " + LIGHT_GREEN.wrap(DUNGEON_NAME) + " dungeon.")
+    public static final MessageLocale DUNGEON_REVIVE_NO_LIFES = LangEntry.builder("Dungeon.Revive.NoLives").titleMessage(
+        SOFT_GREEN.wrap(BOLD.wrap("REVIVED")),
+        GRAY.wrap("You have " + SOFT_RED.wrap("no extra lives") + " left."),
+        10, 50, Sound.ITEM_TOTEM_USE
     );
 
 
 
-    public static final LangText KIT_CREATE_DONE_NEW = LangText.of("Kit.Create.Done.New",
-        LIGHT_GRAY.wrap("Created " + LIGHT_GREEN.wrap(KIT_NAME) + " kit."));
+    public static final MessageLocale DUNGEON_END_ALL_DEAD = LangEntry.builder("Dungeon.Ending.AllDead").titleMessage(
+        SOFT_RED.wrap(BOLD.wrap("Defeat")),
+        GRAY.wrap("All players died."),
+        10, 80, Sound.ENTITY_BLAZE_DEATH
+    );
 
-    public static final LangText KIT_CREATE_DONE_UPDATE = LangText.of("Kit.Create.Done.Update",
-        LIGHT_GRAY.wrap("Updated " + LIGHT_GREEN.wrap(KIT_NAME) + " kit."));
+    public static final MessageLocale DUNGEON_END_TIMEOUT = LangEntry.builder("Dungeon.Ending.Timeout").titleMessage(
+        SOFT_RED.wrap(BOLD.wrap("Time Out")),
+        GRAY.wrap("The time has expired."),
+        10, 80, Sound.ENTITY_BLAZE_DEATH
+    );
 
-    public static final LangText KIT_GRANT_DONE = LangText.of("Kit.Grant.Done",
+    public static final MessageLocale DUNGEON_END_DEFEAT = LangEntry.builder("Dungeon.Ending.Defeat").titleMessage(
+        SOFT_RED.wrap(BOLD.wrap("Defeat")),
+        GRAY.wrap("You failed the " + SOFT_RED.wrap(DUNGEON_NAME) + " dungeon."),
+        10, 80, Sound.ENTITY_PLAYER_LEVELUP
+    );
+
+    public static final MessageLocale DUNGEON_END_COMPLETED = LangEntry.builder("Dungeon.Ending.Completed").titleMessage(
+        SOFT_GREEN.wrap(BOLD.wrap("Completed")),
+        GRAY.wrap("You completed the " + SOFT_GREEN.wrap(DUNGEON_NAME) + " dungeon."),
+        10, 80, Sound.ENTITY_PLAYER_LEVELUP
+    );
+
+
+
+    public static final MessageLocale KIT_CREATE_DONE_NEW = LangEntry.builder("Kit.Create.Done.New").chatMessage(
+        GRAY.wrap("Created " + SOFT_GREEN.wrap(KIT_NAME) + " kit."));
+
+    public static final MessageLocale KIT_CREATE_DONE_UPDATE = LangEntry.builder("Kit.Create.Done.Update").chatMessage(
+        GRAY.wrap("Updated " + SOFT_GREEN.wrap(KIT_NAME) + " kit."));
+
+    public static final MessageLocale KIT_GRANT_DONE = LangEntry.builder("Kit.Grant.Done").chatMessage(
         GRAY.wrap("Granted " + GREEN.wrap(KIT_NAME) + " kit access to " + GREEN.wrap(PLAYER_NAME) + ".")
     );
 
-    public static final LangText KIT_REVOKE_DONE = LangText.of("Kit.Revoke.Done",
+    public static final MessageLocale KIT_REVOKE_DONE = LangEntry.builder("Kit.Revoke.Done").chatMessage(
         GRAY.wrap("Revoked " + RED.wrap(KIT_NAME) + " kit access from " + RED.wrap(PLAYER_NAME) + ".")
     );
 
-    public static final LangText KIT_BUY_ERROR_INSUFFICIENT_FUNDS = LangText.of("Kit.Buy.Error.InsufficientFunds",
-        SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_GRAY.wrap("You can't afford " + LIGHT_RED.wrap(KIT_NAME) + " kit for " + LIGHT_RED.wrap(KIT_COST))
+    public static final MessageLocale KIT_BUY_ERROR_INSUFFICIENT_FUNDS = LangEntry.builder("Kit.Buy.Error.InsufficientFunds").chatMessage(
+        Sound.ENTITY_VILLAGER_NO,
+        GRAY.wrap("You can't afford " + SOFT_RED.wrap(KIT_NAME) + " kit for " + SOFT_RED.wrap(KIT_COST))
     );
 
-    public static final LangText KIT_BUY_SUCCESS = LangText.of("Kit.Buy.Success",
-        SOUND.wrap(Sound.ENTITY_PLAYER_LEVELUP),
-        LIGHT_GRAY.wrap("You purchased " + LIGHT_GREEN.wrap(KIT_NAME) + " kit for " + LIGHT_GREEN.wrap(KIT_COST))
-    );
-
-
-
-    public static final LangText SELECTION_INFO_CUBOID = LangText.of("Selection.Info.Cuboid",
-        LIGHT_GRAY.wrap("Set " + LIGHT_YELLOW.wrap("#" + GENERIC_VALUE) + " position.")
-    );
-
-    public static final LangText SELECTION_INFO_POSITION_ADD = LangText.of("Selection.Info.PositionAdd",
-        LIGHT_GRAY.wrap("Added block position.")
-    );
-
-    public static final LangText SELECTION_INFO_POSITION_REMOVE = LangText.of("Selection.Info.PositionRemove",
-        LIGHT_GRAY.wrap("Removed block position.")
+    public static final MessageLocale KIT_BUY_SUCCESS = LangEntry.builder("Kit.Buy.Success").chatMessage(
+        Sound.ENTITY_PLAYER_LEVELUP,
+        GRAY.wrap("You purchased " + SOFT_GREEN.wrap(KIT_NAME) + " kit for " + SOFT_GREEN.wrap(KIT_COST))
     );
 
 
 
-    public static final LangString UI_TASK_EMPTY_LIST = LangString.of("UI.Task.EmptyList",
-        LIGHT_RED.wrap("✘ No active tasks."));
+    public static final MessageLocale SELECTION_INFO_CUBOID = LangEntry.builder("Selection.Info.Cuboid").chatMessage(
+        GRAY.wrap("Set " + SOFT_YELLOW.wrap("#" + GENERIC_VALUE) + " position.")
+    );
 
-    public static final LangString UI_TASK_COMPLETED = LangString.of("UI.Task.Completed",
+    public static final MessageLocale SELECTION_INFO_POSITION_ADD = LangEntry.builder("Selection.Info.PositionAdd").chatMessage(
+        GRAY.wrap("Added block position.")
+    );
+
+    public static final MessageLocale SELECTION_INFO_POSITION_REMOVE = LangEntry.builder("Selection.Info.PositionRemove").chatMessage(
+        GRAY.wrap("Removed block position.")
+    );
+
+
+
+    public static final TextLocale UI_TASK_EMPTY_LIST = LangEntry.builder("UI.Task.EmptyList").text(
+        SOFT_RED.wrap("✘ No active tasks."));
+
+    public static final TextLocale UI_TASK_COMPLETED = LangEntry.builder("UI.Task.Completed").text(
         GREEN.wrap("✔") + " " + DARK_GRAY.wrap(STRIKETHROUGH.wrap(GENERIC_NAME + ": " + GENERIC_VALUE)));
 
-    public static final LangString UI_TASK_INCOMPLETED = LangString.of("UI.Task.Incompleted",
+    public static final TextLocale UI_TASK_INCOMPLETED = LangEntry.builder("UI.Task.Incompleted").text(
         RED.wrap("✘") + " " + GRAY.wrap(GENERIC_NAME + ": " + GENERIC_VALUE));
 
-    public static final LangString UI_BOARD_PLAYER_READY = LangString.of("UI.Board.Player.Ready",
+    public static final TextLocale UI_BOARD_PLAYER_READY = LangEntry.builder("UI.Board.Player.Ready").text(
         GRAY.wrap(PLAYER_DISPLAY_NAME) + " " + GREEN.wrap("✔"));
 
-    public static final LangString UI_BOARD_PLAYER_NOT_READY = LangString.of("UI.Board.Player.NotReady",
+    public static final TextLocale UI_BOARD_PLAYER_NOT_READY = LangEntry.builder("UI.Board.Player.NotReady").text(
         GRAY.wrap(PLAYER_DISPLAY_NAME) + " " + RED.wrap("✘"));
 
-    public static final LangUIButton UI_CONFIRMATION_DUNGEON_ENTER_NO_KITS = LangUIButton.builder("UI.Confirmation.Dungeon.Enter.NoKits", "Dungeon Info")
-        .description("Enter Cost: " + RED.wrap(DUNGEON_ENTRANCE_PAYMENT))
+    public static final IconLocale UI_CONFIRMATION_DUNGEON_ENTER_NO_KITS = LangEntry.iconBuilder("UI.Confirmation.Dungeon.Enter.NoKits")
+        .name("Dungeon Info")
+        .appendInfo("Enter Cost: " + RED.wrap(DUNGEON_ENTRANCE_PAYMENT))
         .build();
 
-    public static final LangUIButton UI_CONFIRMATION_DUNGEON_ENTER_OWN_KIT = LangUIButton.builder("UI.Confirmation.Dungeon.Enter.OwnedKit", "Dungeon Info")
-        .description("Your Kit: " + WHITE.wrap(KIT_NAME), "Enter Cost: " + RED.wrap(DUNGEON_ENTRANCE_PAYMENT), "", KIT_ATTRIBUTES, KIT_EFFECTS)
+    public static final IconLocale UI_CONFIRMATION_DUNGEON_ENTER_OWN_KIT = LangEntry.iconBuilder("UI.Confirmation.Dungeon.Enter.OwnedKit")
+        .name("Dungeon Info")
+        .appendInfo("Your Kit: " + WHITE.wrap(KIT_NAME), "Enter Cost: " + RED.wrap(DUNGEON_ENTRANCE_PAYMENT), "", KIT_ATTRIBUTES, KIT_EFFECTS)
         .build();
 
-    public static final LangUIButton UI_CONFIRMATION_DUNGEON_ENTER_RENT_KIT = LangUIButton.builder("UI.Confirmation.Dungeon.Enter.RentedKit", "Dungeon Info")
-        .description(
+    public static final IconLocale UI_CONFIRMATION_DUNGEON_ENTER_RENT_KIT = LangEntry.iconBuilder("UI.Confirmation.Dungeon.Enter.RentedKit")
+        .name("Dungeon Info")
+        .appendInfo(
             "Your Kit: " + WHITE.wrap(KIT_NAME),
             "Kit Cost: " + RED.wrap(KIT_COST),
             "Enter Cost: " + RED.wrap(DUNGEON_ENTRANCE_PAYMENT),
@@ -587,30 +581,25 @@ public class Lang extends CoreLang {
         )
         .build();
 
-    public static final LangUIButton UI_CONFIRMATION_KIT_PURCHASE = LangUIButton.builder("UI.Confirmation.Kit.Purchase", "Kit Info")
-        .description("Kit: " + WHITE.wrap(KIT_NAME), "Cost: " + RED.wrap(KIT_COST), "", KIT_ATTRIBUTES, KIT_EFFECTS)
+    public static final IconLocale UI_CONFIRMATION_KIT_PURCHASE = LangEntry.iconBuilder("UI.Confirmation.Kit.Purchase")
+        .name("Kit Info")
+        .appendInfo("Kit: " + WHITE.wrap(KIT_NAME), "Cost: " + RED.wrap(KIT_COST), "", KIT_ATTRIBUTES, KIT_EFFECTS)
         .build();
 
-    public static final LangString UI_KIT_NO_ATTRIBUTES = LangString.of("UI.Kit.NoAttributes", LIGHT_RED.wrap("✘ No attribute modifiers."));
-    public static final LangString UI_KIT_NO_EFFECTS    = LangString.of("UI.Kit.NoEffects", LIGHT_RED.wrap("✘ No potion effects."));
+    public static final TextLocale UI_KIT_NO_ATTRIBUTES = LangEntry.builder("UI.Kit.NoAttributes").text(SOFT_RED.wrap("✘ No attribute modifiers."));
+    public static final TextLocale UI_KIT_NO_EFFECTS    = LangEntry.builder("UI.Kit.NoEffects").text(SOFT_RED.wrap("✘ No potion effects."));
 
-    public static final LangString UI_LEVEL_MIN_ONLY = LangString.of("UI.LevelRequirement.MinOnly", LIGHT_RED.wrap(GENERIC_MIN + "+"));
-    public static final LangString UI_LEVEL_MAX_ONLY = LangString.of("UI.LevelRequirement.MaxOnly", LIGHT_RED.wrap("<= " + GENERIC_MAX));
-    public static final LangString UI_LEVEL_RANGE    = LangString.of("UI.LevelRequirement.Range", LIGHT_RED.wrap(GENERIC_MIN + " - " + GENERIC_MAX));
+    public static final TextLocale UI_LEVEL_MIN_ONLY = LangEntry.builder("UI.LevelRequirement.MinOnly").text(SOFT_RED.wrap(GENERIC_MIN + "+"));
+    public static final TextLocale UI_LEVEL_MAX_ONLY = LangEntry.builder("UI.LevelRequirement.MaxOnly").text(SOFT_RED.wrap("<= " + GENERIC_MAX));
+    public static final TextLocale UI_LEVEL_RANGE    = LangEntry.builder("UI.LevelRequirement.Range").text(SOFT_RED.wrap(GENERIC_MIN + " - " + GENERIC_MAX));
 
-    public static final LangString UI_POTION_EFFECT_ENTRY = LangString.of("UI.PotionEffect.Entry", LIGHT_YELLOW.wrap("● " + LIGHT_GRAY.wrap(GENERIC_NAME) + " " + GENERIC_AMOUNT));
+    public static final TextLocale UI_POTION_EFFECT_ENTRY = LangEntry.builder("UI.PotionEffect.Entry").text(SOFT_YELLOW.wrap("● " + GRAY.wrap(GENERIC_NAME) + " " + GENERIC_AMOUNT));
 
-    public static final LangString UI_ATTRIBUTE_ENTRY           = LangString.of("UI.Attribute.Entry", LIGHT_YELLOW.wrap("● " + LIGHT_GRAY.wrap(GENERIC_NAME) + " " + GENERIC_AMOUNT));
-    public static final LangString UI_ATTRIBUTE_POSITIVE_PLAIN  = LangString.of("UI.Attribute.Positive.Plain", GREEN.wrap("+" + GENERIC_VALUE));
-    public static final LangString UI_ATTRIBUTE_POSITIVE_SCALAR = LangString.of("UI.Attribute.Positive.Scalar", GREEN.wrap("+" + GENERIC_VALUE + "%"));
-    public static final LangString UI_ATTRIBUTE_NEGATIVE_PLAIN  = LangString.of("UI.Attribute.Negative.Plain", RED.wrap(GENERIC_VALUE));
-    public static final LangString UI_ATTRIBUTE_NEGATIVE_SCALAR = LangString.of("UI.Attribute.Negative.Scalar", RED.wrap(GENERIC_VALUE + "%"));
+    public static final TextLocale UI_ATTRIBUTE_ENTRY           = LangEntry.builder("UI.Attribute.Entry").text(SOFT_YELLOW.wrap("● " + GRAY.wrap(GENERIC_NAME) + " " + GENERIC_AMOUNT));
+    public static final TextLocale UI_ATTRIBUTE_POSITIVE_PLAIN  = LangEntry.builder("UI.Attribute.Positive.Plain").text(GREEN.wrap("+" + GENERIC_VALUE));
+    public static final TextLocale UI_ATTRIBUTE_POSITIVE_SCALAR = LangEntry.builder("UI.Attribute.Positive.Scalar").text(GREEN.wrap("+" + GENERIC_VALUE + "%"));
+    public static final TextLocale UI_ATTRIBUTE_NEGATIVE_PLAIN  = LangEntry.builder("UI.Attribute.Negative.Plain").text(RED.wrap(GENERIC_VALUE));
+    public static final TextLocale UI_ATTRIBUTE_NEGATIVE_SCALAR = LangEntry.builder("UI.Attribute.Negative.Scalar").text(RED.wrap(GENERIC_VALUE + "%"));
 
-    public static final LangString OTHER_FREE = LangString.of("Other.Free", "Free");
-
-    public static final LangUIButton OTHER_BROKEN_ITEM = LangUIButton.builder("Other.BrokenItem", LIGHT_RED.wrap(BOLD.wrap("< Invalid Item >")))
-        .description(
-            LIGHT_GRAY.wrap("This item wasn't parsed properly."),
-            LIGHT_GRAY.wrap("Check console logs for details.")
-        ).formatted(false).build();
+    public static final TextLocale OTHER_FREE = LangEntry.builder("Other.Free").text("Free");
 }

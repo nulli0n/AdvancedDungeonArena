@@ -22,7 +22,7 @@ import su.nightexpress.dungeons.kit.impl.Kit;
 import su.nightexpress.dungeons.registry.compat.BoardPluginRegistry;
 import su.nightexpress.dungeons.registry.compat.GodPluginRegistry;
 import su.nightexpress.dungeons.util.DungeonUtils;
-import su.nightexpress.nightcore.language.entry.LangText;
+import su.nightexpress.nightcore.locale.entry.MessageLocale;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +91,7 @@ public class DungeonGamer implements DungeonPlayer {
     @Override
     public void tick() {
         if (this.isDead() && !this.dungeon.isAboutToEnd()) {
-            (this.hasExtraLives() ? Lang.DUNGEON_STATUS_DEAD_LIVES : Lang.DUNGEON_STATUS_DEAD_NO_LIVES).getMessage().send(this.player, replacer -> replacer
+            (this.hasExtraLives() ? Lang.DUNGEON_STATUS_DEAD_LIVES : Lang.DUNGEON_STATUS_DEAD_NO_LIVES).message().send(this.player, replacer -> replacer
                 .replace(this.dungeon.replacePlaceholders())
                 .replace(this.replacePlaceholders())
             );
@@ -132,8 +132,8 @@ public class DungeonGamer implements DungeonPlayer {
         }
         //this.player.playEffect(EntityEffect.TOTEM_RESURRECT);
 
-        LangText lang = this.hasExtraLives() ? Lang.DUNGEON_REVIVE_WITH_LIFES : Lang.DUNGEON_REVIVE_NO_LIFES;
-        this.dungeon.sendMessage(this.player, lang, replacer -> replacer.replace(this.replacePlaceholders()));
+        MessageLocale locale = this.hasExtraLives() ? Lang.DUNGEON_REVIVE_WITH_LIFES : Lang.DUNGEON_REVIVE_NO_LIFES;
+        this.dungeon.sendMessage(this.player, locale, replacer -> replacer.replace(this.replacePlaceholders()));
     }
 
     @Override

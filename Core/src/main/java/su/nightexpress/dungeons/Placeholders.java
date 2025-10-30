@@ -14,9 +14,10 @@ import su.nightexpress.dungeons.dungeon.spot.Spot;
 import su.nightexpress.dungeons.dungeon.spot.SpotState;
 import su.nightexpress.dungeons.dungeon.stage.Stage;
 import su.nightexpress.dungeons.kit.impl.Kit;
-import su.nightexpress.dungeons.util.DungeonUtils;
 import su.nightexpress.dungeons.util.UIUtils;
-import su.nightexpress.economybridge.EconomyBridge;
+import su.nightexpress.nightcore.bridge.currency.Currency;
+import su.nightexpress.nightcore.core.config.CoreLang;
+import su.nightexpress.nightcore.integration.currency.EconomyBridge;
 import su.nightexpress.nightcore.util.NumberUtil;
 import su.nightexpress.nightcore.util.placeholder.PlaceholderList;
 import su.nightexpress.nightcore.util.time.TimeFormatType;
@@ -126,7 +127,7 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
     @NotNull
     public static final PlaceholderList<DungeonInstance> DUNGEON_INSTANCE = PlaceholderList.create(list -> list
             .add(DUNGEON_ID, DungeonInstance::getId)
-            .add(DUNGEON_ACTIVE, instance -> Lang.getYesOrNo(instance.isActive()))
+            .add(DUNGEON_ACTIVE, instance -> CoreLang.STATE_YES_NO.get(instance.isActive()))
             .add(DUNGEON_NAME, instance -> instance.getConfig().getName())
             .add(DUNGEON_DESCRIPTION, instance -> String.join("\n", instance.getConfig().getDescription()))
             .add(DUNGEON_STATE, instance -> Lang.GAME_STATE.getLocalized(instance.getState()))
@@ -139,7 +140,7 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
             .add(DUNGEON_COUNTDOWN, instance -> String.valueOf(instance.getCountdown()))
             .add(DUNGEON_TIMELEFT, instance -> {
                 long timeLeft = instance.getTimeLeft();
-                if (timeLeft < 0) return Lang.OTHER_INFINITY.getString();
+                if (timeLeft < 0) return CoreLang.OTHER_INFINITY.text();
 
                 return TimeFormats.toDigital(timeLeft * 1000L);
             })
@@ -147,27 +148,27 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
             .add(DUNGEON_STAGE, instance -> instance.getStage().getDisplayName())
             .add(DUNGEON_ENTRANCE_PAYMENT, instance -> {
                 Features features = instance.getConfig().features();
-                if (!DungeonUtils.hasEconomyBridge() || !features.hasEntranceCost()) return Lang.OTHER_FREE.getString();
+                if (!features.hasEntranceCost()) return Lang.OTHER_FREE.text();
 
                 var map = instance.getConfig().features().getEntranceCostMap();
                 return map.entrySet().stream().map(entry -> {
-                    su.nightexpress.economybridge.api.Currency currency = EconomyBridge.getCurrency(entry.getKey());
+                    Currency currency = EconomyBridge.getCurrency(entry.getKey());
                     return currency == null ? null : currency.format(entry.getValue());
                 }).filter(Objects::nonNull).collect(Collectors.joining(", "));
             })
             .add(DUNGEON_LEVEL_REQUIREMENT, instance -> {
                 LevelRequirement requirement = instance.getConfig().features().getLevelRequirement();
-                if (!requirement.isRequired()) return Lang.OTHER_ANY.getString();
+                if (!requirement.isRequired()) return CoreLang.OTHER_ANY.text();
 
                 int min = requirement.getMinLevel();
                 int max = requirement.getMaxLevel();
-                String result = Lang.UI_LEVEL_RANGE.getString();
+                String result = Lang.UI_LEVEL_RANGE.text();
 
                 if (!requirement.hasMaxValue()) {
-                    result = Lang.UI_LEVEL_MIN_ONLY.getString();
+                    result = Lang.UI_LEVEL_MIN_ONLY.text();
                 }
                 if (!requirement.hasMinValue()) {
-                    result = Lang.UI_LEVEL_MAX_ONLY.getString();
+                    result = Lang.UI_LEVEL_MAX_ONLY.text();
                 }
 
                 return result.replace(GENERIC_MIN, String.valueOf(min)).replace(GENERIC_MAX, String.valueOf(max));
@@ -194,7 +195,7 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
         .add(PLAYER_KILL_STREAK_DECAY, gamer -> TimeFormats.formatAmount(gamer.getKillStreakDecay() * 1000L, TimeFormatType.LITERAL))
         .add(PLAYER_SCORE, gamer -> String.valueOf(gamer.getScore()))
         .add(PLAYER_KILLS, gamer -> NumberUtil.format(gamer.getKills()))
-        .add(PLAYER_IS_READY, gamer -> Lang.getYesOrNo(gamer.isReady()))
+        .add(PLAYER_IS_READY, gamer -> CoreLang.STATE_YES_NO.get(gamer.isReady()))
         .add(PLAYER_KIT_NAME, gamer -> gamer.getKit() == null ? "-" : gamer.getKit().getName())
     );
 
@@ -222,19 +223,19 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
         .add(KIT_NAME, Kit::getName)
         .add(KIT_DESCRIPTION, kit -> String.join("\n", kit.getDescription()))
         .add(KIT_ATTRIBUTES, kit -> {
-            if (!kit.hasAttributes()) return Lang.UI_KIT_NO_ATTRIBUTES.getString();
+            if (!kit.hasAttributes()) return Lang.UI_KIT_NO_ATTRIBUTES.text();
 
             return kit.getAttributeMap().entrySet().stream()
                 .map(entry -> UIUtils.formatAttributeEntry(entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining("\n"));
         })
         .add(KIT_EFFECTS, kit -> {
-            if (!kit.hasPotionEffects()) return Lang.UI_KIT_NO_EFFECTS.getString();
+            if (!kit.hasPotionEffects()) return Lang.UI_KIT_NO_EFFECTS.text();
 
             return kit.getPotionEffects().stream().map(UIUtils::formatPotionEffectEntry).collect(Collectors.joining("\n"));
         })
         .add(KIT_COST, kit -> {
-            if (!kit.hasCost()) return Lang.OTHER_FREE.getString();
+            if (!kit.hasCost()) return Lang.OTHER_FREE.text();
 
             return kit.getCostMap().entrySet().stream()
                 .map(entry -> UIUtils.formatCostEntry(entry.getKey(), entry.getValue()))

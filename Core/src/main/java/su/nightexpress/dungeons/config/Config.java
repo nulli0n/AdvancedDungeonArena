@@ -65,6 +65,12 @@ public class Config {
         10,
         "Sets how soon (in seconds) game on the dungeon will be stopped in case of victory?");
 
+    public static final ConfigValue<Integer> DUNGEON_TIME_TO_REVIVE = ConfigValue.create("Dungeon.TimeToRevive",
+        10,
+        "Sets how much time (in seconds) must pass after the last player dies before the raid fails.",
+        "During this time, the plugin will wait for a potential player resurrection so the raid can continue."
+    );
+
     public static final ConfigValue<Integer> DUNGEON_LOBBY_DROP_TIMER = ConfigValue.create("Dungeon.DropTimerWhenReady",
         10,
         "Instantly decreases lobby countdown timer to this value, if all players are ready to play.",

@@ -1,8 +1,8 @@
 package su.nightexpress.dungeons.dungeon.lootchest;
 
 import org.jetbrains.annotations.NotNull;
-import su.nightexpress.dungeons.api.item.ItemProvider;
-import su.nightexpress.dungeons.registry.item.ItemRegistry;
+import su.nightexpress.dungeons.util.ItemHelper;
+import su.nightexpress.nightcore.bridge.item.AdaptedItem;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.config.Writeable;
@@ -11,18 +11,18 @@ public class LootItem implements Writeable {
 
     private final String id;
     private final double weight;
-    private final ItemProvider item;
+    private final AdaptedItem item;
 
-    public LootItem(@NotNull String id, double weight, @NotNull ItemProvider item) {
+    public LootItem(@NotNull String id, double weight, @NotNull AdaptedItem item) {
         this.id = id.toLowerCase();
         this.weight = weight;
         this.item = item;
     }
 
     @NotNull
-    public static LootItem read(@NotNull FileConfig config, @NotNull String path, @NotNull String id) {
+    public static LootItem read(@NotNull FileConfig config, @NotNull String path, @NotNull String id) throws IllegalStateException {
         double weight = ConfigValue.create(path + ".Weight", 0D).read(config);
-        ItemProvider provider = ItemRegistry.read(config, path + ".Item");
+        AdaptedItem provider = ItemHelper.read(config, path + ".Item").orElseThrow(() -> new IllegalStateException("Invalid loot item")); // TODO More robust log
 
         return new LootItem(id, weight, provider);
     }
@@ -43,7 +43,7 @@ public class LootItem implements Writeable {
     }
 
     @NotNull
-    public ItemProvider getItem() {
+    public AdaptedItem getItem() {
         return this.item;
     }
 }

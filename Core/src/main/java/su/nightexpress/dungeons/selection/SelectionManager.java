@@ -301,7 +301,7 @@ public class SelectionManager extends AbstractManager<DungeonPlugin> {
         this.addTracker(player).setSelection(true);
 
         Players.addItem(player, this.getItem());
-        Lang.SETUP_SELECTION_ACTIVATED.getMessage().send(player);
+        Lang.SETUP_SELECTION_ACTIVATED.message().send(player);
         return selection;
     }
 

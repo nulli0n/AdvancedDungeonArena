@@ -5,7 +5,7 @@
     <parent>
         <artifactId>AdvancedDungeonArena</artifactId>
         <groupId>su.nightexpress.dungeonarena</groupId>
-        <version>8.3.0</version>
+        <version>8.4.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -67,43 +67,55 @@
             <id>auroramc-releases</id>
             <url>https://repo.auroramc.gg/releases</url>
         </repository>
+
+        <repository>
+            <id>nexus</id>
+            <name>Lumine Public</name>
+            <url>https://mvn.lumine.io/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>API</artifactId>
-            <version>8.3.0</version>
+            <version>8.4.0</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>NMS</artifactId>
-            <version>8.3.0</version>
+            <version>8.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>su.nightexpress.dungeonarena</groupId>
+            <artifactId>MC_1_21_10</artifactId>
+            <version>8.4.0</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>MC_1_21_8</artifactId>
-            <version>8.3.0</version>
+            <version>8.4.0</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>MC_1_21_5</artifactId>
-            <version>8.3.0</version>
+            <version>8.4.0</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>MC_1_21_3</artifactId>
-            <version>8.3.0</version>
+            <version>8.4.0</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.sunlight</groupId>
             <artifactId>Core</artifactId>
-            <version>3.14.0</version>
+            <version>3.15.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -113,6 +125,13 @@
             <version>5.8.1</version>
             <scope>provided</scope>
         </dependency>
+
+        <!--<dependency>
+            <groupId>com.ticxo.modelengine</groupId>
+            <artifactId>ModelEngine</artifactId>
+            <version>R4.0.4</version>
+            <scope>provided</scope>
+        </dependency>-->
 
         <dependency>
             <groupId>me.clip</groupId>

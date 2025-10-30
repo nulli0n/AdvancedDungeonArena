@@ -17,122 +17,130 @@ import su.nightexpress.dungeons.dungeon.spot.SpotState;
 import su.nightexpress.dungeons.dungeon.stage.Stage;
 import su.nightexpress.dungeons.kit.impl.Kit;
 import su.nightexpress.dungeons.selection.SelectionType;
-import su.nightexpress.nightcore.command.experimental.CommandContext;
-import su.nightexpress.nightcore.command.experimental.argument.ArgumentTypes;
-import su.nightexpress.nightcore.command.experimental.argument.ParsedArguments;
-import su.nightexpress.nightcore.command.experimental.impl.ReloadCommand;
-import su.nightexpress.nightcore.command.experimental.node.DirectNode;
-import su.nightexpress.nightcore.util.CommandUtil;
+import su.nightexpress.nightcore.commands.Arguments;
+import su.nightexpress.nightcore.commands.Commands;
+import su.nightexpress.nightcore.commands.builder.HubNodeBuilder;
+import su.nightexpress.nightcore.commands.context.CommandContext;
+import su.nightexpress.nightcore.commands.context.ParsedArguments;
+import su.nightexpress.nightcore.core.config.CoreLang;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class BaseCommands {
 
-    public static void load(@NotNull DungeonPlugin plugin) {
-        var root = plugin.getRootNode();
+    public static void load(@NotNull DungeonPlugin plugin, @NotNull HubNodeBuilder root) {
+        root.branch(Commands.literal("reload")
+            .description(CoreLang.COMMAND_RELOAD_DESC)
+            .permission(Perms.COMMAND_RELOAD)
+            .executes((context, arguments) -> {
+                plugin.doReload(context.getSender());
+                return true;
+            })
+        );
 
-        root.addChildren(ReloadCommand.builder(plugin, Perms.COMMAND_RELOAD));
-
-        root.addChildren(DirectNode.builder(plugin, Placeholders.ALIAS_WAND)
+        root.branch(Commands.literal(Placeholders.ALIAS_WAND)
             .playerOnly()
             .description(Lang.COMMAND_WAND_DESC)
             .permission(Perms.COMMAND_WAND)
-            .withArgument(CommandArguments.forSelectionType(plugin).required())
+            .withArguments(CommandArguments.forSelectionType(plugin))
             .executes((context, arguments) -> getWand(plugin, context, arguments))
         );
 
-        root.addChildren(DirectNode.builder(plugin, "browse")
+        root.branch(Commands.literal("browse")
             .description(Lang.COMMAND_BROWSE_DESC)
             .permission(Perms.COMMAND_BROWSE)
-            .withArgument(ArgumentTypes.player(CommandArguments.PLAYER).permission(Perms.COMMAND_BROWSE_OTHERS))
+            .withArguments(Arguments.player(CommandArguments.PLAYER).permission(Perms.COMMAND_BROWSE_OTHERS).optional())
             .executes((context, arguments) -> browseDungeons(plugin, context, arguments))
         );
 
-        root.addChildren(DirectNode.builder(plugin, Placeholders.ALIAS_JOIN)
+        root.branch(Commands.literal(Placeholders.ALIAS_JOIN)
             .description(Lang.COMMAND_JOIN_DESC)
             .permission(Perms.COMMAND_JOIN)
-            .withArgument(CommandArguments.forDungeon(plugin).required())
+            .withArguments(CommandArguments.forDungeon(plugin))
             .executes((context, arguments) -> joinDungeon(plugin, context, arguments))
         );
 
-        root.addChildren(DirectNode.builder(plugin, "send")
+        root.branch(Commands.literal("send")
             .description(Lang.COMMAND_SEND_DESC)
             .permission(Perms.COMMAND_SEND)
-            .withArgument(ArgumentTypes.player(CommandArguments.PLAYER).required())
-            .withArgument(CommandArguments.forDungeon(plugin).required())
-            .withArgument(CommandArguments.forKit(plugin))
-            .withFlag(CommandFlags.force())
+            .withArguments(
+                Arguments.player(CommandArguments.PLAYER),
+                CommandArguments.forDungeon(plugin),
+                CommandArguments.forKit(plugin).optional()
+            )
+            .withFlags(CommandFlags.FORCE)
             .executes((context, arguments) -> sendToDungeon(plugin, context, arguments))
         );
 
-        root.addChildren(DirectNode.builder(plugin, "leave")
+        root.branch(Commands.literal("leave")
             .playerOnly()
             .description(Lang.COMMAND_LEAVE_DESC)
             .permission(Perms.COMMAND_LEAVE)
             .executes((context, arguments) -> leaveDungeon(plugin, context))
         );
 
-        root.addChildren(DirectNode.builder(plugin, "setstage")
+        root.branch(Commands.literal("setstage")
             .playerOnly()
             .description(Lang.COMMAND_SET_STAGE_DESC)
             .permission(Perms.COMMAND_SET_STAGE)
-            .withArgument(ArgumentTypes.string(CommandArguments.STAGE).required().localized(Lang.COMMAND_ARGUMENT_NAME_STAGE)
-                .withSamples(context -> {
+            .withArguments(Arguments.string(CommandArguments.STAGE).localized(Lang.COMMAND_ARGUMENT_NAME_STAGE)
+                .suggestions((reader, context) -> {
                     DungeonInstance instance = CommandArguments.getDungeonInstance(plugin, context);
                     return instance == null ? Collections.emptyList() : new ArrayList<>(instance.getConfig().getStageByIdMap().keySet());
                 }))
             .executes((context, arguments) -> setStage(plugin, context, arguments))
         );
 
-        root.addChildren(DirectNode.builder(plugin, "setlevel")
+        root.branch(Commands.literal("setlevel")
             .playerOnly()
             .description(Lang.COMMAND_SET_LEVEL_DESC)
             .permission(Perms.COMMAND_SET_LEVEL)
-            .withArgument(ArgumentTypes.string(CommandArguments.LEVEL).required().localized(Lang.COMMAND_ARGUMENT_NAME_LEVEL)
-                .withSamples(context -> {
+            .withArguments(Arguments.string(CommandArguments.LEVEL).localized(Lang.COMMAND_ARGUMENT_NAME_LEVEL)
+                .suggestions((reader, context) -> {
                     DungeonInstance instance = CommandArguments.getDungeonInstance(plugin, context);
                     return instance == null ? Collections.emptyList() : new ArrayList<>(instance.getConfig().getLevelByIdMap().keySet());
                 }))
             .executes((context, arguments) -> setLevel(plugin, context, arguments))
         );
 
-        root.addChildren(DirectNode.builder(plugin, "setspot")
-            .playerOnly()
+        root.branch(Commands.literal("setspot")
             .description(Lang.COMMAND_SET_SPOT_DESC)
             .permission(Perms.COMMAND_SET_SPOT)
-            .withArgument(CommandArguments.forDungeon(plugin).required())
-            .withArgument(ArgumentTypes.string(CommandArguments.SPOT).required().localized(Lang.COMMAND_ARGUMENT_NAME_SPOT)
-                .withSamples(context -> {
-                    DungeonConfig config = CommandArguments.getDungeonConfig(plugin, context);
-                    return config == null ? Collections.emptyList() : new ArrayList<>(config.getSpotByIdMap().keySet());
-                }))
-            .withArgument(ArgumentTypes.string(CommandArguments.STATE).required().localized(Lang.COMMAND_ARGUMENT_NAME_STATE)
-                .withSamples(context -> {
-                    Spot spot = CommandArguments.getSpot(plugin, context);
-                    return spot == null ? Collections.emptyList() : new ArrayList<>(spot.getStateByIdMap().keySet());
-                }))
+            .withArguments(
+                CommandArguments.forDungeon(plugin),
+                Arguments.string(CommandArguments.SPOT).localized(Lang.COMMAND_ARGUMENT_NAME_SPOT)
+                    .suggestions((reader, context) -> {
+                        DungeonConfig config = CommandArguments.getDungeonConfig(plugin, context);
+                        return config == null ? Collections.emptyList() : new ArrayList<>(config.getSpotByIdMap().keySet());
+                    }),
+                Arguments.string(CommandArguments.STATE).localized(Lang.COMMAND_ARGUMENT_NAME_STATE)
+                    .suggestions((reader, context) -> {
+                        Spot spot = CommandArguments.getSpot(plugin, context);
+                        return spot == null ? Collections.emptyList() : new ArrayList<>(spot.getStateByIdMap().keySet());
+                    })
+            )
             .executes(BaseCommands::setSpotState)
         );
 
-        root.addChildren(DirectNode.builder(plugin, "start")
+        root.branch(Commands.literal("start")
             .description(Lang.COMMAND_START_DESC)
             .permission(Perms.COMMAND_START)
-            .withArgument(CommandArguments.forDungeon(plugin))
+            .withArguments(CommandArguments.forDungeon(plugin).optional())
             .executes((context, arguments) -> startGame(plugin, context, arguments))
         );
 
-        root.addChildren(DirectNode.builder(plugin, "stop")
+        root.branch(Commands.literal("stop")
             .description(Lang.COMMAND_STOP_DESC)
             .permission(Perms.COMMAND_STOP)
-            .withArgument(CommandArguments.forDungeon(plugin))
+            .withArguments(CommandArguments.forDungeon(plugin).optional())
             .executes((context, arguments) -> stopGame(plugin, context, arguments))
         );
     }
 
     private static boolean getWand(@NotNull DungeonPlugin plugin, @NotNull CommandContext context, @NotNull ParsedArguments arguments) {
         Player player = context.getPlayerOrThrow();
-        SelectionType type = arguments.getArgument(CommandArguments.TYPE, SelectionType.class);
+        SelectionType type = arguments.get(CommandArguments.TYPE, SelectionType.class);
 
         plugin.getSelectionManager().startSelection(player, type);
         return true;
@@ -142,19 +150,19 @@ public class BaseCommands {
         Player player = context.getPlayerOrThrow();
         DungeonInstance instance = plugin.getDungeonManager().getInstance(player);
         if (instance == null) {
-            Lang.DUNGEON_ERROR_MUST_BE_IN.getMessage().send(player);
+            context.send(Lang.DUNGEON_ERROR_MUST_BE_IN);
             return false;
         }
 
-        String stageId = arguments.getStringArgument(CommandArguments.STAGE);
+        String stageId = arguments.getString(CommandArguments.STAGE);
         Stage stage = instance.getConfig().getStageById(stageId);
         if (stage == null) {
-            Lang.ERROR_COMMAND_INVALID_STAGE_ARGUMENT.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, stageId));
+            context.send(Lang.ERROR_COMMAND_INVALID_STAGE_ARGUMENT, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, stageId));
             return false;
         }
 
         instance.setStage(stage);
-        Lang.DUNGEON_ADMIN_SET_STAGE.getMessage().send(player, replacer -> replacer.replace(instance.replacePlaceholders()).replace(stage.replacePlaceholders()));
+        context.send(Lang.DUNGEON_ADMIN_SET_STAGE, replacer -> replacer.replace(instance.replacePlaceholders()).replace(stage.replacePlaceholders()));
         return true;
     }
 
@@ -162,37 +170,36 @@ public class BaseCommands {
         Player player = context.getPlayerOrThrow();
         DungeonInstance instance = plugin.getDungeonManager().getInstance(player);
         if (instance == null) {
-            Lang.DUNGEON_ERROR_MUST_BE_IN.getMessage().send(player);
+            context.send(Lang.DUNGEON_ERROR_MUST_BE_IN);
             return false;
         }
 
-        String levelId = arguments.getStringArgument(CommandArguments.LEVEL);
+        String levelId = arguments.getString(CommandArguments.LEVEL);
         Level level = instance.getConfig().getLevelById(levelId);
         if (level == null) {
-            Lang.ERROR_COMMAND_INVALID_LEVEL_ARGUMENT.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, levelId));
+            context.send(Lang.ERROR_COMMAND_INVALID_LEVEL_ARGUMENT, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, levelId));
             return false;
         }
 
         instance.setLevel(level);
-        Lang.DUNGEON_ADMIN_SET_LEVEL.getMessage().send(player, replacer -> replacer.replace(instance.replacePlaceholders()).replace(level.replacePlaceholders()));
+        context.send(Lang.DUNGEON_ADMIN_SET_LEVEL, replacer -> replacer.replace(instance.replacePlaceholders()).replace(level.replacePlaceholders()));
         return true;
     }
 
     private static boolean setSpotState(@NotNull CommandContext context, @NotNull ParsedArguments arguments) {
-        Player player = context.getPlayerOrThrow();
-        DungeonConfig config = arguments.getArgument(CommandArguments.DUNGEON, DungeonConfig.class);
+        DungeonConfig config = arguments.get(CommandArguments.DUNGEON, DungeonConfig.class);
 
-        String spotId = arguments.getStringArgument(CommandArguments.SPOT);
+        String spotId = arguments.getString(CommandArguments.SPOT);
         Spot spot = config.getSpotById(spotId);
         if (spot == null) {
-            Lang.ERROR_COMMAND_INVALID_SPOT_ARGUMENT.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, spotId));
+            context.send(Lang.ERROR_COMMAND_INVALID_SPOT_ARGUMENT, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, spotId));
             return false;
         }
 
-        String stateId = arguments.getStringArgument(CommandArguments.STATE);
+        String stateId = arguments.getString(CommandArguments.STATE);
         SpotState state = spot.getState(stateId);
         if (state == null) {
-            Lang.ERROR_COMMAND_INVALID_STATE_ARGUMENT.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, stateId));
+            context.send(Lang.ERROR_COMMAND_INVALID_STATE_ARGUMENT, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, stateId));
             return false;
         }
 
@@ -205,7 +212,7 @@ public class BaseCommands {
             spot.build(dungeon.getWorld(), state);
         }
 
-        Lang.DUNGEON_ADMIN_SET_SPOT.getMessage().send(player, replacer -> replacer
+        context.send(Lang.DUNGEON_ADMIN_SET_SPOT, replacer -> replacer
             .replace(config.replacePlaceholders())
             .replace(spot.replacePlaceholders())
             .replace(state.replacePlaceholders())
@@ -214,31 +221,37 @@ public class BaseCommands {
     }
 
     private static boolean browseDungeons(@NotNull DungeonPlugin plugin, @NotNull CommandContext context, @NotNull ParsedArguments arguments) {
-        Player player = CommandUtil.getPlayerOrSender(context, arguments, CommandArguments.PLAYER);
-        if (player == null) return false;
+        if (!arguments.contains(CommandArguments.PLAYER) && !context.isPlayer()) {
+            context.errorPlayerOnly();
+            return false;
+        }
 
+        Player player = context.isPlayer() ? context.getPlayerOrThrow() : arguments.getPlayer(CommandArguments.PLAYER);
         plugin.getDungeonManager().browseDungeons(player);
         return true;
     }
 
     private static boolean joinDungeon(@NotNull DungeonPlugin plugin, @NotNull CommandContext context, @NotNull ParsedArguments arguments) {
-        Player player = CommandUtil.getPlayerOrSender(context, arguments, CommandArguments.PLAYER);
-        if (player == null) return false;
+        if (!arguments.contains(CommandArguments.PLAYER) && !context.isPlayer()) {
+            context.errorPlayerOnly();
+            return false;
+        }
 
-        DungeonConfig config = arguments.getArgument(CommandArguments.DUNGEON, DungeonConfig.class);
+        Player player = context.isPlayer() ? context.getPlayerOrThrow() : arguments.getPlayer(CommandArguments.PLAYER);
+        DungeonConfig config = arguments.get(CommandArguments.DUNGEON, DungeonConfig.class);
         plugin.getDungeonManager().prepareForInstance(player, config.getInstance());
         return true;
     }
 
     private static boolean sendToDungeon(@NotNull DungeonPlugin plugin, @NotNull CommandContext context, @NotNull ParsedArguments arguments) {
-        Player player = arguments.getPlayerArgument(CommandArguments.PLAYER);
-        DungeonConfig config = arguments.getArgument(CommandArguments.DUNGEON, DungeonConfig.class);
-        Kit kit = arguments.hasArgument(CommandArguments.KIT) ? arguments.getArgument(CommandArguments.KIT, Kit.class) : null;
-        boolean force = arguments.hasFlag(CommandFlags.FORCE);
+        Player player = arguments.getPlayer(CommandArguments.PLAYER);
+        DungeonConfig config = arguments.get(CommandArguments.DUNGEON, DungeonConfig.class);
+        Kit kit = arguments.contains(CommandArguments.KIT) ? arguments.get(CommandArguments.KIT, Kit.class) : null;
+        boolean force = context.hasFlag(CommandFlags.FORCE);
         DungeonInstance instance = config.getInstance();
 
         boolean result = plugin.getDungeonManager().enterInstance(player, instance, kit, force);
-        (result ? Lang.DUNGEON_SEND_SENT : Lang.DUNGEON_SEND_FAIL).getMessage().send(context.getSender(), replacer -> replacer
+        context.send((result ? Lang.DUNGEON_SEND_SENT : Lang.DUNGEON_SEND_FAIL), replacer -> replacer
             .replace(instance.replacePlaceholders())
             .replace(Placeholders.forPlayer(player))
         );
@@ -255,8 +268,8 @@ public class BaseCommands {
     private static boolean startGame(@NotNull DungeonPlugin plugin, @NotNull CommandContext context, @NotNull ParsedArguments arguments) {
         DungeonInstance dungeon;
 
-        if (arguments.hasArgument(CommandArguments.DUNGEON)) {
-            DungeonConfig config = arguments.getArgument(CommandArguments.DUNGEON, DungeonConfig.class);
+        if (arguments.contains(CommandArguments.DUNGEON)) {
+            DungeonConfig config = arguments.get(CommandArguments.DUNGEON, DungeonConfig.class);
             dungeon = config.getInstance();
         }
         else {
@@ -286,8 +299,8 @@ public class BaseCommands {
     private static boolean stopGame(@NotNull DungeonPlugin plugin, @NotNull CommandContext context, @NotNull ParsedArguments arguments) {
         DungeonInstance dungeon;
 
-        if (arguments.hasArgument(CommandArguments.DUNGEON)) {
-            DungeonConfig config = arguments.getArgument(CommandArguments.DUNGEON, DungeonConfig.class);
+        if (arguments.contains(CommandArguments.DUNGEON)) {
+            DungeonConfig config = arguments.get(CommandArguments.DUNGEON, DungeonConfig.class);
             dungeon = config.getInstance();
         }
         else {

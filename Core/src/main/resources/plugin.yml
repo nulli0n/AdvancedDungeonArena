@@ -5,7 +5,6 @@ description: Advanced and poweful dungeon & mob arena creator.
 author: NightExpress
 depend: [ nightcore ]
 softdepend:
-  - EconomyBridge
   - MythicMobs
   - BossMania
   - mcMMO

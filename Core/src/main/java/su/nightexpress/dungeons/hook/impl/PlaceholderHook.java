@@ -9,6 +9,7 @@ import su.nightexpress.dungeons.api.type.MobFaction;
 import su.nightexpress.dungeons.config.Lang;
 import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
 import su.nightexpress.dungeons.dungeon.player.DungeonGamer;
+import su.nightexpress.nightcore.core.config.CoreLang;
 import su.nightexpress.nightcore.util.NumberUtil;
 import su.nightexpress.nightcore.util.time.TimeFormats;
 
@@ -113,7 +114,7 @@ public class PlaceholderHook {
                 return dungeon.getConfig().getName();
             }
             if (var.equalsIgnoreCase("empty")) {
-                return Lang.getYesOrNo(dungeon.getPlayers().isEmpty());
+                return CoreLang.STATE_YES_NO.get(dungeon.getPlayers().isEmpty());
             }
             if (var.equalsIgnoreCase("state")) {
                 return Lang.GAME_STATE.getLocalized(dungeon.getState());
@@ -138,7 +139,7 @@ public class PlaceholderHook {
 
             if (var.equalsIgnoreCase("timeleft")) {
                 long timeleft = dungeon.getTimeLeft();
-                return timeleft < 0 ? Lang.OTHER_INFINITY.getString() : TimeFormats.toDigital(timeleft * 1000L);
+                return timeleft < 0 ? CoreLang.OTHER_INFINITY.text() : TimeFormats.toDigital(timeleft * 1000L);
             }
             return null;
         }

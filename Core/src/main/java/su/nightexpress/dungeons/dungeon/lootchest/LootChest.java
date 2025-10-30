@@ -48,8 +48,13 @@ public class LootChest extends AbstractFileData<DungeonPlugin> {
         this.setUniqueOnly(ConfigValue.create("UniqueOnly", false).read(config));
 
         config.getSection("Items").forEach(sId -> {
-            LootItem item = LootItem.read(config, "Items." + sId, sId);
-            this.itemByIdMap.put(sId.toLowerCase(), item);
+            try {
+                LootItem item = LootItem.read(config, "Items." + sId, sId);
+                this.itemByIdMap.put(sId.toLowerCase(), item);
+            }
+            catch (IllegalStateException exception) {
+                this.plugin.warn("Loot item '%s' in '%s' can not be loaded: %s".formatted(sId, this.file.getPath(), exception.getMessage()));
+            }
         });
 
         return true;

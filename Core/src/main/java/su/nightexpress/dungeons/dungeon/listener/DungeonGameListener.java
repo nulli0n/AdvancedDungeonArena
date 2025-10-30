@@ -130,7 +130,7 @@ public class DungeonGameListener extends AbstractListener<DungeonPlugin> {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onDungeonPlayerDeath(PlayerDeathEvent event) {
+    public void onDungeonPlayerDeath(PlayerDeathEvent event) { // TODO Replace with 'death mimic' in damage event?
         Player player = event.getEntity();
         DungeonGamer gamer = this.manager.getDungeonPlayer(player);
         if (gamer == null) return;
@@ -288,7 +288,7 @@ public class DungeonGameListener extends AbstractListener<DungeonPlugin> {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDungeonMobSpawn(CreatureSpawnEvent event) {
         LivingEntity entity = event.getEntity();
-        //if (entity.getType() == EntityType.ARMOR_STAND) return;
+        if (entity.getType() == EntityType.ARMOR_STAND) return;
 
         Location location = entity.getLocation();
         DungeonInstance dungeon = this.manager.getInstanceByLocation(location);

@@ -13,13 +13,13 @@ public class TABHook implements BoardPlugin {
 
     @Override
     public boolean isBoardEnabled(@NotNull Player player) {
-        return this.manageScoreboard(player, (tabPlayer, manager) -> manager.hasCustomScoreboard(tabPlayer));
+        return this.manageScoreboard(player, (tabPlayer, manager) -> manager.hasCustomScoreboard(tabPlayer) || manager.getActiveScoreboard(tabPlayer) != null);
     }
 
     @Override
     public void disableBoard(@NotNull Player player) {
         this.manageScoreboard(player, (tabPlayer, manager) -> {
-            manager.toggleScoreboard(tabPlayer, false);
+            manager.setScoreboardVisible(tabPlayer, false, false);
             return true;
         });
     }
@@ -27,7 +27,7 @@ public class TABHook implements BoardPlugin {
     @Override
     public void enableBoard(@NotNull Player player) {
         this.manageScoreboard(player, (tabPlayer, manager) -> {
-            manager.toggleScoreboard(tabPlayer, true);
+            manager.setScoreboardVisible(tabPlayer, true, false);
             return true;
         });
     }

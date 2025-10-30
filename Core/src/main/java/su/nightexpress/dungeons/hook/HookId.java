@@ -4,6 +4,7 @@ public class HookId {
 
     public static final String MYTHIC_MOBS = "MythicMobs";
     public static final String BOSS_MANIA  = "BossMania";
+    public static final String MODEL_ENGINE = "ModelEngine";
 
     public static final String ESSENTIALS = "Essentials";
     public static final String SUNLIGHT   = "SunLight";
@@ -19,6 +20,4 @@ public class HookId {
     public static final String COMBAT_PETS   = "CombatPets";
     public static final String MC_PETS       = "MCPets";
     public static final String ADVANCED_PETS = "AdvancedPets";
-
-    public static final String ECONOMY_BRIDGE = "EconomyBridge";
 }

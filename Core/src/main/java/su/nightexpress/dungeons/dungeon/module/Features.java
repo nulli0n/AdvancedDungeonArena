@@ -6,11 +6,10 @@ import su.nightexpress.dungeons.dungeon.config.DungeonConfig;
 import su.nightexpress.dungeons.dungeon.feature.LevelRequirement;
 import su.nightexpress.dungeons.dungeon.feature.itemfilter.ItemFilterCriteria;
 import su.nightexpress.dungeons.dungeon.feature.itemfilter.ItemFilterMode;
-import su.nightexpress.dungeons.util.DungeonUtils;
-import su.nightexpress.economybridge.currency.CurrencyId;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.config.Writeable;
+import su.nightexpress.nightcore.integration.currency.CurrencyId;
 import su.nightexpress.nightcore.util.Lists;
 import su.nightexpress.nightcore.util.RankTable;
 
@@ -37,9 +36,7 @@ public class Features implements Writeable {
         this.entranceCostMap = new LinkedHashMap<>(); // Linked to keep currency order in placeholders.
         this.entranceCommands = new ArrayList<>();
         this.exitCommands = new ArrayList<>();
-        if (DungeonUtils.hasEconomyBridge()) {
-            this.entranceCostMap.put(CurrencyId.VAULT, 0D);
-        }
+        this.entranceCostMap.put(CurrencyId.VAULT, 0D);
     }
 
     public void load(@NotNull FileConfig config, @NotNull String path) {
@@ -50,14 +47,12 @@ public class Features implements Writeable {
         this.exitCommands = ConfigValue.create(path + ".Exit.Commands", this.exitCommands).read(config);
 
         this.entranceCostMap.clear();
-        if (DungeonUtils.hasEconomyBridge()) {
-            config.getSection(path + ".Entrance.Payment").forEach(curId -> {
-                double price = config.getDouble(path + ".Entrance.Payment." + curId);
-                if (price <= 0) return;
+        config.getSection(path + ".Entrance.Payment").forEach(curId -> {
+            double price = config.getDouble(path + ".Entrance.Payment." + curId);
+            if (price <= 0) return;
 
-                this.entranceCostMap.put(curId.toLowerCase(), price);
-            });
-        }
+            this.entranceCostMap.put(curId.toLowerCase(), price);
+        });
 
         this.levelRequirement = LevelRequirement.read(config, path + ".LevelRequirement");
 
@@ -73,10 +68,8 @@ public class Features implements Writeable {
         config.set(path + ".Exit.Commands", this.exitCommands);
         config.set(path + ".LevelRequirement", this.levelRequirement);
 
-        if (DungeonUtils.hasEconomyBridge()) {
-            config.remove(path + "Entrance.Payment");
-            this.entranceCostMap.forEach((id, price) -> config.set(path + ".Entrance.Payment." + id, price));
-        }
+        config.remove(path + "Entrance.Payment");
+        this.entranceCostMap.forEach((id, price) -> config.set(path + ".Entrance.Payment." + id, price));
 
         config.set(path + ".ItemFilter.Mode", this.itemFilterMode);
         config.set(path + ".ItemFilter.Criteria", this.itemFilterCriteria);

@@ -18,7 +18,7 @@ import su.nightexpress.dungeons.config.Config;
 import su.nightexpress.dungeons.config.Keys;
 import su.nightexpress.dungeons.kit.impl.Kit;
 import su.nightexpress.dungeons.util.DungeonUtils;
-import su.nightexpress.economybridge.currency.CurrencyId;
+import su.nightexpress.nightcore.integration.currency.CurrencyId;
 import su.nightexpress.nightcore.util.ItemUtil;
 import su.nightexpress.nightcore.util.Lists;
 import su.nightexpress.nightcore.util.PDCUtil;
@@ -27,7 +27,8 @@ import su.nightexpress.nightcore.util.text.NightMessage;
 
 import java.util.HashSet;
 
-import static su.nightexpress.nightcore.util.text.tag.Tags.*;
+import static su.nightexpress.nightcore.util.text.tag.Tags.LIGHT_CYAN;
+import static su.nightexpress.nightcore.util.text.tag.Tags.WHITE;
 
 public class KitUtils {
 
@@ -179,10 +180,7 @@ public class KitUtils {
             items[slot] = new ItemStack(healPotion);
         }
         kit.setItems(items);
-
-        if (DungeonUtils.hasEconomyBridge()) {
-            kit.setCost(CurrencyId.VAULT, 500);
-        }
+        kit.setCost(CurrencyId.VAULT, 500);
     }
 
     public static void setArcherKit(@NotNull Kit kit) {
@@ -248,9 +246,7 @@ public class KitUtils {
         }
         kit.setItems(items);
 
-        if (DungeonUtils.hasEconomyBridge()) {
-            kit.setCost(CurrencyId.VAULT, 1500);
-        }
+        kit.setCost(CurrencyId.VAULT, 1500);
     }
 
     public static void setAssasinKit(@NotNull Kit kit) {
@@ -314,9 +310,7 @@ public class KitUtils {
         }
         kit.setItems(items);
 
-        if (DungeonUtils.hasEconomyBridge()) {
-            kit.setCost(CurrencyId.VAULT, 3500);
-        }
+        kit.setCost(CurrencyId.VAULT, 3500);
     }
 
     public static void setSupportKit(@NotNull Kit kit) {
@@ -400,9 +394,7 @@ public class KitUtils {
         }
         kit.setItems(items);
 
-        if (DungeonUtils.hasEconomyBridge()) {
-            kit.setCost(CurrencyId.VAULT, 2500);
-        }
+        kit.setCost(CurrencyId.VAULT, 2500);
     }
 
     public static void setPriestKit(@NotNull Kit kit) {
@@ -500,9 +492,7 @@ public class KitUtils {
         }
         kit.setItems(items);
 
-        if (DungeonUtils.hasEconomyBridge()) {
-            kit.setCost(CurrencyId.VAULT, 4500);
-        }
+        kit.setCost(CurrencyId.VAULT, 4500);
     }
 
     public static void setPyroKit(@NotNull Kit kit) {
@@ -555,9 +545,7 @@ public class KitUtils {
         }
         kit.setItems(items);
 
-        if (DungeonUtils.hasEconomyBridge()) {
-            kit.setCost(CurrencyId.VAULT, 5000);
-        }
+        kit.setCost(CurrencyId.VAULT, 5000);
     }
 
     public static void setBomberKit(@NotNull Kit kit) {
@@ -605,8 +593,6 @@ public class KitUtils {
         }
         kit.setItems(items);
 
-        if (DungeonUtils.hasEconomyBridge()) {
-            kit.setCost(CurrencyId.VAULT, 7500);
-        }
+        kit.setCost(CurrencyId.VAULT, 7500);
     }
 }

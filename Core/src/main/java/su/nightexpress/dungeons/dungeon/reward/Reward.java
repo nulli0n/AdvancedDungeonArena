@@ -4,10 +4,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.dungeons.DungeonPlugin;
 import su.nightexpress.dungeons.Placeholders;
-import su.nightexpress.dungeons.api.item.ItemProvider;
 import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
 import su.nightexpress.dungeons.dungeon.player.DungeonGamer;
-import su.nightexpress.dungeons.registry.item.ItemRegistry;
+import su.nightexpress.dungeons.util.ItemHelper;
+import su.nightexpress.nightcore.bridge.item.AdaptedItem;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.manager.AbstractFileData;
@@ -23,9 +23,9 @@ import java.util.function.UnaryOperator;
 public class Reward extends AbstractFileData<DungeonPlugin> {
 
     private String name;
-    private List<String> description;
-    private List<ItemProvider> items;
-    private List<String> commands;
+    private List<String>      description;
+    private List<AdaptedItem> items;
+    private List<String>      commands;
 
     public Reward(@NotNull DungeonPlugin plugin, @NotNull File file) {
         super(plugin, file);
@@ -38,8 +38,10 @@ public class Reward extends AbstractFileData<DungeonPlugin> {
 
         this.items = new ArrayList<>();
         config.getSection("Items").forEach(sId -> {
-            ItemProvider provider = ItemRegistry.read(config, "Items." + sId);
-            this.items.add(provider);
+            AdaptedItem adaptedItem = ItemHelper.read(config, "Items." + sId).orElse(null);
+            if (adaptedItem == null) return; // TODO log
+
+            this.items.add(adaptedItem);
         });
 
         this.setCommands(ConfigValue.create("Commands", new ArrayList<>()).read(config));
@@ -54,8 +56,8 @@ public class Reward extends AbstractFileData<DungeonPlugin> {
         config.remove("Items");
 
         int index = 0;
-        for (ItemProvider provider : this.items) {
-            config.set("Items." + (index++), provider);
+        for (AdaptedItem adaptedItem : this.items) {
+            config.set("Items." + (index++), adaptedItem);
         }
 
         config.set("Commands", this.commands);
@@ -69,10 +71,10 @@ public class Reward extends AbstractFileData<DungeonPlugin> {
     public void give(@NotNull DungeonInstance dungeon, @NotNull DungeonGamer gamer) {
         Player player = gamer.getPlayer();
 
-        this.items.forEach(itemProvider -> {
-            if (!itemProvider.canProduceItem()) return;
-
-            Players.addItem(player, itemProvider.getItemStack());
+        this.items.forEach(adaptedItem -> {
+            adaptedItem.itemStack().ifPresent(itemStack -> {
+                Players.addItem(player, itemStack);
+            });
         });
 
         Players.dispatchCommands(player, Replacer.create().replace(dungeon.replacePlaceholders()).apply(this.commands));
@@ -97,11 +99,11 @@ public class Reward extends AbstractFileData<DungeonPlugin> {
     }
 
     @NotNull
-    public List<ItemProvider> getItems() {
+    public List<AdaptedItem> getItems() {
         return this.items;
     }
 
-    public void setItems(@NotNull List<ItemProvider> items) {
+    public void setItems(@NotNull List<AdaptedItem> items) {
         this.items = items;
     }
 
