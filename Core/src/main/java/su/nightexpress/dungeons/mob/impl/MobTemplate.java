@@ -96,7 +96,10 @@ public class MobTemplate extends AbstractFileData<DungeonPlugin> {
         });
 
         config.remove("Equipment");
+
         this.equipment.forEach((slot, itemStack) -> {
+            if (itemStack == null || itemStack.getType().isAir()) return;
+
             config.set("Equipment." + slot.name(), ItemNbt.getTag(itemStack));
         });
 

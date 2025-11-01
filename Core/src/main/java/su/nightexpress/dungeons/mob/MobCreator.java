@@ -27,6 +27,8 @@ public class MobCreator {
         File dir = new File(plugin.getDataFolder() + Config.DIR_MOBS);
         if (dir.exists()) return;
 
+        dir.mkdirs();
+
         World world = Bukkit.getWorlds().getFirst();
 
         for (EntityType entityType : BukkitThing.allFromRegistry(Registry.ENTITY_TYPE)) {
