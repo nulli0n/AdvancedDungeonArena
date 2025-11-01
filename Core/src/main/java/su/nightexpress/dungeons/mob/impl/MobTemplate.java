@@ -46,7 +46,7 @@ public class MobTemplate extends AbstractFileData<DungeonPlugin> {
     protected boolean onLoad(@NotNull FileConfig config) {
         this.setEntityType(ConfigValue.create("EntityType", EntityType.class, EntityType.UNKNOWN).read(config));
         if (!this.plugin.getInternals().isSupportedMob(this.entityType)) {
-            this.plugin.error("Invalid or unsupported entity type '" + BukkitThing.toString(this.entityType) + "'.");
+            this.plugin.error("Invalid or unsupported entity type '" + this.entityType.name() + "'.");
             return false;
         }
 
