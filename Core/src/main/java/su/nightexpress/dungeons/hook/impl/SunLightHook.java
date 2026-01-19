@@ -5,9 +5,10 @@ import org.jetbrains.annotations.NotNull;
 import su.nightexpress.dungeons.api.compat.BoardPlugin;
 import su.nightexpress.dungeons.api.compat.GodPlugin;
 import su.nightexpress.sunlight.SunLightAPI;
-import su.nightexpress.sunlight.data.user.SunUser;
 import su.nightexpress.sunlight.module.godmode.GodModule;
 import su.nightexpress.sunlight.module.scoreboard.ScoreboardModule;
+import su.nightexpress.sunlight.module.scoreboard.ScoreboardProperties;
+import su.nightexpress.sunlight.user.SunUser;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -16,27 +17,27 @@ public class SunLightHook implements GodPlugin, BoardPlugin {
 
     @Override
     public boolean isGodEnabled(@NotNull Player player) {
-        return this.checkUser(player, user -> user.getSettings().get(GodModule.GOD_MODE));
+        return this.checkUser(player, user -> user.getProperty(GodModule.GOD_MODE));
     }
 
     @Override
     public void disableGod(@NotNull Player player) {
-        this.manageUser(player, user -> user.getSettings().set(GodModule.GOD_MODE, false));
+        this.manageUser(player, user -> user.setProperty(GodModule.GOD_MODE, false));
     }
 
     @Override
     public void enableGod(@NotNull Player player) {
-        this.manageUser(player, user -> user.getSettings().set(GodModule.GOD_MODE, true));
+        this.manageUser(player, user -> user.setProperty(GodModule.GOD_MODE, true));
     }
 
     @Override
     public boolean isBoardEnabled(@NotNull Player player) {
-        return this.checkUser(player, user -> user.getSettings().get(ScoreboardModule.SETTING_SCOREBOARD));
+        return this.checkUser(player, user -> user.getProperty(ScoreboardProperties.SCOREBOARD));
     }
 
     @Override
     public void disableBoard(@NotNull Player player) {
-        ScoreboardModule module = SunLightAPI.getModuleManager().getModule(ScoreboardModule.class).orElse(null);
+        ScoreboardModule module = SunLightAPI.getModuleRegistry().byType(ScoreboardModule.class).orElse(null);
         if (module == null) return;
 
         module.removeBoard(player);
@@ -44,7 +45,7 @@ public class SunLightHook implements GodPlugin, BoardPlugin {
 
     @Override
     public void enableBoard(@NotNull Player player) {
-        ScoreboardModule module = SunLightAPI.getModuleManager().getModule(ScoreboardModule.class).orElse(null);
+        ScoreboardModule module = SunLightAPI.getModuleRegistry().byType(ScoreboardModule.class).orElse(null);
         if (module == null) return;
 
         module.addBoard(player);

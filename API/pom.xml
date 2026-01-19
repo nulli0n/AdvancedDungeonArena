@@ -5,7 +5,7 @@
     <parent>
         <artifactId>AdvancedDungeonArena</artifactId>
         <groupId>su.nightexpress.dungeonarena</groupId>
-        <version>8.4.1</version>
+        <version>8.5.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
