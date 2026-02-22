@@ -28,7 +28,6 @@ import su.nightexpress.dungeons.nms.DungeonNMS;
 import su.nightexpress.dungeons.nms.mc_1_21_10.MC_1_21_10;
 import su.nightexpress.dungeons.nms.mc_1_21_11.MC_1_21_11;
 import su.nightexpress.dungeons.nms.mc_1_21_3.MC_1_21_3;
-import su.nightexpress.dungeons.nms.mc_1_21_5.MC_1_21_5;
 import su.nightexpress.dungeons.nms.mc_1_21_8.MC_1_21_8;
 import su.nightexpress.dungeons.registry.compat.BoardPluginRegistry;
 import su.nightexpress.dungeons.registry.compat.GodPluginRegistry;
@@ -146,7 +145,6 @@ public class DungeonPlugin extends NightPlugin {
     private boolean loadInternals() {
         this.internals = switch (Version.getCurrent()) {
             case MC_1_21_4 -> new MC_1_21_3();
-            case MC_1_21_5 -> new MC_1_21_5();
             case MC_1_21_8 -> new MC_1_21_8();
             case MC_1_21_10 -> new MC_1_21_10();
             case MC_1_21_11 -> new MC_1_21_11();

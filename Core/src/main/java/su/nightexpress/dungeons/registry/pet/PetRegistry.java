@@ -4,9 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.dungeons.DungeonPlugin;
 import su.nightexpress.dungeons.hook.HookId;
-import su.nightexpress.dungeons.registry.pet.provider.AdvancedPetsProvider;
 import su.nightexpress.dungeons.registry.pet.provider.CombatPetsProvider;
-import su.nightexpress.dungeons.registry.pet.provider.MCPetsProvider;
 import su.nightexpress.nightcore.util.Plugins;
 
 import java.util.*;
@@ -21,8 +19,6 @@ public class PetRegistry {
     public static void load(@NotNull DungeonPlugin dungeonPlugin) {
         plugin = dungeonPlugin;
 
-        loadIntegration(HookId.ADVANCED_PETS, AdvancedPetsProvider::new);
-        loadIntegration(HookId.MC_PETS, MCPetsProvider::new);
         loadIntegration(HookId.COMBAT_PETS, CombatPetsProvider::new);
     }
 

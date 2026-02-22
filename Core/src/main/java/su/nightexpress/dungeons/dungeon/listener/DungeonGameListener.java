@@ -306,7 +306,7 @@ public class DungeonGameListener extends AbstractListener<DungeonPlugin> {
         }
 
         // One tick delay, because custom mob's plugins don't have a way to distinguish an entity until it is spawned.
-        this.plugin.runTask(task -> dungeon.handleMobSpawn(entity));
+        this.plugin.runTask(() -> dungeon.handleMobSpawn(entity));
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)

@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.dungeons.DungeonPlugin;
 import su.nightexpress.dungeons.api.mob.MobProvider;
 import su.nightexpress.dungeons.hook.HookId;
-import su.nightexpress.dungeons.registry.mob.provider.BossManiaProvider;
 import su.nightexpress.dungeons.registry.mob.provider.DungeonMobProvider;
 import su.nightexpress.dungeons.registry.mob.provider.MythicMobProvider;
 import su.nightexpress.nightcore.util.Plugins;
@@ -28,7 +27,6 @@ public class MobRegistry {
 
         register(new DungeonMobProvider(dungeonPlugin));
         loadIntegration(HookId.MYTHIC_MOBS, MythicMobProvider::new);
-        loadIntegration(HookId.BOSS_MANIA, BossManiaProvider::new);
     }
 
     private static void loadIntegration(@NotNull String pluginName, @NotNull Supplier<MobProvider> provider) {

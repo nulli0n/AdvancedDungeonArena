@@ -159,7 +159,7 @@ public class SelectionManager extends AbstractManager<DungeonPlugin> {
 
         World world = player.getWorld();
         Material cornerType = Material.WHITE_STAINED_GLASS;
-        Material wireType = Material.CHAIN;
+        Material wireType = Material.IRON_CHAIN;
         Set<BlockInfo> dataSet = new HashSet<>();
 
         // Draw corners of the chunk/region all the time.

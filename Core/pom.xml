@@ -5,7 +5,7 @@
     <parent>
         <artifactId>AdvancedDungeonArena</artifactId>
         <groupId>su.nightexpress.dungeonarena</groupId>
-        <version>8.5.0</version>
+        <version>8.5.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -39,11 +39,6 @@
         </repository>
 
         <repository>
-            <id>maven</id>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-
-        <repository>
             <id>codemc-repo</id>
             <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
@@ -67,55 +62,68 @@
             <id>auroramc-releases</id>
             <url>https://repo.auroramc.gg/releases</url>
         </repository>
+
+        <repository>
+            <id>mcmmo-repo</id>
+            <url>https://nexus.neetgames.com/repository/maven-public</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>1.21.11-R0.2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>API</artifactId>
-            <version>8.5.0</version>
+            <version>8.5.1</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>NMS</artifactId>
-            <version>8.5.0</version>
+            <version>8.5.1</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>MC_1_21_11</artifactId>
-            <version>8.5.0</version>
+            <version>8.5.1</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>MC_1_21_10</artifactId>
-            <version>8.5.0</version>
+            <version>8.5.1</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>MC_1_21_8</artifactId>
-            <version>8.5.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>su.nightexpress.dungeonarena</groupId>
-            <artifactId>MC_1_21_5</artifactId>
-            <version>8.5.0</version>
+            <version>8.5.1</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.dungeonarena</groupId>
             <artifactId>MC_1_21_3</artifactId>
-            <version>8.5.0</version>
+            <version>8.5.1</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.sunlight</groupId>
             <artifactId>Core</artifactId>
-            <version>3.15.0</version>
+            <version>3.16.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>su.nightexpress.sunlight</groupId>
+            <artifactId>API</artifactId>
+            <version>3.16.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -157,8 +165,22 @@
         <dependency>
             <groupId>net.essentialsx</groupId>
             <artifactId>EssentialsX</artifactId>
-            <version>2.19.0</version>
+            <version>2.21.2</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.mojang</groupId>
+                    <artifactId>brigadier</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.papermc</groupId>
+                    <artifactId>paperlib</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.md-5</groupId>
+                    <artifactId>bungeecord-chat</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -169,10 +191,16 @@
         </dependency>
 
         <dependency>
-            <groupId>com.gmail.nossr50</groupId>
+            <groupId>com.gmail.nossr50.mcMMO</groupId>
             <artifactId>mcMMO</artifactId>
-            <version>2.1.222</version>
+            <version>2.2.049</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sk89q.worldguard</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -187,27 +215,6 @@
             <groupId>net.Indyuce</groupId>
             <artifactId>MMOCore-API</artifactId>
             <version>1.12.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>it.dado997.BossMania</groupId>
-            <artifactId>BossMania</artifactId>
-            <version>1.9.10</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.advancedplugins.pets</groupId>
-            <artifactId>AdvancedPets</artifactId>
-            <version>2.5.4</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>fr.nocsy.mcpets</groupId>
-            <artifactId>MCPets</artifactId>
-            <version>4.0.3</version>
             <scope>provided</scope>
         </dependency>
 
@@ -231,6 +238,7 @@
             <version>2.1.6</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
@@ -264,7 +272,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.6.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -272,8 +280,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <outputFile>${project.parent.basedir}\target\${project.parent.name}-${project.version}.jar
-                            </outputFile>
+                            <outputFile>${project.parent.basedir}\target\${project.parent.name}-${project.version}.jar</outputFile>
                             <artifactSet>
                                 <includes>
                                     <include>su.nightexpress.dungeonarena:*</include>

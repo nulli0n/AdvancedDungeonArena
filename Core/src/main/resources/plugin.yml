@@ -6,11 +6,8 @@ author: NightExpress
 depend: [ nightcore ]
 softdepend:
   - MythicMobs
-  - BossMania
   - mcMMO
   - PlaceholderAPI
-  - MCPets
-  - AdvancedPets
   - CombatPets
 
 api-version: 1.21

@@ -147,6 +147,7 @@ public class DungeonInstance implements Dungeon {
         this.stageCompleted = false;
         this.state = GameState.WAITING;
         this.eventReceivers.clear();
+        this.gameResult = null;
     }
 
     public void stop() {
@@ -276,14 +277,14 @@ public class DungeonInstance implements Dungeon {
         }
 
         if (this.countdown <= 0) {
+            this.holdChunks();
+
             this.state = GameState.INGAME;
             this.setLevel(this.config.getStartLevel());
             this.setStage(this.config.getStartStage());
             players.forEach(this::spawnPlayer);
             this.countdown = -1;
             this.setTimeLeft(this.config.gameSettings().hasTimeleft() ? this.config.gameSettings().getTimeleft() * 60L : -1L);
-
-            this.holdChunks();
 
             DungeonStartedEvent event = new DungeonStartedEvent(this);
             this.plugin.getPluginManager().callEvent(event);
