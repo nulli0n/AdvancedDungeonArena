@@ -1,5 +1,5 @@
 main: su.nightexpress.dungeons.DungeonPlugin
-version: '${project.version}'
+version: ${version}
 name: AdvancedDungeonArena
 description: Advanced and poweful dungeon & mob arena creator.
 author: NightExpress
