@@ -41,7 +41,7 @@ public class DungeonGameListener extends AbstractListener<DungeonPlugin> {
         this.manager = manager;
     }
 
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDungeonGenericFriendlyFire(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof LivingEntity victim)) return;
 
