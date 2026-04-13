@@ -1,10 +1,11 @@
-package su.nightexpress.dungeons.nms.mc_1_21_3;
+package su.nightexpress.dungeons.nms.mc_26_1_1;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.*;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -12,13 +13,15 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.zombie.Drowned;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.CraftRegistry;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.craftbukkit.block.CraftBlockState;
@@ -35,9 +38,9 @@ import su.nightexpress.dungeons.api.dungeon.Dungeon;
 import su.nightexpress.dungeons.api.schema.SchemaBlock;
 import su.nightexpress.dungeons.api.type.MobFaction;
 import su.nightexpress.dungeons.nms.DungeonNMS;
-import su.nightexpress.dungeons.nms.mc_1_21_3.brain.goal.FollowPlayersGoal;
-import su.nightexpress.dungeons.nms.mc_1_21_3.brain.goal.LastDamagerTargetGoal;
-import su.nightexpress.dungeons.nms.mc_1_21_3.brain.goal.NearestFactionTargetGoal;
+import su.nightexpress.dungeons.nms.mc_26_1_1.brain.goal.FollowPlayersGoal;
+import su.nightexpress.dungeons.nms.mc_26_1_1.brain.goal.LastDamagerTargetGoal;
+import su.nightexpress.dungeons.nms.mc_26_1_1.brain.goal.NearestFactionTargetGoal;
 import su.nightexpress.nightcore.util.Reflex;
 
 import java.io.File;
@@ -48,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class MC_1_21_3 implements DungeonNMS {
+public class MC_26_1_1 implements DungeonNMS {
 
     @Override
     public boolean isSupportedMob(@NotNull EntityType type) {
@@ -100,16 +103,16 @@ public class MC_1_21_3 implements DungeonNMS {
             if (bukkitEntity instanceof Animals || bukkitEntity instanceof org.bukkit.entity.IronGolem) {
                 mob.goalSelector.getAvailableGoals().clear();
                 mob.goalSelector.addGoal(0, new FloatGoal(mob));
-                mob.goalSelector.addGoal(2, new su.nightexpress.dungeons.nms.mc_1_21_3.brain.goal.MeleeAttackGoal(pathfinderMob, dungeon, faction));
+                mob.goalSelector.addGoal(2, new su.nightexpress.dungeons.nms.mc_26_1_1.brain.goal.MeleeAttackGoal(pathfinderMob, dungeon, faction));
                 mob.goalSelector.addGoal(8, new LookAtPlayerGoal(pathfinderMob, net.minecraft.world.entity.player.Player.class, 8.0F));
             }
             else {
-                if (mob instanceof net.minecraft.world.entity.monster.Drowned drowned) {
+                if (mob instanceof Drowned drowned) {
                     drowned.goalSelector.getAvailableGoals().removeIf(goal -> goal.getGoal() instanceof ZombieAttackGoal);
                     drowned.goalSelector.addGoal(3, new ZombieAttackGoal(drowned, 1D, false));
                 }
                 else if (mob instanceof EnderMan ender) {
-                    ender.goalSelector.getAvailableGoals().removeIf(wrappedGoal -> wrappedGoal.getPriority() == 1);
+                    ender.goalSelector.getAvailableGoals().removeIf(wrappedGoal -> wrappedGoal.getPriority() == 1); // EndermanFreezeWhenLookedAt
                 }
                 pathfinderMob.goalSelector.getAvailableGoals().removeIf(wrappedGoal -> {
                     var goal = wrappedGoal.getGoal();
@@ -128,7 +131,7 @@ public class MC_1_21_3 implements DungeonNMS {
         function.accept(bukkitEntity);
 
         level.addFreshEntity(mob, null);
-        mob.moveTo(location.getX(), location.getY(), location.getZ());
+        mob.snapTo(location.getX(), location.getY(), location.getZ());
 
         return bukkitEntity;
     }
@@ -150,7 +153,6 @@ public class MC_1_21_3 implements DungeonNMS {
 
             }));
             Reflex.setFieldValue(provider, "a", aMap2);
-            //System.out.println("Injected Attribute: " + att.getDescriptionId());
         }
     }
 
@@ -158,10 +160,8 @@ public class MC_1_21_3 implements DungeonNMS {
         this.registerAttribute(handle, attribute);
 
         AttributeInstance instance = handle.getAttribute(attribute);
-        if (instance == null) {
-            //System.out.println("Could not create attribute instance: " + attribute.getDescriptionId());
-            return;
-        }
+        if (instance == null) return;
+
         instance.setBaseValue(value);
     }
 
@@ -182,7 +182,7 @@ public class MC_1_21_3 implements DungeonNMS {
 
             // Load NBT data directly to NMS block.
             // CraftBlockEntityState#load wipes out some data, for example CraftSign overrides #load() and wipes out sign text.
-            blockEntity.loadWithComponents(tag, level.registryAccess());
+            blockEntity.loadWithComponents(TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), tag));
             blockEntity.setChanged();
         }
     }
@@ -201,61 +201,70 @@ public class MC_1_21_3 implements DungeonNMS {
             return schemaBlocks;
         }
         if (schemTag == null) {
-            System.out.println("null schema NBT");
             return schemaBlocks;
         }
 
-        ListTag blocksTag = schemTag.getList("blocks", 10);
+        ListTag blocksTag = schemTag.getListOrEmpty("blocks");
 
         blocksTag.forEach(tag -> {
             CompoundTag blockTag = (CompoundTag) tag;
 
-            BlockState state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK, blockTag.getCompound("state"));
-            BlockPos pos = NbtUtils.readBlockPos(blockTag, "pos").orElse(null);
-            if (pos == null) return;
+            BlockState state = NbtUtils.readBlockState(BuiltInRegistries.BLOCK, blockTag.getCompound("state").orElseThrow());
 
-            CompoundTag nbt = null;
-            if (blockTag.contains("nbt")) {
-                nbt = blockTag.getCompound("nbt");
-            }
+            ListTag posTag = blockTag.getListOrEmpty("pos");
+            BlockPos pos = new BlockPos(posTag.getIntOr(0, 0), posTag.getIntOr(1, 0), posTag.getIntOr(2, 0));
+            CompoundTag nbt = blockTag.getCompound("nbt").orElse(null);
 
-            CraftBlockData craftBlockData = CraftBlockData.fromData(state);
+            CraftBlockData craftBlockData = CraftBlockData.createData(state);
             su.nightexpress.nightcore.util.geodata.pos.BlockPos blockPos = new su.nightexpress.nightcore.util.geodata.pos.BlockPos(pos.getX(), pos.getY(), pos.getZ());
 
             schemaBlocks.add(new SchemaBlock(blockPos, craftBlockData, nbt));
         });
 
-
-
         return schemaBlocks;
     }
 
+    @Override
     public void saveSchema(@NotNull World world, @NotNull List<Block> blocks, @NotNull File file) {
         ServerLevel level = ((CraftWorld) world).getHandle();
 
-        CompoundTag schemTag = new CompoundTag();
+        CompoundTag root = new CompoundTag();
         ListTag blocksTag = new ListTag();
 
         for (Block block : blocks) {
-            CraftBlockState state = (CraftBlockState) block.getState();
-            BlockEntity blockEntity = level.getBlockEntity(state.getPosition());
+            CraftBlockState craftState = (CraftBlockState) block.getState();
+            BlockPos blockPos = craftState.getPosition();
+            BlockEntity blockEntity = level.getBlockEntity(blockPos);
 
             CompoundTag blockTag = new CompoundTag();
-            blockTag.put("state", NbtUtils.writeBlockState(state.getHandle()));
-            blockTag.put("pos", NbtUtils.writeBlockPos(state.getPosition()));
+            blockTag.put("state", NbtUtils.writeBlockState(craftState.getHandle()));
+            blockTag.put("pos", this.newIntegerList(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
             if (blockEntity != null) {
-                blockTag.put("nbt", blockEntity.saveWithId(level.registryAccess()));
+                TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, level.registryAccess());//TagValueOutput.createWithContext(reporter, level.registryAccess());
+                blockEntity.saveWithId(output);
+                blockTag.put("nbt", output.buildResult());
             }
             blocksTag.add(blockTag);
         }
 
-        schemTag.put("blocks", blocksTag);
+        root.put("blocks", blocksTag);
 
         try {
-            NbtIo.writeCompressed(schemTag, file.toPath());
+            NbtIo.writeCompressed(root, file.toPath());
         }
         catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+
+    @NotNull
+    private ListTag newIntegerList(int... arr) {
+        ListTag tag = new ListTag();
+
+        for (int value : arr) {
+            tag.add(IntTag.valueOf(value));
+        }
+
+        return tag;
     }
 }

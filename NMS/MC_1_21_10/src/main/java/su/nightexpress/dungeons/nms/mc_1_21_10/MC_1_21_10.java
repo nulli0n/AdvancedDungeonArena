@@ -135,7 +135,7 @@ public class MC_1_21_10 implements DungeonNMS {
         return bukkitEntity;
     }
 
-    private void registerAttribute(@NotNull net.minecraft.world.entity.LivingEntity handle, @NotNull Holder<Attribute> att) {
+    private void registerAttribute(@NotNull net.minecraft.world.entity.LivingEntity handle, Holder<Attribute> att) {
         AttributeInstance instance = handle.getAttribute(att);
 
         if (instance == null) {
@@ -155,7 +155,7 @@ public class MC_1_21_10 implements DungeonNMS {
         }
     }
 
-    private void setAttribute(@NotNull net.minecraft.world.entity.LivingEntity handle, @NotNull Holder<Attribute> attribute, double value) {
+    private void setAttribute(@NotNull net.minecraft.world.entity.LivingEntity handle, Holder<Attribute> attribute, double value) {
         this.registerAttribute(handle, attribute);
 
         AttributeInstance instance = handle.getAttribute(attribute);
