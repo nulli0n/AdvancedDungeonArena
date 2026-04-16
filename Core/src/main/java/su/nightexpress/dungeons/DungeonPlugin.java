@@ -25,11 +25,6 @@ import su.nightexpress.dungeons.kit.KitManager;
 import su.nightexpress.dungeons.mob.MobManager;
 import su.nightexpress.dungeons.mob.variant.MobVariantRegistry;
 import su.nightexpress.dungeons.nms.DungeonNMS;
-import su.nightexpress.dungeons.nms.mc_1_21_10.MC_1_21_10;
-import su.nightexpress.dungeons.nms.mc_1_21_11.MC_1_21_11;
-import su.nightexpress.dungeons.nms.mc_1_21_3.MC_1_21_3;
-import su.nightexpress.dungeons.nms.mc_1_21_8.MC_1_21_8;
-import su.nightexpress.dungeons.nms.mc_26_1_1.MC_26_1_1;
 import su.nightexpress.dungeons.registry.compat.BoardPluginRegistry;
 import su.nightexpress.dungeons.registry.compat.GodPluginRegistry;
 import su.nightexpress.dungeons.registry.level.LevelRegistry;
@@ -42,6 +37,8 @@ import su.nightexpress.nightcore.commands.command.NightCommand;
 import su.nightexpress.nightcore.config.PluginDetails;
 import su.nightexpress.nightcore.util.Plugins;
 import su.nightexpress.nightcore.util.Version;
+
+import java.util.logging.Level;
 
 public class DungeonPlugin extends NightPlugin {
 
@@ -144,22 +141,37 @@ public class DungeonPlugin extends NightPlugin {
     }
 
     private boolean loadInternals() {
-        this.internals = switch (Version.getCurrent()) {
-            case MC_1_21_4 -> new MC_1_21_3();
-            case MC_1_21_8 -> new MC_1_21_8();
-            case MC_1_21_10 -> new MC_1_21_10();
-            case MC_1_21_11 -> new MC_1_21_11();
-            case MC_26_1_1 -> new MC_26_1_1();
+        String className = switch (Version.getCurrent()) {
+            case MC_1_21_4, MC_1_21_3 -> "su.nightexpress.dungeons.nms.mc_1_21_3.MC_1_21_3";
+            case MC_1_21_8 -> "su.nightexpress.dungeons.nms.mc_1_21_8.MC_1_21_8";
+            case MC_1_21_10 -> "su.nightexpress.dungeons.nms.mc_1_21_10.MC_1_21_10";
+            case MC_1_21_11 -> "su.nightexpress.dungeons.nms.mc_1_21_11.MC_1_21_11";
+            case MC_26_1_1, MC_26_1_2 -> "su.nightexpress.dungeons.nms.mc_26_1_1.MC_26_1_1";
             default -> null;
         };
 
-        if (this.internals == null) {
-            this.error("Unsupported server version.");
-            this.getPluginManager().disablePlugin(this);
+        if (className == null) {
+            failUnsupported();
             return false;
         }
 
-        return true;
+        try {
+            Class<?> clazz = Class.forName(className);
+            this.internals = (DungeonNMS) clazz.getDeclaredConstructor().newInstance();
+            return true;
+        } catch (UnsupportedClassVersionError e) {
+            this.getLogger().log(Level.SEVERE, "This server Java version is too old for this Minecraft version.", e);
+        } catch (Throwable t) {
+            this.getLogger().log(Level.SEVERE, "Failed to load NMS implementation: " + className, t);
+        }
+
+        this.getPluginManager().disablePlugin(this);
+        return false;
+    }
+
+    private void failUnsupported() {
+        this.error("Unsupported server version.");
+        this.getPluginManager().disablePlugin(this);
     }
 
     private void loadEngine() {

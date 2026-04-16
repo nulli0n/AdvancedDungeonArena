@@ -13,12 +13,6 @@ dependencies {
     compileOnly(project(":API"))
     compileOnly(project(":NMS:SPI"))
 
-    compileOnly(project(":NMS:MC_26_1_1"))
-    compileOnly(project(":NMS:MC_1_21_11"))
-    compileOnly(project(":NMS:MC_1_21_10"))
-    compileOnly(project(":NMS:MC_1_21_8"))
-    compileOnly(project(":NMS:MC_1_21_3"))
-
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
 
     compileOnly("su.nightexpress.sunlight:Core:3.16.0")
@@ -51,5 +45,5 @@ dependencies {
 }
 
 java.toolchain {
-    languageVersion.set(JavaLanguageVersion.of(25))
+    languageVersion.set(JavaLanguageVersion.of(21))
 }

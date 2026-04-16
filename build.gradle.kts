@@ -29,6 +29,7 @@ allprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
 
         maven("https://jitpack.io")
         maven("https://repo.papermc.io/repository/maven-public/")
@@ -41,7 +42,8 @@ allprojects {
 
     dependencies {
         compileOnly("org.jetbrains:annotations:23.0.0")
-        compileOnly("su.nightexpress.nightcore:main:2.15.1")
+        compileOnly("su.nightexpress.nightcore:main:2.15.2")
+        compileOnly("su.nightexpress.nightcore:utils:2.15.2")
     }
 
     configurations.all {
