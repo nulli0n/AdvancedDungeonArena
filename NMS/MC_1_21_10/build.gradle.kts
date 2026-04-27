@@ -1,15 +1,16 @@
-import io.papermc.paperweight.userdev.PaperweightUserDependenciesExtension
 
 plugins {
     id("io.papermc.paperweight.userdev")
 }
 
 dependencies {
-    compileOnly(project(":NMS"))
-    compileOnly(project(":NMS:SPI"))
-    compileOnly(project(":API"))
+    paperweight.paperDevBundle("1.21.10-R0.1-SNAPSHOT")
+}
 
-    the<PaperweightUserDependenciesExtension>().paperDevBundle("1.21.10-R0.1-SNAPSHOT")
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
 }
 
 tasks {

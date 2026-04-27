@@ -11,7 +11,6 @@ repositories {
 
 dependencies {
     compileOnly(project(":API"))
-    compileOnly(project(":NMS:SPI"))
 
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
 
@@ -46,4 +45,18 @@ dependencies {
 
 java.toolchain {
     languageVersion.set(JavaLanguageVersion.of(21))
+}
+
+tasks {
+    processResources {
+        val props = mapOf(
+            "version" to project.version.toString()
+        )
+
+        inputs.properties(props)
+
+        filesMatching("**plugin.yml") {
+            expand(props)
+        }
+    }
 }

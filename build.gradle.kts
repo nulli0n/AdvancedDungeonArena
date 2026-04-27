@@ -6,17 +6,16 @@ plugins {
 }
 
 group = "su.nightexpress.dungeonarena"
-version = findProperty("version")!! // gradle.properties
+version = "8.5.1"
 
 dependencies {
     implementation(project(":API"))
     implementation(project(path = ":Core", configuration = "shadow"))
-    implementation(project(":NMS:SPI"))
     implementation(project(path = ":NMS:MC_1_21_3", configuration = "reobf"))
     implementation(project(path = ":NMS:MC_1_21_8", configuration = "reobf"))
     implementation(project(path = ":NMS:MC_1_21_10", configuration = "reobf"))
     implementation(project(path = ":NMS:MC_1_21_11", configuration = "reobf"))
-    implementation(project(path = ":NMS:MC_26_1_1", configuration = "default"))
+    implementation(project(path = ":NMS:MC_26_1_1", configuration = "shadow"))
 }
 
 allprojects {
@@ -29,7 +28,6 @@ allprojects {
 
     repositories {
         mavenCentral()
-        mavenLocal()
 
         maven("https://jitpack.io")
         maven("https://repo.papermc.io/repository/maven-public/")
@@ -52,7 +50,6 @@ allprojects {
 
     java {
         withSourcesJar()
-        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     }
 
     tasks {
@@ -60,21 +57,11 @@ allprojects {
             options.isDeprecation = true
             options.encoding = "UTF-8"
         }
+    }
+}
 
-        processResources {
-            val props = mapOf(
-                "version" to project.version.toString()
-            )
-
-            inputs.properties(props)
-
-            filesMatching("plugin.yml") {
-                expand(props)
-            }
-        }
-
-        build {
-            dependsOn(shadowJar)
-        }
+tasks {
+    build {
+        dependsOn(shadowJar)
     }
 }

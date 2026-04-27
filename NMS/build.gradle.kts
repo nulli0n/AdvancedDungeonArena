@@ -9,7 +9,6 @@ version = rootProject.version
 subprojects {
     dependencies {
         compileOnly(project(":API"))
-
-        compileOnly("su.nightexpress.dungeonarena:API:8.5.1")
+        compileOnly(project(":Core"))
     }
 }
