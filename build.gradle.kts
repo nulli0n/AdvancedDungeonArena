@@ -1,3 +1,4 @@
+
 plugins {
     id("java")
     id("java-library")
@@ -18,13 +19,15 @@ dependencies {
     implementation(project(path = ":NMS:MC_26_1_1", configuration = "shadow"))
 }
 
+subprojects {
+    group = rootProject.group
+    version = rootProject.version
+}
+
 allprojects {
     apply(plugin = "java")
     apply(plugin = "java-library")
     apply(plugin = "com.gradleup.shadow")
-
-    group = rootProject.group
-    version = rootProject.version
 
     repositories {
         mavenCentral()
@@ -61,6 +64,16 @@ allprojects {
 }
 
 tasks {
+    shadowJar {
+        // filename: <project.name>-<project.version>.jar
+        archiveBaseName.set(project.name)
+        archiveVersion.set(project.version.toString())
+        archiveClassifier.set("")
+
+        // output to rootProject's output directory
+        destinationDirectory.set(rootProject.layout.projectDirectory.dir("output"))
+    }
+
     build {
         dependsOn(shadowJar)
     }

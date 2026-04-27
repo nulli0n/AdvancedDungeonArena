@@ -43,8 +43,10 @@ dependencies {
     compileOnly("gg.auroramc:Aurora:2.1.6")
 }
 
-java.toolchain {
-    languageVersion.set(JavaLanguageVersion.of(21))
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
 }
 
 tasks {
