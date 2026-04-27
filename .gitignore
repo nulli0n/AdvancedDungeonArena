@@ -3,3 +3,4 @@
 **/target/
 !src/**/target/
 /Core/dependency-reduced-pom.xml
+/output/
