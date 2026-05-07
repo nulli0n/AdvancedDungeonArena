@@ -95,7 +95,7 @@ public class DungeonGameListener extends AbstractListener<DungeonPlugin> {
         dungeon.broadcast(format);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDungeonPlayerCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         if (player.hasPermission(Perms.BYPASS_DUNGEON_COMMANDS)) return;
