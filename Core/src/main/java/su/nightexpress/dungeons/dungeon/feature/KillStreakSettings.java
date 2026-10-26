@@ -16,6 +16,7 @@ public class KillStreakSettings implements Writeable {
 
     private Boolean                  enabled;
     private Integer                  decayTime;
+    private Boolean                  oncePerRun;
     private Map<String, KillStreak> streaks;
 
     public KillStreakSettings() {
@@ -34,6 +35,9 @@ public class KillStreakSettings implements Writeable {
         if (config.contains(path + ".DecayTime")) {
             settings.decayTime = config.getInt(path + ".DecayTime");
         }
+        if (config.contains(path + ".OncePerRun")) {
+            settings.oncePerRun = config.getBoolean(path + ".OncePerRun");
+        }
         if (config.contains(path + ".List")) {
             Map<String, KillStreak> map = new LinkedHashMap<>();
             config.getSection(path + ".List").forEach(id -> {
@@ -50,6 +54,7 @@ public class KillStreakSettings implements Writeable {
     public void write(@NotNull FileConfig config, @NotNull String path) {
         if (this.enabled != null) config.set(path + ".Enabled", this.enabled);
         if (this.decayTime != null) config.set(path + ".DecayTime", this.decayTime);
+        if (this.oncePerRun != null) config.set(path + ".OncePerRun", this.oncePerRun);
         if (this.streaks != null) {
             config.remove(path + ".List");
             this.streaks.forEach((id, streak) -> config.set(path + ".List." + id, streak));
@@ -62,6 +67,10 @@ public class KillStreakSettings implements Writeable {
 
     public int getDecayTime() {
         return this.decayTime != null ? this.decayTime : Config.KILL_STREAKS_DECAY_TIME.get();
+    }
+
+    public boolean isOncePerRun() {
+        return this.oncePerRun != null ? this.oncePerRun : Config.KILL_STREAKS_ONCE_PER_RUN.get();
     }
 
     @NotNull

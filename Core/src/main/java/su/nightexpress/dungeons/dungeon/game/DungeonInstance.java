@@ -785,7 +785,15 @@ public class DungeonInstance implements Dungeon {
             if (this.config.isKillStreaksEnabled()) {
                 KillStreak killStreak = this.config.getKillStreak(gamer.getKillStreak());
                 if (killStreak != null) {
-                    killStreak.run(this, gamer);
+                    // When 'OncePerRun' is enabled (per dungeon or globally), non-repeatable streaks can be
+                    // claimed only once per dungeon run (per gamer), even if the player loses the streak
+                    // (decay/death) and reaches the same mark again.
+                    boolean oncePerRun = this.config.isKillStreakOncePerRun();
+                    boolean canRun = !oncePerRun || killStreak.isRepeatable() || !gamer.hasClaimedKillStreak(killStreak.getId());
+                    if (canRun) {
+                        if (oncePerRun) gamer.claimKillStreak(killStreak.getId());
+                        killStreak.run(this, gamer);
+                    }
                 }
             }
         }

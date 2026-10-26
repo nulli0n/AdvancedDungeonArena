@@ -24,6 +24,8 @@ import su.nightexpress.dungeons.registry.compat.GodPluginRegistry;
 import su.nightexpress.dungeons.util.DungeonUtils;
 import su.nightexpress.nightcore.locale.entry.MessageLocale;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -50,6 +52,7 @@ public class DungeonGamer implements DungeonPlayer {
     private int     lives;
     private int     killStreak;
     private long    killStreakDecay;
+    private final Set<String> claimedKillStreaks = new HashSet<>();
     private int     kills;
     private int     score;
 
@@ -92,8 +95,8 @@ public class DungeonGamer implements DungeonPlayer {
     public void tick() {
         if (this.isDead() && !this.dungeon.isAboutToEnd()) {
             (this.hasExtraLives() ? Lang.DUNGEON_STATUS_DEAD_LIVES : Lang.DUNGEON_STATUS_DEAD_NO_LIVES).message().send(this.player, replacer -> replacer
-                .replace(this.dungeon.replacePlaceholders())
-                .replace(this.replacePlaceholders())
+                    .replace(this.dungeon.replacePlaceholders())
+                    .replace(this.replacePlaceholders())
             );
         }
 
@@ -169,8 +172,8 @@ public class DungeonGamer implements DungeonPlayer {
         this.setKillStreakDecay(0);
 
         this.dungeon.broadcast(Lang.DUNGEON_GAME_PLAYER_DIED, replacer -> replacer
-            .replace(this.dungeon.replacePlaceholders())
-            .replace(this.replacePlaceholders())
+                .replace(this.dungeon.replacePlaceholders())
+                .replace(this.replacePlaceholders())
         );
     }
 
@@ -357,6 +360,14 @@ public class DungeonGamer implements DungeonPlayer {
 
     public void setKillStreakDecay(long killStreakDecay) {
         this.killStreakDecay = killStreakDecay;
+    }
+
+    public boolean hasClaimedKillStreak(@NotNull String streakId) {
+        return this.claimedKillStreaks.contains(streakId);
+    }
+
+    public void claimKillStreak(@NotNull String streakId) {
+        this.claimedKillStreaks.add(streakId);
     }
 
     public int getKills() {

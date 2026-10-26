@@ -359,6 +359,10 @@ public class DungeonConfig extends AbstractFileData<DungeonPlugin> {
         return this.killStreakSettings != null ? this.killStreakSettings.getDecayTime() : Config.KILL_STREAKS_DECAY_TIME.get();
     }
 
+    public boolean isKillStreakOncePerRun() {
+        return this.killStreakSettings != null ? this.killStreakSettings.isOncePerRun() : Config.KILL_STREAKS_ONCE_PER_RUN.get();
+    }
+
     @Nullable
     public KillStreak getKillStreak(int kills) {
         return this.killStreakSettings != null ? this.killStreakSettings.getKillStreak(kills) : DungeonUtils.getKillStreak(kills);

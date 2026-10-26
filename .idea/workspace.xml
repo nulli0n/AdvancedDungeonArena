@@ -6,13 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="d8e2415a-3fd7-4b04-babb-1dee0fea43c4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/Placeholders.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/Placeholders.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/feature/board/AbstractBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/feature/board/AbstractBoard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/feature/itemfilter/ItemFilterCriteria.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/feature/itemfilter/ItemFilterCriteria.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/config/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/config/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/config/DungeonConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/config/DungeonConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/feature/KillStreakSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/feature/KillStreakSettings.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/game/DungeonInstance.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/game/DungeonInstance.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/module/Features.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/module/Features.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/stage/StageTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/stage/StageTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/player/DungeonGamer.java" beforeDir="false" afterPath="$PROJECT_DIR$/Core/src/main/java/su/nightexpress/dungeons/dungeon/player/DungeonGamer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,6 +77,7 @@
     "Gradle.AdvancedDungeonArena [:Core:build].executor": "Run",
     "Gradle.AdvancedDungeonArena [:Core:clean].executor": "Run",
     "Gradle.AdvancedDungeonArena [:Core:shadowJar].executor": "Run",
+    "Gradle.AdvancedDungeonArena [clean].executor": "Run",
     "Gradle.AdvancedDungeonArena [shadowJar].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -167,6 +166,31 @@
       <GradleCoverageDisabled>false</GradleCoverageDisabled>
       <method v="2" />
     </configuration>
+    <configuration name="AdvancedDungeonArena [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
     <configuration name="AdvancedDungeonArena [shadowJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -195,6 +219,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.AdvancedDungeonArena [shadowJar]" />
+        <item itemvalue="Gradle.AdvancedDungeonArena [clean]" />
         <item itemvalue="Gradle.AdvancedDungeonArena [:Core:clean]" />
         <item itemvalue="Gradle.AdvancedDungeonArena [:Core:build]" />
         <item itemvalue="Gradle.AdvancedDungeonArena [:Core:shadowJar]" />
@@ -218,7 +243,8 @@
       <updated>1791954465642</updated>
       <workItem from="1791954466682" duration="3803000" />
       <workItem from="1791961062549" duration="469000" />
-      <workItem from="1791962728921" duration="3112000" />
+      <workItem from="1791962728921" duration="3724000" />
+      <workItem from="1793024608716" duration="1089000" />
     </task>
     <servers />
   </component>
