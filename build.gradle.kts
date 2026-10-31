@@ -6,7 +6,7 @@ plugins {
 
 allprojects {
     group = "su.nightexpress.dungeonarena"
-    version = "8.6.0"
+    version = "8.8.0"
 
     repositories {
         mavenLocal()
@@ -34,7 +34,7 @@ subprojects {
     }
 
     dependencies {
-        compileOnly("su.nightexpress.nightcore:main:2.16.5")
+        compileOnly("su.nightexpress.nightcore:main:2.16.6")
         compileOnly("io.papermc.paper:paper-api:26.2.build.+")
     }
 

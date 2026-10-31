@@ -27,6 +27,7 @@ public class Features implements Writeable {
     private       List<String>        exitCommands;
 
     private ItemFilterMode     itemFilterMode     = ItemFilterMode.BAN_SPECIFIC;
+    private boolean            itemFilterScanContainers = false;
     private ItemFilterCriteria itemFilterCriteria = new ItemFilterCriteria(Collections.emptyList(), Collections.emptyList(), Lists.newList(Material.ENDER_PEARL, Material.ENCHANTED_GOLDEN_APPLE));
 
     public Features(@NotNull DungeonConfig dungeonConfig) {
@@ -57,6 +58,7 @@ public class Features implements Writeable {
         this.levelRequirement = LevelRequirement.read(config, path + ".LevelRequirement");
 
         this.itemFilterMode = ConfigValue.create(path + ".ItemFilter.Mode", ItemFilterMode.class, this.itemFilterMode).read(config);
+        this.itemFilterScanContainers = ConfigValue.create(path + ".ItemFilter.Scan_Containers", this.itemFilterScanContainers).read(config);
         this.itemFilterCriteria = ConfigValue.create(path + ".ItemFilter.Criteria", ItemFilterCriteria::read, this.itemFilterCriteria).read(config);
     }
 
@@ -72,6 +74,7 @@ public class Features implements Writeable {
         this.entranceCostMap.forEach((id, price) -> config.set(path + ".Entrance.Payment." + id, price));
 
         config.set(path + ".ItemFilter.Mode", this.itemFilterMode);
+        config.set(path + ".ItemFilter.Scan_Containers", this.itemFilterScanContainers);
         config.set(path + ".ItemFilter.Criteria", this.itemFilterCriteria);
     }
 
@@ -115,6 +118,10 @@ public class Features implements Writeable {
     @NotNull
     public ItemFilterMode getItemFilterMode() {
         return this.itemFilterMode;
+    }
+
+    public boolean isItemFilterScanContainers() {
+        return this.itemFilterScanContainers;
     }
 
     @NotNull

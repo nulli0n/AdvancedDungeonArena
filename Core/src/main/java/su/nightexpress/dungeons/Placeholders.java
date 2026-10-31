@@ -101,6 +101,15 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
     public static final String KIT_COMMANDS    = "%kit_commands%";
     public static final String KIT_COST        = "%kit_cost%";
 
+    // Task placeholders.
+    // Inside a task's own Display: %task_amount%, %task_current%, %task_left% (values for that task, scaled amount included).
+    // Anywhere else (scoreboard, messages): %task_amount_<taskId>%, %task_current_<taskId>%, %task_left_<taskId>%.
+    public static final String TASK_AMOUNT  = "%task_amount%";
+    public static final String TASK_CURRENT = "%task_current%";
+    public static final String TASK_LEFT    = "%task_left%";
+
+    public static final java.util.regex.Pattern TASK_BY_ID = java.util.regex.Pattern.compile("%task_(amount|current|left)_([A-Za-z0-9_\\-]+)%");
+
     public static final String PLAYER_NAME              = "%player_name%";
     public static final String PLAYER_LIVES             = "%player_lives%";
     public static final String PLAYER_KILL_STREAK       = "%player_streak%";
@@ -120,8 +129,8 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
 
     @NotNull
     public static final PlaceholderList<DungeonConfig> DUNGEON_CONFIG = PlaceholderList.create(list -> list
-        .add(DUNGEON_ID, DungeonConfig::getId)
-        .add(DUNGEON_NAME, DungeonConfig::getName)
+            .add(DUNGEON_ID, DungeonConfig::getId)
+            .add(DUNGEON_NAME, DungeonConfig::getName)
     );
 
     @NotNull
@@ -176,70 +185,70 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
     );
 
     public static final PlaceholderList<Stage> STAGE = PlaceholderList.create(list -> list
-        .add(STAGE_ID, Stage::getId)
-        .add(STAGE_NAME, Stage::getDisplayName)
-        .add(STAGE_DESCRIPTION, Stage::getDescription)
+            .add(STAGE_ID, Stage::getId)
+            .add(STAGE_NAME, Stage::getDisplayName)
+            .add(STAGE_DESCRIPTION, Stage::getDescription)
     );
 
     public static final PlaceholderList<Level> LEVEL = PlaceholderList.create(list -> list
-        .add(LEVEL_ID, Level::getId)
-        .add(LEVEL_NAME, Level::getDisplayName)
-        .add(LEVEL_DESCRIPTION, Level::getDescription)
+            .add(LEVEL_ID, Level::getId)
+            .add(LEVEL_NAME, Level::getDisplayName)
+            .add(LEVEL_DESCRIPTION, Level::getDescription)
     );
 
     public static final PlaceholderList<DungeonGamer> DUNGEON_GAMER = PlaceholderList.create(list -> list
-        .add(PLAYER_NAME, gamer -> gamer.getPlayer().getName())
-        .add(PLAYER_DISPLAY_NAME, gamer -> gamer.getPlayer().getDisplayName())
-        .add(PLAYER_LIVES, gamer -> String.valueOf(gamer.getLives()))
-        .add(PLAYER_KILL_STREAK, gamer -> String.valueOf(gamer.getKillStreak()))
-        .add(PLAYER_KILL_STREAK_DECAY, gamer -> TimeFormats.formatAmount(gamer.getKillStreakDecay() * 1000L, TimeFormatType.LITERAL))
-        .add(PLAYER_SCORE, gamer -> String.valueOf(gamer.getScore()))
-        .add(PLAYER_KILLS, gamer -> NumberUtil.format(gamer.getKills()))
-        .add(PLAYER_IS_READY, gamer -> CoreLang.STATE_YES_NO.get(gamer.isReady()))
-        .add(PLAYER_KIT_NAME, gamer -> gamer.getKit() == null ? "-" : gamer.getKit().getName())
+            .add(PLAYER_NAME, gamer -> gamer.getPlayer().getName())
+            .add(PLAYER_DISPLAY_NAME, gamer -> gamer.getPlayer().getDisplayName())
+            .add(PLAYER_LIVES, gamer -> String.valueOf(gamer.getLives()))
+            .add(PLAYER_KILL_STREAK, gamer -> String.valueOf(gamer.getKillStreak()))
+            .add(PLAYER_KILL_STREAK_DECAY, gamer -> TimeFormats.formatAmount(gamer.getKillStreakDecay() * 1000L, TimeFormatType.LITERAL))
+            .add(PLAYER_SCORE, gamer -> String.valueOf(gamer.getScore()))
+            .add(PLAYER_KILLS, gamer -> NumberUtil.format(gamer.getKills()))
+            .add(PLAYER_IS_READY, gamer -> CoreLang.STATE_YES_NO.get(gamer.isReady()))
+            .add(PLAYER_KIT_NAME, gamer -> gamer.getKit() == null ? "-" : gamer.getKit().getName())
     );
 
     public static final PlaceholderList<Reward> REWARD = PlaceholderList.create(list -> list
-        .add(REWARD_ID, Reward::getId)
-        .add(REWARD_NAME, Reward::getName)
-        .add(REWARD_DESCRIPTION, reward -> String.join("\n", reward.getDescription()))
+            .add(REWARD_ID, Reward::getId)
+            .add(REWARD_NAME, Reward::getName)
+            .add(REWARD_DESCRIPTION, reward -> String.join("\n", reward.getDescription()))
     );
 
     public static final PlaceholderList<LootChest> LOOT_CHEST = PlaceholderList.create(list -> list
-        .add(LOOT_CHEST_ID, LootChest::getId)
+            .add(LOOT_CHEST_ID, LootChest::getId)
     );
 
     public static final PlaceholderList<Spot> SPOT = PlaceholderList.create(list -> list
-        .add(SPOT_ID, Spot::getId)
-        .add(SPOT_NAME, Spot::getName)
+            .add(SPOT_ID, Spot::getId)
+            .add(SPOT_NAME, Spot::getName)
     );
 
     public static final PlaceholderList<SpotState> SPOT_STATE = PlaceholderList.create(list -> list
-        .add(SPOT_STATE_ID, SpotState::getId)
+            .add(SPOT_STATE_ID, SpotState::getId)
     );
 
     public static final PlaceholderList<Kit> KIT = PlaceholderList.create(list -> list
-        .add(KIT_ID, Kit::getId)
-        .add(KIT_NAME, Kit::getName)
-        .add(KIT_DESCRIPTION, kit -> String.join("\n", kit.getDescription()))
-        .add(KIT_ATTRIBUTES, kit -> {
-            if (!kit.hasAttributes()) return Lang.UI_KIT_NO_ATTRIBUTES.text();
+            .add(KIT_ID, Kit::getId)
+            .add(KIT_NAME, Kit::getName)
+            .add(KIT_DESCRIPTION, kit -> String.join("\n", kit.getDescription()))
+            .add(KIT_ATTRIBUTES, kit -> {
+                if (!kit.hasAttributes()) return Lang.UI_KIT_NO_ATTRIBUTES.text();
 
-            return kit.getAttributeMap().entrySet().stream()
-                .map(entry -> UIUtils.formatAttributeEntry(entry.getKey(), entry.getValue()))
-                .collect(Collectors.joining("\n"));
-        })
-        .add(KIT_EFFECTS, kit -> {
-            if (!kit.hasPotionEffects()) return Lang.UI_KIT_NO_EFFECTS.text();
+                return kit.getAttributeMap().entrySet().stream()
+                        .map(entry -> UIUtils.formatAttributeEntry(entry.getKey(), entry.getValue()))
+                        .collect(Collectors.joining("\n"));
+            })
+            .add(KIT_EFFECTS, kit -> {
+                if (!kit.hasPotionEffects()) return Lang.UI_KIT_NO_EFFECTS.text();
 
-            return kit.getPotionEffects().stream().map(UIUtils::formatPotionEffectEntry).collect(Collectors.joining("\n"));
-        })
-        .add(KIT_COST, kit -> {
-            if (!kit.hasCost()) return Lang.OTHER_FREE.text();
+                return kit.getPotionEffects().stream().map(UIUtils::formatPotionEffectEntry).collect(Collectors.joining("\n"));
+            })
+            .add(KIT_COST, kit -> {
+                if (!kit.hasCost()) return Lang.OTHER_FREE.text();
 
-            return kit.getCostMap().entrySet().stream()
-                .map(entry -> UIUtils.formatCostEntry(entry.getKey(), entry.getValue()))
-                .collect(Collectors.joining(", "));
-        })
+                return kit.getCostMap().entrySet().stream()
+                        .map(entry -> UIUtils.formatCostEntry(entry.getKey(), entry.getValue()))
+                        .collect(Collectors.joining(", "));
+            })
     );
 }

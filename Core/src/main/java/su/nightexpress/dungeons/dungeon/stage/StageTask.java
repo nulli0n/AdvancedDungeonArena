@@ -1,7 +1,9 @@
 package su.nightexpress.dungeons.dungeon.stage;
 
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import su.nightexpress.dungeons.Placeholders;
 import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
 import su.nightexpress.dungeons.dungeon.script.task.ProgressFormatter;
 import su.nightexpress.dungeons.dungeon.script.task.Task;
@@ -54,7 +56,7 @@ public class StageTask implements Writeable {
     @NotNull
     public TaskProgress createProgress(@NotNull DungeonInstance dungeon) {
         ProgressFormatter formatter = this.task.getFormatter();
-        int requiredAmount = this.params.getAmount().roll();
+        int requiredAmount = this.params.rollAmount(dungeon);
 
         if (this.params.isPerPlayer() && this.task.canBePerPlayer()) {
             int players = dungeon.getAlivePlayers().size();
@@ -64,6 +66,16 @@ public class StageTask implements Writeable {
         }
 
         return new GlobalProgress(formatter, requiredAmount);
+    }
+
+    @NotNull
+    public String formatDisplay(@NotNull DungeonInstance dungeon, @NotNull TaskProgress progress, @Nullable Player player) {
+        String display = this.params.getDisplay()
+                .replace(Placeholders.TASK_AMOUNT, String.valueOf(progress.getRequiredAmount(player)))
+                .replace(Placeholders.TASK_CURRENT, String.valueOf(progress.countProgress(player)))
+                .replace(Placeholders.TASK_LEFT, String.valueOf(progress.countLeftover(player)));
+
+        return dungeon.replaceTaskPlaceholders().apply(display);
     }
 
     @NotNull

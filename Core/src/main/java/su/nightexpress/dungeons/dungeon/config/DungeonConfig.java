@@ -11,6 +11,8 @@ import su.nightexpress.dungeons.Placeholders;
 import su.nightexpress.dungeons.api.dungeon.DungeonPos;
 import su.nightexpress.dungeons.config.Config;
 import su.nightexpress.dungeons.dungeon.game.DungeonInstance;
+import su.nightexpress.dungeons.dungeon.feature.KillStreak;
+import su.nightexpress.dungeons.dungeon.feature.KillStreakSettings;
 import su.nightexpress.dungeons.dungeon.level.Level;
 import su.nightexpress.dungeons.dungeon.lootchest.LootChest;
 import su.nightexpress.dungeons.dungeon.module.Features;
@@ -18,6 +20,7 @@ import su.nightexpress.dungeons.dungeon.module.GameSettings;
 import su.nightexpress.dungeons.dungeon.reward.Reward;
 import su.nightexpress.dungeons.dungeon.spot.Spot;
 import su.nightexpress.dungeons.dungeon.stage.Stage;
+import su.nightexpress.dungeons.util.DungeonUtils;
 import su.nightexpress.dungeons.util.ErrorHandler;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.manager.AbstractFileData;
@@ -49,6 +52,8 @@ public class DungeonConfig extends AbstractFileData<DungeonPlugin> {
 
     private final Features     features;
     private final GameSettings gameSettings;
+
+    private KillStreakSettings killStreakSettings; // null = use global settings
 
     private DungeonInstance instance;
 
@@ -106,6 +111,8 @@ public class DungeonConfig extends AbstractFileData<DungeonPlugin> {
         this.features.load(config, "Features");
         this.gameSettings.load(config, "Game");
 
+        this.killStreakSettings = KillStreakSettings.read(config, KillStreakSettings.PATH);
+
         return true;
     }
 
@@ -129,6 +136,10 @@ public class DungeonConfig extends AbstractFileData<DungeonPlugin> {
         //config.remove("Game");
         config.set("Features", this.features);
         config.set("Game", this.gameSettings);
+
+        if (this.killStreakSettings != null) {
+            config.set(KillStreakSettings.PATH, this.killStreakSettings);
+        }
     }
 
     public void saveSpawners() {
@@ -338,6 +349,23 @@ public class DungeonConfig extends AbstractFileData<DungeonPlugin> {
     @NotNull
     public GameSettings gameSettings() {
         return this.gameSettings;
+    }
+
+    public boolean isKillStreaksEnabled() {
+        return this.killStreakSettings != null ? this.killStreakSettings.isEnabled() : Config.KILL_STREAKS_ENABLED.get();
+    }
+
+    public int getKillStreakDecayTime() {
+        return this.killStreakSettings != null ? this.killStreakSettings.getDecayTime() : Config.KILL_STREAKS_DECAY_TIME.get();
+    }
+
+    public boolean isKillStreakOncePerRun() {
+        return this.killStreakSettings != null ? this.killStreakSettings.isOncePerRun() : Config.KILL_STREAKS_ONCE_PER_RUN.get();
+    }
+
+    @Nullable
+    public KillStreak getKillStreak(int kills) {
+        return this.killStreakSettings != null ? this.killStreakSettings.getKillStreak(kills) : DungeonUtils.getKillStreak(kills);
     }
 
 

@@ -97,10 +97,10 @@ public abstract class AbstractBoard<T> implements Board {
     @NotNull
     private String replacePlaceholders(@NotNull String string) {
         return Replacer.create()
-            .replace(Placeholders.forPlayerWithPAPI(this.player))
-            .replace(this.gamer.replacePlaceholders())
-            .replace(this.gamer.getDungeon().replacePlaceholders())
-            .apply(string);
+                .replace(Placeholders.forPlayerWithPAPI(this.player))
+                .replace(this.gamer.replacePlaceholders())
+                .replace(this.gamer.getDungeon().replacePlaceholders())
+                .apply(string);
     }
 
     @NotNull
@@ -116,8 +116,8 @@ public abstract class AbstractBoard<T> implements Board {
         dungeon.getTaskProgress().forEach((stageTask, progress) -> {
             TextLocale format = progress.isCompleted() ? Lang.UI_TASK_COMPLETED : Lang.UI_TASK_INCOMPLETED;
             list.add(format.text()
-                .replace(Placeholders.GENERIC_NAME, stageTask.getParams().getDisplay())
-                .replace(Placeholders.GENERIC_VALUE, progress.format(this.gamer.getPlayer()))
+                    .replace(Placeholders.GENERIC_NAME, stageTask.formatDisplay(dungeon, progress, this.gamer.getPlayer()))
+                    .replace(Placeholders.GENERIC_VALUE, progress.format(this.gamer.getPlayer()))
             );
         });
 

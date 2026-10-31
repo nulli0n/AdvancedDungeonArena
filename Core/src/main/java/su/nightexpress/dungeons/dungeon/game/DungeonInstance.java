@@ -70,6 +70,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class DungeonInstance implements Dungeon {
@@ -117,7 +118,43 @@ public class DungeonInstance implements Dungeon {
 
     @NotNull
     public UnaryOperator<String> replacePlaceholders() {
-        return str -> Placeholders.DUNGEON_INSTANCE.replacer(this).apply(this.replaceVariables().apply(str));
+        return str -> this.replaceTaskPlaceholders().apply(Placeholders.DUNGEON_INSTANCE.replacer(this).apply(this.replaceVariables().apply(str)));
+    }
+
+    /**
+     * Replaces %task_amount_<taskId>%, %task_current_<taskId>% and %task_left_<taskId>% placeholders
+     * with values of the active task. Values are totals (scaled amount included).
+     * Unknown or inactive tasks give 0.
+     */
+    @NotNull
+    public UnaryOperator<String> replaceTaskPlaceholders() {
+        return str -> {
+            if (!str.contains("%task_")) return str;
+
+            Matcher matcher = Placeholders.TASK_BY_ID.matcher(str);
+            return matcher.replaceAll(result -> {
+                String type = result.group(1);
+                String taskId = result.group(2);
+
+                TaskProgress progress = this.findTaskProgress(taskId);
+                if (progress == null) return "0";
+
+                int value = switch (type) {
+                    case "amount" -> progress.getRequiredAmount();
+                    case "current" -> progress.countProgress();
+                    default -> progress.countLeftover();
+                };
+                return String.valueOf(value);
+            });
+        };
+    }
+
+    @Nullable
+    private TaskProgress findTaskProgress(@NotNull String taskId) {
+        for (var entry : this.taskProgress.entrySet()) {
+            if (entry.getKey().getId().equalsIgnoreCase(taskId)) return entry.getValue();
+        }
+        return null;
     }
 
     @NotNull
@@ -251,8 +288,8 @@ public class DungeonInstance implements Dungeon {
                         if (!this.hasPermission(player)) return;
 
                         Lang.DUNGEON_ANNOUNCE_START.message().send(player, replacer -> replacer
-                            .replace(this.replacePlaceholders())
-                            .replace(Placeholders.GENERIC_TIME, this.countdown));
+                                .replace(this.replacePlaceholders())
+                                .replace(Placeholders.GENERIC_TIME, this.countdown));
                     });
                 }
             }
@@ -374,8 +411,8 @@ public class DungeonInstance implements Dungeon {
 
             this.broadcastEvent(new DungeonTaskFinishedEvent(this, stageTask, progress));
             this.broadcast(Lang.DUNGEON_TASK_COMPLETED_INFO, replacer -> replacer
-                .replace(this.replacePlaceholders())
-                .replace(Placeholders.GENERIC_NAME, stageTask.getParams().getDisplay())
+                    .replace(this.replacePlaceholders())
+                    .replace(Placeholders.GENERIC_NAME, stageTask.formatDisplay(this, progress, null))
             );
         });
     }
@@ -452,19 +489,19 @@ public class DungeonInstance implements Dungeon {
     private void showStatus() {
         switch (this.state) {
             case WAITING -> this.broadcast(Lang.DUNGEON_STATUS_LOBBY_WAITING, replacer -> replacer
-                .replace(Placeholders.GENERIC_CURRENT, String.valueOf(this.countPlayers()))
-                .replace(Placeholders.GENERIC_MIN, String.valueOf(this.config.gameSettings().getMinPlayers()))
+                    .replace(Placeholders.GENERIC_CURRENT, String.valueOf(this.countPlayers()))
+                    .replace(Placeholders.GENERIC_MIN, String.valueOf(this.config.gameSettings().getMinPlayers()))
             );
             case READY -> {
                 boolean isClose = this.countdown <= 10;
                 this.broadcast((isClose ? Lang.DUNGEON_STATUS_LOBBY_READY_CLOSE : Lang.DUNGEON_STATUS_LOBBY_READY_FAR), replacer -> replacer
-                    .replace(Placeholders.GENERIC_TIME, TimeFormats.toDigitalShort(TimeUnit.SECONDS.toMillis(this.countdown))));
+                        .replace(Placeholders.GENERIC_TIME, TimeFormats.toDigitalShort(TimeUnit.SECONDS.toMillis(this.countdown))));
             }
             case INGAME -> {
                 if (!this.isAboutToEnd()) return;
 
                 this.broadcast((this.gameResult == GameResult.VICTORY ? Lang.DUNGEON_STATUS_ENDING_VICTORY : Lang.DUNGEON_STATUS_ENDING_DEFEAT), replacer -> replacer
-                    .replace(Placeholders.GENERIC_TIME, TimeFormats.toDigitalShort(TimeUnit.SECONDS.toMillis(this.countdown))));
+                        .replace(Placeholders.GENERIC_TIME, TimeFormats.toDigitalShort(TimeUnit.SECONDS.toMillis(this.countdown))));
             }
         }
     }
@@ -527,12 +564,12 @@ public class DungeonInstance implements Dungeon {
         if (mode == ItemFilterMode.NONE) return;
 
         ItemFilterCriteria criteria = this.config.features().getItemFilterCriteria();
+        boolean scanContainers = this.config.features().isItemFilterScanContainers();
 
         for (ItemStack itemStack : player.getInventory().getContents()) {
             if (itemStack == null) continue;
 
-            boolean matched = criteria.matches(itemStack);
-            boolean needConfiscated = (mode == ItemFilterMode.BAN_SPECIFIC && matched) || (mode == ItemFilterMode.ALLOW_SPECIFIC && !matched);
+            boolean needConfiscated = criteria.shouldConfiscate(mode, itemStack, scanContainers);
 
             if (needConfiscated) {
                 confiscate.add(new ItemStack(itemStack));
@@ -542,8 +579,8 @@ public class DungeonInstance implements Dungeon {
 
         if (!confiscate.isEmpty()) {
             this.getPrefixed(Lang.DUNGEON_CONFISACATE_INFO).send(player, replacer -> replacer
-                .replace(this.replacePlaceholders())
-                .replace(Placeholders.GENERIC_ITEM, confiscate.stream().map(ItemUtil::getNameSerialized).collect(Collectors.joining(", ")))
+                    .replace(this.replacePlaceholders())
+                    .replace(Placeholders.GENERIC_ITEM, confiscate.stream().map(ItemUtil::getNameSerialized).collect(Collectors.joining(", ")))
             );
         }
     }
@@ -569,8 +606,8 @@ public class DungeonInstance implements Dungeon {
                 DungeonUser user = this.plugin.getUserManager().getOrFetch(player);
                 if (user.isOnCooldown(this)) {
                     if (notify) this.sendMessage(player, Lang.DUNGEON_ENTER_ERROR_COOLDOWN, replacer -> replacer
-                        .replace(Placeholders.GENERIC_TIME, TimeFormats.formatDuration(user.getArenaCooldown(this), TimeFormatType.LITERAL))
-                        .replace(this.replacePlaceholders()));
+                            .replace(Placeholders.GENERIC_TIME, TimeFormats.formatDuration(user.getArenaCooldown(this), TimeFormatType.LITERAL))
+                            .replace(this.replacePlaceholders()));
                     return false;
                 }
             }
@@ -743,12 +780,20 @@ public class DungeonInstance implements Dungeon {
             int streak = gamer.getKillStreak() + 1;
             gamer.addKill();
             gamer.setKillStreak(streak);
-            gamer.setKillStreakDecay(Config.KILL_STREAKS_DECAY_TIME.get());
+            gamer.setKillStreakDecay(this.config.getKillStreakDecayTime());
 
-            if (DungeonUtils.isKillStreaksEnabled()) {
-                KillStreak killStreak = DungeonUtils.getKillStreak(gamer.getKillStreak());
+            if (this.config.isKillStreaksEnabled()) {
+                KillStreak killStreak = this.config.getKillStreak(gamer.getKillStreak());
                 if (killStreak != null) {
-                    killStreak.run(this, gamer);
+                    // When 'OncePerRun' is enabled (per dungeon or globally), non-repeatable streaks can be
+                    // claimed only once per dungeon run (per gamer), even if the player loses the streak
+                    // (decay/death) and reaches the same mark again.
+                    boolean oncePerRun = this.config.isKillStreakOncePerRun();
+                    boolean canRun = !oncePerRun || killStreak.isRepeatable() || !gamer.hasClaimedKillStreak(killStreak.getId());
+                    if (canRun) {
+                        if (oncePerRun) gamer.claimKillStreak(killStreak.getId());
+                        killStreak.run(this, gamer);
+                    }
                 }
             }
         }
@@ -918,7 +963,7 @@ public class DungeonInstance implements Dungeon {
 
         for (int i = 0; i < amount; i++) {
             Location location = spawner.getRandomPosition().toLocation(this.world)
-                .add(MobUitls.getRandomSpawnOffset(), 0, MobUitls.getRandomSpawnOffset());
+                    .add(MobUitls.getRandomSpawnOffset(), 0, MobUitls.getRandomSpawnOffset());
 
             this.spawnMob(provider, mobId, faction, location, level);
         }
@@ -1039,9 +1084,9 @@ public class DungeonInstance implements Dungeon {
         boolean isPersonal = stageTask.getParams().isPerPlayer();
 
         this.broadcast((isPersonal ? Lang.DUNGEON_TASK_CREATED_PERSONAL : Lang.DUNGEON_TASK_CREATED_GLOBAL), (player, replacer) -> replacer
-            .replace(this.replacePlaceholders())
-            .replace(Placeholders.GENERIC_NAME, stageTask.getParams().getDisplay())
-            .replace(Placeholders.GENERIC_VALUE, progress.format(isPersonal ? player : null)));
+                .replace(this.replacePlaceholders())
+                .replace(Placeholders.GENERIC_NAME, stageTask.formatDisplay(this, progress, isPersonal ? player : null))
+                .replace(Placeholders.GENERIC_VALUE, progress.format(isPersonal ? player : null)));
 
         this.broadcastEvent(new DungeonTaskCreatedEvent(this, stageTask, progress));
     }
